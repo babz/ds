@@ -39,29 +39,24 @@ public class SchedulerSocket {
 
 	public void readStream() {
 		log.info("read stream");
-		
-		
-		
-//		KnockKnockProtocol kkp = new KnockKnockProtocol();
-//
-//		outputLine = kkp.processInput(null);
-//		out.println(outputLine);
-//
+
 		String input = null;
 		try {
+			//TODO check auf blocking - warum wird nur 1 line gelesen?
 			while ((input = in.readLine()) != null) {
-//			outputLine = kkp.processInput(inputLine);
 				System.out.println(input);
-//			if (outputLine.equals("Bye."))
-//				break;
+				if (input.equals("!exit")) {
+					destroy();
+					return;
+				}
 			}
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.println("Error!");
 		}
 	}
 
 	public void destroy() throws IOException {
+		log.info("scheduler: close all");
 		out.close();
 		in.close();
 		clientSocket.close();

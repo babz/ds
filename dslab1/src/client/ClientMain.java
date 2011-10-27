@@ -20,7 +20,6 @@ public class ClientMain {
 		try {
 			socket = new ClientSocket(args[0], Integer.parseInt(args[1]), args[2]);
 			socket.readStream();
-			socket.destroy();
 		} catch (IOException exc) {
 			System.out.println("connection from client failed");
 		}

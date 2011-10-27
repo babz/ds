@@ -27,7 +27,6 @@ public class SchedulerMain {
 		try {
 			serverSocket = new SchedulerSocket(argsInt[0], argsInt[1], argsInt[2], argsInt[3], argsInt[4], argsInt[5]);
 			serverSocket.readStream();
-			serverSocket.destroy();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			System.out.println("connection from scheduler failed");
