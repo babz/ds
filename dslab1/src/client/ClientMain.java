@@ -11,15 +11,10 @@ public class ClientMain {
 		ClientSocket socket = null;
 
 		// TODO fehlerbehandlung für typen
-		int noOfParams = 7;
+		int noOfParams = 3;
 		if(args.length != noOfParams) {
 			System.out.println("Error: Too few arguments!");
-			try {
-				socket.destroy();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			return;
 		}
 		
 		try {
