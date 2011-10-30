@@ -25,6 +25,9 @@ public class SchedulerMain {
 		}
 
 		try {
+			EngineManager engineManager = new EngineManager(argsInt[1]);
+			engineManager.startWorking();
+			
 			serverSocket = new SchedulerSocket(argsInt[0], argsInt[1], argsInt[2], argsInt[3], argsInt[4], argsInt[5]);
 			serverSocket.readStream();
 		} catch (IOException e) {
