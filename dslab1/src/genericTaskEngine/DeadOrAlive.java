@@ -32,9 +32,11 @@ public class DeadOrAlive implements Runnable {
 	public void run() {
 		message = tcpPort + " " + minConsumption + " " + maxConsumption;
 		while(alive) {
-			byte[] msg = message.getBytes();
+			int packetLength = 100;
+			byte[] msg = new byte[packetLength];
+			msg = message.getBytes();
 			try {
-				alivePacket.send(new DatagramPacket(msg, msg.length, InetAddress.getByName(schedulerHost), udpPort));
+				alivePacket.send(new DatagramPacket(msg, msg.length , InetAddress.getByName(schedulerHost), udpPort));
 			} catch (UnknownHostException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

@@ -20,10 +20,15 @@ public class EngineManager {
 		while(true){
 			try {
 				int packetLength = 100;
-				DatagramPacket packet = new DatagramPacket(new byte[packetLength], packetLength);
+				byte[] buf = new byte[packetLength];
+				DatagramPacket packet = new DatagramPacket(buf, buf.length);
 				datagramSocket.receive(packet);
-				String msg = new String(packet.getData());
+				String msg = new String(packet.getData(), 0, packet.getLength());
 				System.out.println(msg);
+				String[] msgParts = msg.split(" ");
+				int tcpPort = Integer.parseInt(msgParts[0]);
+				int minCons = Integer.parseInt(msgParts[1]);
+				int maxCons = Integer.parseInt(msgParts[2]);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				System.out.println("msg nicht angekommen");
