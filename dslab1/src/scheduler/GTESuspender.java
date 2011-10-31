@@ -2,7 +2,9 @@ package scheduler;
 
 import genericTaskEngine.EngineIdentifier;
 
+import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.util.Hashtable;
 import java.util.Map.Entry;
 import java.util.logging.Logger;
@@ -46,9 +48,10 @@ public class GTESuspender implements Runnable {
 					}
 				}
 			}
-			//TODO check suspend/activate
+			//check suspend/activate
 			this.checkEnergyEfficience(activeEngines, zeroLoadEngines);
 			try {
+				//TODO send udp suspend command
 				//confirm alive statements every checkPeriod, timeout otherwise
 				Thread.sleep(checkPeriod);
 			} catch (InterruptedException e) {
@@ -58,6 +61,11 @@ public class GTESuspender implements Runnable {
 		}
 	}
 
+	/**
+	 * Sets the suspend or offline flag for engines (activate/suspend commands)
+	 * @param activeEngines all engines with flag set to active
+	 * @param zeroLoadEngines engines with 0% load
+	 */
 	private void checkEnergyEfficience(Hashtable<EngineIdentifier, GTEInfo> activeEngines, Hashtable<EngineIdentifier, GTEInfo> zeroLoadEngines) {
 		//if activeEngines <= min, do not suspend
 		if(activeEngines.size() > min) {
@@ -69,16 +77,19 @@ public class GTESuspender implements Runnable {
 		}
 		//if activeEngines >= max, do not activate
 		if(activeEngines.size() < max) {
-			if(zeroLoadEngines.size() <= 1) {
-
+			if((activeEngines.size() < min) || checkEngineOverload()) {
+				//TODO activate enerySaver via udp
+				EngineIdentifier energySaver = this.getEnergySaver();
+				engines.get(energySaver).setOffline(); //set offline-flag
+				//TODO check if engine is really ready (might be no connection after activating)
 			}
-			//TODO activate engine
-		}
-		for(Entry<EngineIdentifier, GTEInfo> activeEngine: activeEngines.entrySet()) {
-
 		}
 	}
-
+	
+	/**
+	 * @param activeEngines
+	 * @return engine that consumes the most energy
+	 */
 	private EngineIdentifier getEnergyEater(Hashtable<EngineIdentifier, GTEInfo> activeEngines) {
 		EngineIdentifier energyEater = null;
 		int maxConsumption = 0;
@@ -91,7 +102,28 @@ public class GTESuspender implements Runnable {
 		return energyEater;
 	}
 	
-	private EngineIdentifier getEnergySaver() {
-		return null;
+	/** 
+	 * @return true if all active GTEs have at least 66% load
+	 */
+	private boolean checkEngineOverload() {
+		// TODO Auto-generated method stub
+		return false;
 	}
+	
+	/**
+	 * @return engine that consumes the fewest energy at start-up
+	 */
+	private EngineIdentifier getEnergySaver() {
+		EngineIdentifier energySaver = null;
+		int minConsumption = 1000;
+		for(Entry<EngineIdentifier, GTEInfo> engine: engines.entrySet()) {
+			//find all suspended engines and activate the one with the fewest energy consumption
+			if(engine.getValue().isSuspended() && (engine.getValue().getMinConsumption() < minConsumption)) {
+				energySaver = engine.getKey();
+				minConsumption = engine.getValue().getMinConsumption();
+			}
+		}
+		return energySaver;
+	}
+	
 }

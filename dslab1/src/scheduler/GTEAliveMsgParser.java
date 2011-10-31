@@ -24,7 +24,7 @@ public class GTEAliveMsgParser implements Runnable {
 	@Override
 	public void run() {
 		String msg = new String(packet.getData(), 0, packet.getLength());
-		
+
 		//msg decode
 		int tcpPort = 0;
 		int minCons = 0;
@@ -43,7 +43,9 @@ public class GTEAliveMsgParser implements Runnable {
 		int udp = packet.getPort();
 		EngineIdentifier currEngine = new EngineIdentifier(ip, tcpPort);
 		if(engines.containsKey(currEngine)) {
-			engines.get(currEngine).setActive();
+			if(engines.get(currEngine).isOffline()) {
+				engines.get(currEngine).setActive();
+			}
 			engines.get(currEngine).updateEngine(udp);
 		} else {
 			engines.put(currEngine, new GTEInfo(ip, udp, tcpPort, minCons, maxCons));

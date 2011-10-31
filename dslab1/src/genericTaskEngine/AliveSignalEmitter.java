@@ -8,7 +8,7 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.logging.Logger;
 
-public class GenericTaskEngine implements Runnable {
+public class AliveSignalEmitter implements Runnable {
 	private static Logger log = Logger.getLogger("class GTE");
 	
 	private DatagramSocket datagramSocket;
@@ -19,7 +19,7 @@ public class GenericTaskEngine implements Runnable {
 	private String message;
 	private String schedulerHost;
 	
-	public GenericTaskEngine(int udpPort, int tcpPort, String schedulerHost, int alivePeriod, int minConsumption, int maxConsumption) throws SocketException {
+	public AliveSignalEmitter(int udpPort, int tcpPort, String schedulerHost, int alivePeriod, int minConsumption, int maxConsumption) throws SocketException {
 		datagramSocket = new DatagramSocket();
 		alive = true;
 		this.alivePeriod = alivePeriod;

@@ -38,8 +38,16 @@ public class GTEInfo {
 		return StatusFlag.ACTIVE == status; 
 	}
 	
+	public boolean isSuspended() {
+		return StatusFlag.SUSPENDED == status;
+	}
+	
 	public void suspendGTE() {
 		status = StatusFlag.SUSPENDED;
+	}
+	
+	public boolean isOffline() {
+		return StatusFlag.OFFLINE == status;
 	}
 	
 	public void setOffline() {
