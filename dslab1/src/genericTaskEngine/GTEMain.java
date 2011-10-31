@@ -26,7 +26,7 @@ public class GTEMain {
 		String taskdir = args[6];
 		
 		try {
-			Thread t = new Thread(new DeadOrAlive(udpPort, tcpPort, schedulerHost, alivePeriod, minConsumption, maxConsumption));
+			Thread t = new Thread(new GenericTaskEngine(udpPort, tcpPort, schedulerHost, alivePeriod, minConsumption, maxConsumption));
 			t.start();
 		} catch (SocketException e) {
 			// TODO Auto-generated catch block
