@@ -16,10 +16,10 @@ public class GTEInfo {
 		this.tcpPort = tcpPort;
 		this.minConsumption = minConsumption;
 		this.maxConsumption = maxConsumption;
-		status = StatusFlag.online;
+		status = StatusFlag.ACTIVE;
 	}
 	
-	private enum StatusFlag {suspended, online, offline}
+	private enum StatusFlag {SUSPENDED, ACTIVE, OFFLINE}
 	
 	public long getTime() {
 		return currTime;
@@ -34,20 +34,20 @@ public class GTEInfo {
 		currTime = System.currentTimeMillis();
 	}
 	
-	public boolean isSuspended() {
-		return StatusFlag.suspended == status; 
+	public boolean isActive() {
+		return StatusFlag.ACTIVE == status; 
 	}
 	
 	public void suspendGTE() {
-		status = StatusFlag.suspended;
+		status = StatusFlag.SUSPENDED;
 	}
 	
 	public void setOffline() {
-		status = StatusFlag.offline;
+		status = StatusFlag.OFFLINE;
 	}
 	
-	public void setOnline() {
-		status = StatusFlag.online;
+	public void setActive() {
+		status = StatusFlag.ACTIVE;
 	}
 	
 	public int getLoad() {

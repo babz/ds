@@ -43,7 +43,7 @@ public class GTEAliveMsgParser implements Runnable {
 		int udp = packet.getPort();
 		EngineIdentifier currEngine = new EngineIdentifier(ip, tcpPort);
 		if(engines.containsKey(currEngine)) {
-			engines.get(currEngine).setOnline();
+			engines.get(currEngine).setActive();
 			engines.get(currEngine).updateEngine(udp);
 		} else {
 			engines.put(currEngine, new GTEInfo(ip, udp, tcpPort, minCons, maxCons));
