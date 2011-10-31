@@ -28,11 +28,21 @@ public class GTESuspender implements Runnable {
 		log.info("run");
 		while (true) {
 			for(Entry<EngineIdentifier, GTEInfo> engine: engines.entrySet()) {
-				//compare timestamp: timeout & getTime
+				//if not suspendend and timeout, set offline
+				if(!engine.getValue().isSuspended() && (System.currentTimeMillis() - engine.getValue().getTime()) >= timeout) {
+					engine.getValue().setOffline();
+				}
+				//TODO check load
 				
-				//check suspend
+				
 			}
-			//sleep(checkPeriod)
+			try {
+				//confirm alive statements every checkPeriod, timeout otherwise
+				Thread.sleep(checkPeriod);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 

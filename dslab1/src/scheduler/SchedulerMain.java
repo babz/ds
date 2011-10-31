@@ -2,6 +2,7 @@ package scheduler;
 
 import java.io.IOException;
 import java.net.SocketException;
+import java.util.Scanner;
 
 public class SchedulerMain {
 
@@ -27,8 +28,9 @@ public class SchedulerMain {
 		int timeout = Integer.parseInt(args[4]);
 		int checkPeriod = Integer.parseInt(args[5]);
 
+		
+		GTEManager engineManager = null;
 		try {
-			GTEManager engineManager;
 			engineManager = new GTEManager(udpPort, min, max, timeout, checkPeriod);
 			engineManager.startWorking();
 		} catch (SocketException e) {
@@ -36,6 +38,10 @@ public class SchedulerMain {
 			e.printStackTrace();
 		}
 
+		SchedulerCommands readCommand = new SchedulerCommands(engineManager);
+		readCommand.start();
+				
+				
 		//			serverSocket = new SchedulerSocket(tcpPort, udpPort, min, max, timeout, checkPeriod);
 		//			serverSocket.readStream();
 		//		} catch (IOException e) {

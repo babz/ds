@@ -28,7 +28,7 @@ public class GTEListener implements Runnable {
 		log.info("run");
 		while (true) {
 			try {
-				//receive packeges and forward them
+				//receive packages and forward them
 				datagramSocket.receive(packet);
 				Thread t = new Thread(new GTEAliveMsgParser(packet, engines));
 				t.start();

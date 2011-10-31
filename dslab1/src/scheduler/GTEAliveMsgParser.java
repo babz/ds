@@ -3,6 +3,7 @@ package scheduler;
 import genericTaskEngine.EngineIdentifier;
 
 import java.net.DatagramPacket;
+import java.net.InetAddress;
 import java.util.Hashtable;
 import java.util.logging.Logger;
 
@@ -22,7 +23,6 @@ public class GTEAliveMsgParser implements Runnable {
 
 	@Override
 	public void run() {
-		log.info("run");
 		String msg = new String(packet.getData(), 0, packet.getLength());
 		
 		//msg decode
@@ -39,13 +39,15 @@ public class GTEAliveMsgParser implements Runnable {
 		}
 
 		//update time if engine already in hashtable, add new engine with time otherwise
-		EngineIdentifier currEngine = new EngineIdentifier(packet.getAddress(), packet.getPort());
+		InetAddress ip = packet.getAddress();
+		int udp = packet.getPort();
+		EngineIdentifier currEngine = new EngineIdentifier(ip, tcpPort);
 		if(engines.containsKey(currEngine)) {
-			engines.get(currEngine).updateTime();
+			engines.get(currEngine).setOnline();
+			engines.get(currEngine).updateEngine(udp);
 		} else {
-			engines.put(currEngine, new GTEInfo(tcpPort, minCons, maxCons));
+			engines.put(currEngine, new GTEInfo(ip, udp, tcpPort, minCons, maxCons));
 		}
-		log.info("parsed:" + tcpPort);
 	}
 
 }

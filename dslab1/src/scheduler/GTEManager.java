@@ -6,7 +6,9 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketException;
+import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.logging.Logger;
 
@@ -37,5 +39,13 @@ public class GTEManager {
 		Thread t2 = new Thread(suspender);
 		t1.start();
 		t2.start();
+	}
+	
+	public String toString() {
+		String engineList = "";
+		for(Entry<EngineIdentifier, GTEInfo> engine: engines.entrySet()) {
+			engineList += engine.getValue().toString() + "\n";
+		}
+		return engineList;
 	}
 }
