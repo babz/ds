@@ -77,7 +77,7 @@ public class GTESuspender implements Runnable {
 		}
 		//if activeEngines >= max, do not activate
 		if(activeEngines.size() < max) {
-			if((activeEngines.size() < min) || checkEngineOverload()) {
+			if((activeEngines.size() < min) || checkEngineOverload(activeEngines)) {
 				//TODO activate enerySaver via udp
 				EngineIdentifier energySaver = this.getEnergySaver();
 				engines.get(energySaver).setOffline(); //set offline-flag
@@ -103,11 +103,18 @@ public class GTESuspender implements Runnable {
 	}
 	
 	/** 
+	 * @param activeEngines 
 	 * @return true if all active GTEs have at least 66% load
 	 */
-	private boolean checkEngineOverload() {
-		// TODO Auto-generated method stub
-		return false;
+	private boolean checkEngineOverload(Hashtable<EngineIdentifier, GTEInfo> activeEngines) {
+		boolean engineOverload = true;
+		for(Entry<EngineIdentifier, GTEInfo> engine: engines.entrySet()) {
+			if(engine.getValue().getLoad() < 66) {
+				engineOverload = false;
+				break;
+			}
+		}
+		return engineOverload;
 	}
 	
 	/**
