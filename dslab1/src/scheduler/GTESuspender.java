@@ -2,14 +2,10 @@ package scheduler;
 
 import genericTaskEngine.EngineIdentifier;
 
-import java.net.DatagramPacket;
 import java.net.DatagramSocket;
-import java.net.InetAddress;
 import java.util.Hashtable;
 import java.util.Map.Entry;
 import java.util.logging.Logger;
-
-import com.sun.xml.internal.ws.api.pipe.Engine;
 
 public class GTESuspender implements Runnable {
 	private static Logger log = Logger.getLogger("class GTE suspender");

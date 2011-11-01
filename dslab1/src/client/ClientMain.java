@@ -8,7 +8,7 @@ public class ClientMain {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		ClientSocket socket = null;
+		CompanyAgent socket = null;
 
 		// TODO fehlerbehandlung für typen
 //		params = String schedulerHost, int schedulerTCPPort, String taskDir
@@ -23,7 +23,7 @@ public class ClientMain {
 		String taskDir = args[2];
 		
 		try {
-			socket = new ClientSocket(schedulerHost, schedulerTCPPort, taskDir);
+			socket = new CompanyAgent(schedulerHost, schedulerTCPPort, taskDir);
 			socket.readStream();
 		} catch (IOException exc) {
 			System.out.println("connection from client failed");

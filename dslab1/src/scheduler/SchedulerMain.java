@@ -11,8 +11,6 @@ public class SchedulerMain {
 	 */
 	public static void main(String[] args) {
 
-//		SchedulerSocket serverSocket;
-
 		// TODO fehlerbehandlung für typen
 		//params = int tcpPort, int udpPort, int min, int max, int timeout, int checkPeriod
 		int noOfParams = 6;
@@ -28,34 +26,21 @@ public class SchedulerMain {
 		int timeout = Integer.parseInt(args[4]);
 		int checkPeriod = Integer.parseInt(args[5]);
 
-		
+
 		GTEManager engineManager = null;
+		ClientHandler clientHandler = null;
 		try {
+			clientHandler = new ClientHandler(tcpPort, udpPort, min, max, timeout, checkPeriod);
+			clientHandler.readStream();
 			engineManager = new GTEManager(udpPort, min, max, timeout, checkPeriod);
 			engineManager.startWorking();
-		} catch (SocketException e) {
+		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.println("connection from scheduler failed");
 		}
 
 		SchedulerCommands readCommand = new SchedulerCommands(engineManager);
-		readCommand.start();
-				
-				
-		//			serverSocket = new SchedulerSocket(tcpPort, udpPort, min, max, timeout, checkPeriod);
-		//			serverSocket.readStream();
-		//		} catch (IOException e) {
-		//			// TODO Auto-generated catch block
-		//			System.out.println("connection from scheduler failed");
-		//			try {
-		////				serverSocket.destroy();
-		//			} catch (IOException e1) {
-		//				// TODO Auto-generated catch block
-		//				System.out.println("server socket could not be terminated");
-		//			}
-		//		}
-
-
+		readCommand.read();
 	}
 
 }

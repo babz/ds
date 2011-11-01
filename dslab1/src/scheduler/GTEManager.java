@@ -32,7 +32,7 @@ public class GTEManager {
 		log.info("manager started");
 		// TODO do in own thread
 
-		//schleife f. alive-receive
+		//listens to alivePackages and suspends/activates engines
 		GTEListener listener = new GTEListener(datagramSocket, engines);
 		Thread t1 = new Thread(listener);
 		GTESuspender suspender = new GTESuspender(datagramSocket, engines, min, max, timeout, checkPeriod);
@@ -44,7 +44,7 @@ public class GTEManager {
 	public String toString() {
 		String engineList = "";
 		for(Entry<EngineIdentifier, GTEInfo> engine: engines.entrySet()) {
-			engineList += engine.getValue().toString() + "\n";
+			engineList += engine.getValue() + "\n";
 		}
 		return engineList;
 	}

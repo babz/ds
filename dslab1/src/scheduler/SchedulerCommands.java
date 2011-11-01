@@ -10,7 +10,7 @@ public class SchedulerCommands {
 		manager = engineManager;
 	}
 
-	public void start() {
+	public void read() {
 		//scheduler commands: engines, companies, exit
 		while(sc.hasNext()) {
 			String command = sc.next();
