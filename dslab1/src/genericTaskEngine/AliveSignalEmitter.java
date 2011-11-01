@@ -8,6 +8,11 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.logging.Logger;
 
+/**
+ * socket that sends alive messages constantly
+ * @author babz
+ *
+ */
 public class AliveSignalEmitter implements Runnable {
 	private static Logger log = Logger.getLogger("class GTE");
 

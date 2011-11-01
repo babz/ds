@@ -3,6 +3,11 @@ package genericTaskEngine;
 import java.net.DatagramSocket;
 import java.net.SocketException;
 
+/**
+ * manages datagram sockets: aliveSignalEmitter and SchedulerListener
+ * @author babz
+ *
+ */
 public class EngineManager implements Runnable {
 
 	private int tcp;
