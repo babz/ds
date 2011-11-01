@@ -10,7 +10,7 @@ import java.util.logging.Logger;
 
 public class AliveSignalEmitter implements Runnable {
 	private static Logger log = Logger.getLogger("class GTE");
-	
+
 	private DatagramSocket datagramSocket;
 	private int udpPort, tcpPort;
 	private int minConsumption, maxConsumption;
@@ -18,29 +18,30 @@ public class AliveSignalEmitter implements Runnable {
 	private long alivePeriod;
 	private String message;
 	private String schedulerHost;
-	
-	public AliveSignalEmitter(int udpPort, int tcpPort, String schedulerHost, int alivePeriod, int minConsumption, int maxConsumption) throws SocketException {
-		datagramSocket = new DatagramSocket();
+
+	public AliveSignalEmitter(DatagramSocket socket, int tcpPort, String schedulerHost,
+			int alivePeriod, int minConsumption, int maxConsumption)
+			throws SocketException {
 		alive = true;
 		this.alivePeriod = alivePeriod;
-		this.udpPort = udpPort;
 		this.tcpPort = tcpPort;
 		this.schedulerHost = schedulerHost;
 		this.minConsumption = minConsumption;
 		this.maxConsumption = maxConsumption;
 	}
-	
-	//send alive-packages
+
+	// send alive-packages
 	@Override
 	public void run() {
 		log.info("sending alive packages");
 		message = tcpPort + " " + minConsumption + " " + maxConsumption;
-		while(alive) {
+		while (alive) {
 			int packetLength = 100;
 			byte[] msg = new byte[packetLength];
 			msg = message.getBytes();
 			try {
-				datagramSocket.send(new DatagramPacket(msg, msg.length , InetAddress.getByName(schedulerHost), udpPort));
+				datagramSocket.send(new DatagramPacket(msg, msg.length,
+						InetAddress.getByName(schedulerHost), udpPort));
 				Thread.sleep(alivePeriod);
 			} catch (UnknownHostException e) {
 				// TODO Auto-generated catch block
@@ -49,14 +50,18 @@ public class AliveSignalEmitter implements Runnable {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				alive = false;
 				return;
 			}
 		}
 	}
+
+	public void stopEmitter() {
+		alive = false;
+	}
 	
-	//TODO listen to suspend/activate commands
-	
-	
+	public void restart() {
+		//TODO check restart of thread
+		alive = true;
+	}
+
 }

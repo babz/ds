@@ -58,7 +58,7 @@ public class CompanyInfo {
 
 	@Override
 	public String toString() {
-		return name + "(" + status.toString().toLowerCase() + "): LOW " 
+		return name + " (" + status.toString().toLowerCase() + "): LOW " 
 				+ lowRequests + ", MIDDLE " + middleRequests + ", HIGH " + highRequests;
 	}
 

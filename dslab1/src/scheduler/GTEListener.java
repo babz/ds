@@ -30,8 +30,7 @@ public class GTEListener implements Runnable {
 			try {
 				//receive packages and forward them
 				datagramSocket.receive(packet);
-				Thread t = new Thread(new GTEAliveMsgParser(packet, engines));
-				t.start();
+				new Thread(new GTEAliveMsgParser(packet, engines)).start();
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
