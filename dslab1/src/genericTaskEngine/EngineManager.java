@@ -33,7 +33,7 @@ public class EngineManager implements Runnable {
 	public void run() {
 		AliveSignalEmitter emitter;
 		try {
-			emitter = new AliveSignalEmitter(datagramSocket, tcp,
+			emitter = new AliveSignalEmitter(datagramSocket, udp, tcp,
 					host, alivePeriod, minConsumption, maxConsumption);
 			new Thread(emitter).start();
 			SchedulerListener listener = new SchedulerListener(datagramSocket, emitter);

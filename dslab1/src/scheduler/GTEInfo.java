@@ -73,6 +73,14 @@ public class GTEInfo {
 	public int getMaxConsumption() {
 		return maxConsumption;
 	}
+	
+	public InetAddress getIpAddress() {
+		return ip;
+	}
+	
+	public int getUdpPort() {
+		return udp;
+	}
 
 	@Override
 	public String toString() {

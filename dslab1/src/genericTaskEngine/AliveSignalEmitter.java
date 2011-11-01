@@ -24,11 +24,12 @@ public class AliveSignalEmitter implements Runnable {
 	private String message;
 	private String schedulerHost;
 
-	public AliveSignalEmitter(DatagramSocket socket, int tcpPort, String schedulerHost,
+	public AliveSignalEmitter(DatagramSocket socket, int udpPort, int tcpPort, String schedulerHost,
 			int alivePeriod, int minConsumption, int maxConsumption)
 			throws SocketException {
 		alive = true;
 		this.alivePeriod = alivePeriod;
+		this.udpPort = udpPort;
 		this.tcpPort = tcpPort;
 		this.schedulerHost = schedulerHost;
 		this.minConsumption = minConsumption;
