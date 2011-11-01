@@ -58,8 +58,8 @@ public class CompanyInfo {
 
 	@Override
 	public String toString() {
-		return name + "(" + status + "): LOW " + lowRequests + ", MIDDLE " + middleRequests
-				+ ", HIGH " + highRequests;
+		return name + "(" + status.toString().toLowerCase() + "): LOW " 
+				+ lowRequests + ", MIDDLE " + middleRequests + ", HIGH " + highRequests;
 	}
 
 	public String getPassword() {

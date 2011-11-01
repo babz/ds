@@ -7,28 +7,37 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Map.Entry;
 
+import sun.security.jca.GetInstance.Instance;
+
 /**
  * reads company properties-file and provides methods for companies
  * @author babz
  *
  */
 public class CompanyManager {
+	private static CompanyManager instance;
+	private Map<String, CompanyInfo> companies; //map with names and passwords
 
-	private Map<String, CompanyInfo> companiesNamesPW; //map with names and passwords
-
-	public CompanyManager() throws IOException {
+	private CompanyManager() throws IOException {
 		readCompanies();
+	}
+	
+	public static synchronized CompanyManager getInstance() throws IOException {
+		if(instance == null) {
+			instance = new CompanyManager();
+		}
+		return instance;
 	}
 
 	private void readCompanies() throws IOException {
 		InputStream inputStream = ClassLoader.getSystemResourceAsStream("company.properties");
 		if (inputStream != null) {
-			Properties companies = new Properties();
-			companies.load(inputStream);
-			companiesNamesPW = new HashMap<String, CompanyInfo>() ; 
-			for (String companyName : companies.stringPropertyNames()) { // get all company names
-				String password = companies.getProperty(companyName); // get password for user with company name
-				companiesNamesPW.put(companyName, new CompanyInfo(companyName, password));
+			Properties companyProps = new Properties();
+			companyProps.load(inputStream);
+			companies = new HashMap<String, CompanyInfo>() ; 
+			for (String companyName : companyProps.stringPropertyNames()) { // get all company names
+				String password = companyProps.getProperty(companyName); // get password for user with company name
+				companies.put(companyName, new CompanyInfo(companyName, password));
 			}
 		} else {
 			//TODO company.properties could not be found
@@ -37,10 +46,10 @@ public class CompanyManager {
 	}
 	
 	public boolean checkLogin(String name, String pw) {
-		if(!companiesNamesPW.containsKey(name)) {
+		if(!companies.containsKey(name)) {
 			return false;
 		} 
-		return companiesNamesPW.get(name).loginIfPasswordCorrect(pw);
+		return companies.get(name).loginIfPasswordCorrect(pw);
 	}
 	
 	/**
@@ -48,7 +57,7 @@ public class CompanyManager {
 	 * @return true if logout successful
 	 */
 	public boolean logout(String username) {
-		CompanyInfo company = companiesNamesPW.get(username);
+		CompanyInfo company = companies.get(username);
 		if(company.isOnline()) {
 			company.setOffline();
 			return true;
@@ -60,9 +69,9 @@ public class CompanyManager {
 	
 	public String toString() {
 		String companyList = "";
-//		for(Entry<String, CompanyInfo> company: companies.entrySet()) {
-//			companyList += company.getValue() + "\n";
-//		}
+		for(Entry<String, CompanyInfo> company: companies.entrySet()) {
+			companyList += company.getValue() + "\n";
+		}
 		return companyList;
 	}
 	

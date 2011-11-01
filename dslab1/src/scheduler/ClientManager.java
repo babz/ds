@@ -18,7 +18,7 @@ public class ClientManager implements Runnable {
 
 	public ClientManager(int tcpPort) throws IOException {
 		serverSocket = new ServerSocket(tcpPort);
-		manager = new CompanyManager();
+		manager = CompanyManager.getInstance();
 	}
 
 	@Override

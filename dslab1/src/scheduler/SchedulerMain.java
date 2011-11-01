@@ -39,8 +39,14 @@ public class SchedulerMain {
 			System.out.println("connection from scheduler failed");
 		}
 
-		SchedulerCommands readCommand = new SchedulerCommands(engineManager);
-		readCommand.read();
+		SchedulerCommands readCommand;
+		try {
+			readCommand = new SchedulerCommands(engineManager);
+			readCommand.read();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }

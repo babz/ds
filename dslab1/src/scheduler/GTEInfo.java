@@ -76,8 +76,9 @@ public class GTEInfo {
 
 	@Override
 	public String toString() {
-		return "IP:" + ip + ", TCP:" + tcpPort + ", UDP: " + udp + ", " + status 
-				+ ", Energy Signature: min " + minConsumption + "W, max "
-				+ maxConsumption + "W, " + ", Load: " + load + "%";
+		return "IP:" + ip + ", TCP:" + tcpPort + ", UDP: " + udp + ", " 
+				+ status.toString().toLowerCase() + ", Energy Signature: min " 
+				+ minConsumption + "W, max " + maxConsumption + "W, " 
+				+ ", Load: " + load + "%";
 	}
 }
