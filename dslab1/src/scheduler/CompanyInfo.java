@@ -15,6 +15,7 @@ public class CompanyInfo {
 		super();
 		this.name = name;
 		this.pw = pw;
+		status = StatusFlag.OFFLINE;
 	}
 	
 	private enum StatusFlag {ONLINE, OFFLINE}
@@ -25,6 +26,10 @@ public class CompanyInfo {
 
 	public void setOnline() {
 		status = StatusFlag.ONLINE;
+	}
+	
+	public void setOffline() {
+		status = StatusFlag.OFFLINE;
 	}
 
 	public int getLowRequests() {
@@ -55,5 +60,17 @@ public class CompanyInfo {
 	public String toString() {
 		return name + "(" + status + "): LOW " + lowRequests + ", MIDDLE " + middleRequests
 				+ ", HIGH " + highRequests;
+	}
+
+	public String getPassword() {
+		return pw;
+	}
+
+	public boolean loginIfPasswordCorrect(String password) {
+		if(password.equals(pw)) {
+			setOnline();
+			return true;
+		}
+		return false;
 	}
 }

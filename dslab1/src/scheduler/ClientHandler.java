@@ -1,38 +1,34 @@
 package scheduler;
 
-import java.io.*;
-import java.net.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.Socket;
 import java.util.logging.Logger;
 
 /**
- * Server Socket
+ * own thread for each client
  * @author babz
  *
  */
-public class ClientHandler {
-	private static Logger log = Logger.getLogger("class client handler");
-
-	private ServerSocket serverSocket;
-	private DatagramSocket datagramSocket;
-	private Socket clientSocket = null;
+public class ClientHandler implements Runnable {
+	private static Logger log = Logger.getLogger("class clientHandler");
 	private PrintWriter out;
 	private BufferedReader in;
+	private Socket clientSocket;
 	private CompanyManager manager;
+	private String currentlyLoggedIn;
 
-	public ClientHandler(int tcpPort, int udpPort, int min, int max, int timeout, int checkPeriod) throws IOException {
-		serverSocket = new ServerSocket(tcpPort);
-
-		manager = new CompanyManager();
-
-		//TODO spawn new thread for each in loop
-		clientSocket = serverSocket.accept();
-
+	public ClientHandler(Socket accept, CompanyManager manager) throws IOException {
+		clientSocket = accept;
+		this.manager = manager;
 		out = new PrintWriter(clientSocket.getOutputStream(), true);
 		in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 	}
 
-	public void readStream() {
+	@Override
+	public void run() {
 		log.info("read stream from client");
 
 		String input = null;
@@ -44,13 +40,17 @@ public class ClientHandler {
 					out.println("Invalid command!");
 				} else if(cmd.command() == UserCommand.Cmds.LOGIN) {
 					if(manager.checkLogin(cmd.getArg(0), cmd.getArg(1))) {
-
+						currentlyLoggedIn = cmd.getArg(0);
 						out.println("Successfully logged in.");
 					} else {
 						out.println("Wrong company or password.");
 					}
-
-				} else if (input.startsWith("!logout")) {
+				} else if (cmd.command() == UserCommand.Cmds.LOGOUT) {
+					if(manager.logout(currentlyLoggedIn)) {
+						out.println("Successfully logged out.");
+					} else {
+						out.println("You have to log in first.");
+					}
 				} else if (input.startsWith("!list")) {
 				} else if (input.equals("!exit")) {
 					destroy();
@@ -60,13 +60,13 @@ public class ClientHandler {
 		} catch (IOException e) {
 			System.out.println("Error!");
 		}
+
 	}
 
-	public void destroy() throws IOException {
-		log.info("scheduler: close all");
+	private void destroy() throws IOException {
 		out.close();
 		in.close();
 		clientSocket.close();
-		serverSocket.close();
 	}
+
 }

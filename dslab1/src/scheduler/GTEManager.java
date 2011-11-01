@@ -12,7 +12,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.logging.Logger;
 
-public class GTEManager {
+public class GTEManager implements Runnable {
 	private static Logger log = Logger.getLogger("class engine manager");
 	
 	private int udpPort, min, max, timeout, checkPeriod;
@@ -28,17 +28,15 @@ public class GTEManager {
 		this.checkPeriod = checkPeriod;
 	}
 
-	public void startWorking() {
+	@Override
+	public void run() {
 		log.info("manager started");
-		// TODO do in own thread
-
+		
 		//listens to alivePackages and suspends/activates engines
 		GTEListener listener = new GTEListener(datagramSocket, engines);
-		Thread t1 = new Thread(listener);
+		new Thread(listener).start();
 		GTESuspender suspender = new GTESuspender(datagramSocket, engines, min, max, timeout, checkPeriod);
-		Thread t2 = new Thread(suspender);
-		t1.start();
-		t2.start();
+		new Thread(suspender).start();
 	}
 	
 	public String toString() {

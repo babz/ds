@@ -28,12 +28,12 @@ public class SchedulerMain {
 
 
 		GTEManager engineManager = null;
-		ClientHandler clientHandler = null;
+		ClientManager clientManager = null;
 		try {
-			clientHandler = new ClientHandler(tcpPort, udpPort, min, max, timeout, checkPeriod);
-			clientHandler.readStream();
+			clientManager = new ClientManager(tcpPort);
+			new Thread(clientManager).start();
 			engineManager = new GTEManager(udpPort, min, max, timeout, checkPeriod);
-			engineManager.startWorking();
+			new Thread(engineManager).start();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			System.out.println("connection from scheduler failed");

@@ -76,12 +76,14 @@ public class GTESuspender implements Runnable {
 			if((activeEngines.size() < min) || checkEngineOverload(activeEngines)) {
 				//TODO activate enerySaver via udp
 				EngineIdentifier energySaver = this.getEnergySaver();
-				engines.get(energySaver).setOffline(); //set offline-flag
+				if(energySaver != null) {
+					engines.get(energySaver).setOffline(); //set offline-flag
+				}
 				//TODO check if engine is really ready (might be no connection after activating)
 			}
 		}
 	}
-	
+
 	/**
 	 * @param activeEngines
 	 * @return engine that consumes the most energy
@@ -97,7 +99,7 @@ public class GTESuspender implements Runnable {
 		}
 		return energyEater;
 	}
-	
+
 	/** 
 	 * @param activeEngines 
 	 * @return true if all active GTEs have at least 66% load
@@ -112,7 +114,7 @@ public class GTESuspender implements Runnable {
 		}
 		return engineOverload;
 	}
-	
+
 	/**
 	 * @return engine that consumes the fewest energy at start-up
 	 */
@@ -128,5 +130,5 @@ public class GTESuspender implements Runnable {
 		}
 		return energySaver;
 	}
-	
+
 }
