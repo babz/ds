@@ -33,7 +33,7 @@
         <java classname="client.ClientMain" fork="true" classpathref="project.classpath">
             <arg value="localhost"/><!-- schedulerHost -->
             <arg value="12160"/><!-- schedulerTCPPort -->
-        	<arg value="your/taskDir"/><!-- taskDir -->
+        	<arg value="myAwesomeTaskdir"/><!-- taskDir -->
         </java>
     </target>
     

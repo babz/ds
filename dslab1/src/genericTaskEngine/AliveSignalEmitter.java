@@ -19,14 +19,16 @@ public class AliveSignalEmitter implements Runnable {
 	private DatagramSocket datagramSocket;
 	private int udpPort, tcpPort;
 	private int minConsumption, maxConsumption;
-	private boolean alive;
+	private boolean suspended;
 	private long alivePeriod;
 	private String message;
 	private String schedulerHost;
+	private boolean alive;
 
 	public AliveSignalEmitter(DatagramSocket socket, int udpPort, int tcpPort, String schedulerHost,
 			int alivePeriod, int minConsumption, int maxConsumption)
-			throws SocketException {
+					throws SocketException {
+		suspended = false;
 		alive = true;
 		this.alivePeriod = alivePeriod;
 		this.udpPort = udpPort;
@@ -46,8 +48,10 @@ public class AliveSignalEmitter implements Runnable {
 			byte[] msg = new byte[packetLength];
 			msg = message.getBytes();
 			try {
-				datagramSocket.send(new DatagramPacket(msg, msg.length,
-						InetAddress.getByName(schedulerHost), udpPort));
+				if(!suspended) {
+					datagramSocket.send(new DatagramPacket(msg, msg.length,
+							InetAddress.getByName(schedulerHost), udpPort));
+				}
 				Thread.sleep(alivePeriod);
 			} catch (UnknownHostException e) {
 				// TODO Auto-generated catch block
@@ -62,12 +66,16 @@ public class AliveSignalEmitter implements Runnable {
 	}
 
 	public void stopEmitter() {
-		alive = false;
+		suspended = true;
 	}
-	
+
 	public void restart() {
 		//TODO check restart of thread
-		alive = true;
+		suspended = false;
+	}
+
+	public void terminate() {
+		alive = false;
 	}
 
 }

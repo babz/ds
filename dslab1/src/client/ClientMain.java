@@ -1,5 +1,6 @@
 package client;
 
+import java.io.File;
 import java.io.IOException;
 
 public class ClientMain {
@@ -8,7 +9,6 @@ public class ClientMain {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		CompanyAgent socket = null;
 
 		// TODO fehlerbehandlung für typen
 //		params = String schedulerHost, int schedulerTCPPort, String taskDir
@@ -20,17 +20,19 @@ public class ClientMain {
 		
 		String schedulerHost = args[0];
 		int schedulerTCPPort = Integer.parseInt(args[1]);
-		String taskDir = args[2];
+		File taskDir = new File(args[2]);
 		
+		TaskManager taskManager = null;
+		ClientConnectionManager connection = null;
 		try {
-			socket = new CompanyAgent(schedulerHost, schedulerTCPPort, taskDir);
-			socket.readStream();
+			taskManager = new TaskManager(taskDir);
+			connection = new ClientConnectionManager(schedulerHost, schedulerTCPPort);
 		} catch (IOException exc) {
 			System.out.println("connection from client failed");
 		}
 
-		ClientInfoPoint commandReader = new ClientInfoPoint();
-		commandReader.read();
+		//reads commands from console
+		new ClientInfoPoint(taskManager).read();
 	}
 
 }
