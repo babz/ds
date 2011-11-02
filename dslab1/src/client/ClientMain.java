@@ -29,6 +29,8 @@ public class ClientMain {
 			System.out.println("connection from client failed");
 		}
 
+		ClientInfoPoint commandReader = new ClientInfoPoint();
+		commandReader.read();
 	}
 
 }

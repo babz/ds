@@ -38,21 +38,38 @@ public class ClientHandler implements Runnable {
 				UserCommand cmd = InputProcessor.processInput(input);
 				if(cmd == null) {
 					out.println("Invalid command!");
-				} else if(cmd.command() == UserCommand.Cmds.LOGIN) {
+				} 
+				//!login
+				else if(cmd.command() == UserCommand.Cmds.LOGIN) {
 					if(manager.checkLogin(cmd.getArg(0), cmd.getArg(1))) {
 						currentlyLoggedIn = cmd.getArg(0);
 						out.println("Successfully logged in.");
 					} else {
 						out.println("Wrong company or password.");
 					}
-				} else if (cmd.command() == UserCommand.Cmds.LOGOUT) {
+				} 
+				//!logout
+				else if (cmd.command() == UserCommand.Cmds.LOGOUT) {
 					if(manager.logout(currentlyLoggedIn)) {
 						out.println("Successfully logged out.");
 					} else {
 						out.println("You have to log in first.");
 					}
-				} else if (input.startsWith("!list")) {
-				} else if (input.equals("!exit")) {
+				} 
+				//!requestEngine
+				else if (cmd.command() == UserCommand.Cmds.REQUESTENGINE) {
+					//TODO
+				}
+				//!executeTask
+				else if (cmd.command() == UserCommand.Cmds.EXECUTETASK) {
+					//TODO
+				}
+				//!info
+				else if (cmd.command() == UserCommand.Cmds.INFO) {
+					//TODO
+				}
+				//!exit
+				else if (cmd.command() == UserCommand.Cmds.EXIT) {
 					destroy();
 					break;
 				}

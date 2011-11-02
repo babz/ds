@@ -2,8 +2,13 @@ package scheduler;
 
 import scheduler.UserCommand.Cmds;
 
+/**
+ * the different inputs coming from the client
+ * @author babz
+ *
+ */
 public class UserCommand {
-	public enum Cmds { LOGIN, LOGOUT, LIST, PREPARE, REQUESTENGINE, EXECUTETASK, EXIT}
+	public enum Cmds { LOGIN, LOGOUT, REQUESTENGINE, EXECUTETASK, INFO, EXIT}
 
 	private Cmds cmd;
 	private String[] args;

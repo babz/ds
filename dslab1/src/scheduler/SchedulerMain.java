@@ -39,10 +39,10 @@ public class SchedulerMain {
 			System.out.println("connection from scheduler failed");
 		}
 
-		SchedulerCommands readCommand;
+		SchedulerInfoPoint commandReader;
 		try {
-			readCommand = new SchedulerCommands(engineManager);
-			readCommand.read();
+			commandReader = new SchedulerInfoPoint(engineManager);
+			commandReader.read();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

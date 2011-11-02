@@ -33,6 +33,9 @@ public class GTEMain {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		EngineInfoPoint commandReader = new EngineInfoPoint();
+		commandReader.read();
 	}
 
 }

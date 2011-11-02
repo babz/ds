@@ -3,14 +3,17 @@ package scheduler;
 import java.io.IOException;
 import java.util.Scanner;
 
-import sun.security.jca.GetInstance;
-
-public class SchedulerCommands {
+/**
+ * reads from terminal and gives informations
+ * @author babz
+ *
+ */
+public class SchedulerInfoPoint {
 	private Scanner sc = new Scanner(System.in);
 	private GTEManager manager;
 	private CompanyManager companies;
 
-	public SchedulerCommands(GTEManager engineManager) throws IOException {
+	public SchedulerInfoPoint(GTEManager engineManager) throws IOException {
 		manager = engineManager;
 		companies = CompanyManager.getInstance();
 	}
