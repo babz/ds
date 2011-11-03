@@ -54,6 +54,10 @@ public class TaskManager {
 		return preparedTasks.containsKey(taskId);
 	}
 	
+	public String getEffort(int id) {
+		return preparedTasks.get(id).getEffortType().toString();
+	}
+	
 	public String toString() {
 		String[] tmp = taskDir.list();
 		String allTasks = "";

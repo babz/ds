@@ -12,16 +12,25 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.logging.Logger;
 
+/**
+ * manages the listener for the alive-packages from the engines and the
+ * engine (energy) controller
+ * 
+ * @author babz
+ * 
+ */
 public class GTEManager implements Runnable {
 	private static Logger log = Logger.getLogger("class engine manager");
 
-	private int udpPort, min, max, timeout, checkPeriod;
+	private int min, max, timeout, checkPeriod;
 	private DatagramSocket datagramSocket;
-	private Hashtable<EngineIdentifier, GTEInfo> engines = new Hashtable<EngineIdentifier, GTEInfo>();
+	private Hashtable<EngineIdentifier, GTEInfo> allEngines = new Hashtable<EngineIdentifier, GTEInfo>();
+
+	private GTEAssigner assigner;
+	
 
 	public GTEManager(int udpPort, int min, int max, int timeout,
 			int checkPeriod) throws SocketException {
-		this.udpPort = udpPort;
 		datagramSocket = new DatagramSocket(udpPort);
 		this.min = min;
 		this.max = max;
@@ -33,17 +42,21 @@ public class GTEManager implements Runnable {
 	public void run() {
 		log.info("manager started");
 
-		// listens to alivePackages and suspends/activates engines
-		GTEListener listener = new GTEListener(datagramSocket, engines);
+		// listener (precisely aliveMsgParser) fills 'allEngines'
+		GTEListener listener = new GTEListener(datagramSocket, allEngines);
 		new Thread(listener).start();
-		GTESuspender suspender = new GTESuspender(datagramSocket, engines, min,
-				max, timeout, checkPeriod);
-		new Thread(suspender).start();
+		GTEController controller = new GTEController(datagramSocket, allEngines, min, max, timeout, checkPeriod);
+		new Thread(controller).start();
+		assigner = new GTEAssigner(allEngines);
+	}
+	
+	public GTEAssigner getGTEAssigner() {
+		return assigner;
 	}
 
 	public String toString() {
 		String engineList = "";
-		for (Entry<EngineIdentifier, GTEInfo> engine : engines.entrySet()) {
+		for (Entry<EngineIdentifier, GTEInfo> engine : allEngines.entrySet()) {
 			engineList += engine.getValue() + "\n";
 		}
 		return engineList;

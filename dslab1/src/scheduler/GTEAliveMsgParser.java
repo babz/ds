@@ -7,6 +7,11 @@ import java.net.InetAddress;
 import java.util.Hashtable;
 import java.util.logging.Logger;
 
+/**
+ * parses the alive-messages from the engine
+ * @author babz
+ *
+ */
 public class GTEAliveMsgParser implements Runnable {
 	private static Logger log = Logger.getLogger("class gte alivemsg parser");
 

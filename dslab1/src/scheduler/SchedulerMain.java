@@ -30,10 +30,10 @@ public class SchedulerMain {
 		GTEManager engineManager = null;
 		ClientManager clientManager = null;
 		try {
-			clientManager = new ClientManager(tcpPort);
-			new Thread(clientManager).start();
 			engineManager = new GTEManager(udpPort, min, max, timeout, checkPeriod);
 			new Thread(engineManager).start();
+			clientManager = new ClientManager(tcpPort, engineManager);
+			new Thread(clientManager).start();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			System.out.println("connection from scheduler failed");

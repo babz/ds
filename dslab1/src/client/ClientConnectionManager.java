@@ -14,15 +14,17 @@ public class ClientConnectionManager implements Runnable {
 	private Socket clientSocket;
 	private ConnectionListener listener;
 	private CompanyAgent agent;
+	private TaskManager taskManager;
 
-	public ClientConnectionManager(String schedulerHost, int schedulerTCPPort) throws UnknownHostException, IOException {
+	public ClientConnectionManager(String schedulerHost, int schedulerTCPPort, TaskManager taskManager) throws UnknownHostException, IOException {
 		clientSocket = new Socket(schedulerHost, schedulerTCPPort);
+		this.taskManager = taskManager;
 	}
 
 	@Override
 	public void run() {
 		try {
-			agent = new CompanyAgent(clientSocket);
+			agent = new CompanyAgent(clientSocket, taskManager);
 			new Thread(agent).start();
 			listener = new ConnectionListener(clientSocket);
 			new Thread(listener).start();

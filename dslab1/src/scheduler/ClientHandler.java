@@ -8,6 +8,7 @@ import java.net.Socket;
 import java.util.logging.Logger;
 
 /**
+ * Server Socket; listens to client
  * own thread for each client
  * @author babz
  *
@@ -17,12 +18,14 @@ public class ClientHandler implements Runnable {
 	private PrintWriter out;
 	private BufferedReader in;
 	private Socket clientSocket;
-	private CompanyManager manager;
-	private String currentlyLoggedIn;
+	private CompanyManager companyManager;
+	private GTEAssigner gteAssigner;
+	private String currentlyLoggedIn = null;
 
-	public ClientHandler(Socket accept, CompanyManager manager) throws IOException {
-		clientSocket = accept;
-		this.manager = manager;
+	public ClientHandler(Socket socket, CompanyManager companyManager, GTEAssigner gteAssigner) throws IOException {
+		clientSocket = socket;
+		this.companyManager = companyManager;
+		this.gteAssigner = gteAssigner;
 		out = new PrintWriter(clientSocket.getOutputStream(), true);
 		in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 	}
@@ -39,9 +42,9 @@ public class ClientHandler implements Runnable {
 				if(cmd == null) {
 					out.println("Invalid command!");
 				} 
-				//!login
+				//!login <company> <password>
 				else if(cmd.command() == UserCommand.Cmds.LOGIN) {
-					if(manager.checkLogin(cmd.getArg(0), cmd.getArg(1))) {
+					if(companyManager.checkLogin(cmd.getArg(0), cmd.getArg(1))) {
 						currentlyLoggedIn = cmd.getArg(0);
 						out.println("Successfully logged in.");
 					} else {
@@ -50,21 +53,26 @@ public class ClientHandler implements Runnable {
 				} 
 				//!logout
 				else if (cmd.command() == UserCommand.Cmds.LOGOUT) {
-					if(manager.logout(currentlyLoggedIn)) {
+					if(companyManager.logout(currentlyLoggedIn)) {
 						out.println("Successfully logged out.");
 					} else {
 						out.println("You have to log in first.");
 					}
 				} 
-				//!requestEngine
+				//!requestEngine <taskId>
 				else if (cmd.command() == UserCommand.Cmds.REQUESTENGINE) {
-					//TODO
+					if(currentlyLoggedIn == null) {
+						out.println("Login required!");
+					} else {
+						int taskId = Integer.parseInt(cmd.getArg(0));
+						gteAssigner.getEngine(cmd.getArg(0));
+					}
 				}
-				//!executeTask
+				//!executeTask <taskId> <startScript>
 				else if (cmd.command() == UserCommand.Cmds.EXECUTETASK) {
 					//TODO
 				}
-				//!info
+				//!info <taskId>
 				else if (cmd.command() == UserCommand.Cmds.INFO) {
 					//TODO
 				}

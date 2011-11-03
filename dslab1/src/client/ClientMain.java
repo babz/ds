@@ -26,13 +26,11 @@ public class ClientMain {
 		ClientConnectionManager connection = null;
 		try {
 			taskManager = new TaskManager(taskDir);
-			connection = new ClientConnectionManager(schedulerHost, schedulerTCPPort);
+			connection = new ClientConnectionManager(schedulerHost, schedulerTCPPort, taskManager);
 		} catch (IOException exc) {
 			System.out.println("connection from client failed");
 		}
 
-		//reads commands from console
-		new ClientInfoPoint(taskManager).read();
 	}
 
 }

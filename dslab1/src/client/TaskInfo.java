@@ -2,7 +2,7 @@ package client;
 
 public class TaskInfo {
 
-	private enum EffortType { LOW, MIDDLE, HIGH }
+	public enum EffortType { LOW, MIDDLE, HIGH }
 	
 	private String name;
 	private EffortType effort;
@@ -20,16 +20,16 @@ public class TaskInfo {
 		this.name = name;
 	}
 
-	public EffortType getEffort() {
+	public EffortType getEffortType() {
 		return effort;
 	}
 
-	public void setEffort(String effordType) {
-		if(effordType.equals("LOW")) {
+	public void setEffort(String effortType) {
+		if(effortType.equals("LOW")) {
 			effort = EffortType.LOW;
-		} else if (effordType.equals("MIDDLE")) {
+		} else if (effortType.equals("MIDDLE")) {
 			effort = EffortType.MIDDLE;
-		} else if (effordType.equals("HIGH")) {
+		} else if (effortType.equals("HIGH")) {
 			effort = EffortType.HIGH;
 		}
 	}

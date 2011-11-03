@@ -2,6 +2,11 @@ package scheduler;
 
 import java.net.InetAddress;
 
+/**
+ * contains information about one engine including the online-status-flag
+ * @author babz
+ *
+ */
 public class GTEInfo {
 
 	private long currTime;

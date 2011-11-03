@@ -8,6 +8,11 @@ import java.net.DatagramSocket;
 import java.util.Hashtable;
 import java.util.logging.Logger;
 
+/**
+ * listens to alivePackages and forwards them to the parser
+ * @author babz
+ *
+ */
 public class GTEListener implements Runnable {
 	private static Logger log = Logger.getLogger("class GTE listener");
 
