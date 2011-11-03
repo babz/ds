@@ -76,7 +76,7 @@ public class ClientHandler implements Runnable {
 						if (engine == null) {
 							out.println("!engineRequestFailed:" + id);
 						} else {
-							out.println("!engineAssigned:" + id + ":" + engine.getAddress() + ":" + engine.getPort());
+							out.println("!engineAssigned:" + id + ":" + engine.getAddress().getHostAddress() + ":" + engine.getPort());
 						}
 					}
 				}

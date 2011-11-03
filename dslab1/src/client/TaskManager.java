@@ -76,4 +76,8 @@ public class TaskManager {
 	public TaskInfo getTask(int taskId) {
 		return preparedTasks.get(taskId);
 	}
+
+	public String getTaskDir() {
+		return taskDir;
+	}
 }

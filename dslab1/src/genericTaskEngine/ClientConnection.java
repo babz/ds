@@ -18,6 +18,11 @@ public class ClientConnection implements Runnable {
 	private EngineManager manager;
 
 	public ClientConnection(Socket socket, String taskDir, EngineManager engineManager) {
+		
+		
+		System.out.println("new Client connection");
+		
+		
 		sock = socket;
 		dir = taskDir;
 		manager = engineManager;
@@ -25,13 +30,27 @@ public class ClientConnection implements Runnable {
 
 	@Override
 	public void run() {
+		DataInputStream in = null;
+		DataOutputStream out = null;
 		try {
-			DataInputStream in = new DataInputStream(sock.getInputStream());
-			DataOutputStream out = new DataOutputStream(sock.getOutputStream());
+			
+			System.out.println("opening streams");
+			
+			
+			in = new DataInputStream(sock.getInputStream());
+			out = new DataOutputStream(sock.getOutputStream());
 
+			
+			System.out.println("splitting command");
+			
+			
 			// receive task command + taskData
 			String[] cmd = in.readUTF().split(" ");
 			if(cmd[0].equals("!executeTask")) {
+				
+				System.out.println("execute task");
+				
+				
 				String effort = cmd[1];
 				int load = 0;
 				if(effort.equals("LOW")) {
@@ -47,14 +66,22 @@ public class ClientConnection implements Runnable {
 				//TODO check if this works
 				FileOutputStream fos = new FileOutputStream(dir + File.separator + filename);
 				
+				
+				System.out.println("read file from client");
+				
+				
 				byte[] buf = new byte[BUF_LENGTH];
 				int bytesReceived = 0;
 				while((bytesReceived = in.read(buf)) != -1) {
+					System.out.println("writing buf to disk");
 					fos.write(buf, 0, bytesReceived);
 				}
 				
 				// TODO set status of file to executable
 				
+				System.out.println("finished reading file from client");
+				
+				out.writeUTF("Starting execution");
 				
 				
 				manager.addLoad(load);
@@ -63,18 +90,11 @@ public class ClientConnection implements Runnable {
 				Thread.sleep(30000); // simulate execution
 				
 				out.writeUTF("task completed successfully");
-				
-				//close all after finishing
-				in.close();
-				out.close();
-				sock.close();
+
 				
 				manager.removeLoad(load);
 			} else if (cmd[0].equals("!currentLoad")) {
 				out.writeInt(manager.getLoad());
-				out.close();
-				in.close();
-				sock.close();
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -82,6 +102,18 @@ public class ClientConnection implements Runnable {
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} finally {
+			
+			//close all after finishing
+			
+			
+			System.out.println("closing streams");
+
+			try {
+				out.close();
+				in.close();
+				sock.close();
+			} catch (IOException e) { }
 		}
 	}
 

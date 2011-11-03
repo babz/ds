@@ -98,15 +98,23 @@ public class CompanyAgent implements Runnable {
 					DataOutputStream out = new DataOutputStream(socket.getOutputStream());
 					DataInputStream in = new DataInputStream(socket.getInputStream());
 
+					System.out.println("writing cmd to GTE");
 					out.writeUTF("!executeTask " + task.getEffortType() + " " + input[2] + " " + task.getName());
+
 					// TODO write file to engine
+					FileInputStream fis = new FileInputStream(taskManager.getTaskDir() + File.separator + task.getName());
+					
+					
 					byte[] buf = new byte[BUF_LENGTH];
-					out.write(buf);
+					System.out.println("writing data to GTE");
+					while(fis.read(buf) != -1) {
+						out.write(buf);
+					}
 
 					try {
 						while(true) {
-							String answer;
-							answer = in.readUTF();
+							System.out.println("waiting for answer");
+							String answer = in.readUTF();
 							System.out.println(answer);
 						}
 					} catch (IOException e) {

@@ -18,9 +18,11 @@ public class ConnectionListener implements Runnable {
 	@Override
 	public void run() {
 		try {
-			// TODO save connection for shutdown
-			ClientConnection connection = new ClientConnection(socket.accept(), taskDir, engineManager);
-			new Thread(connection).start();
+			while(true) {
+				// TODO save connection for shutdown
+				ClientConnection connection = new ClientConnection(socket.accept(), taskDir, engineManager);
+				new Thread(connection).start();
+			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
