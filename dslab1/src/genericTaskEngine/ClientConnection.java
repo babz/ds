@@ -15,10 +15,12 @@ public class ClientConnection implements Runnable {
 	private static final int BUF_LENGTH = 100;
 	private Socket sock;
 	private String dir;
+	private EngineManager manager;
 
-	public ClientConnection(Socket socket, String taskDir) {
+	public ClientConnection(Socket socket, String taskDir, EngineManager engineManager) {
 		sock = socket;
 		dir = taskDir;
+		manager = engineManager;
 	}
 
 	@Override
@@ -31,6 +33,14 @@ public class ClientConnection implements Runnable {
 			String[] cmd = in.readUTF().split(" ");
 			if(cmd[0].equals("!executeTask")) {
 				String effort = cmd[1];
+				int load = 0;
+				if(effort.equals("LOW")) {
+					load = 33;
+				} else if (effort.equals("MIDDLE")) {
+					load = 66;
+				} else if (effort.equals("HIGH")) {
+					load = 100;
+				}
 				String startScript = cmd[2];
 				String filename = cmd[3];
 				
@@ -45,17 +55,26 @@ public class ClientConnection implements Runnable {
 				
 				// TODO set status of file to executable
 				
-				// TODO set effort
+				
+				
+				manager.addLoad(load);
 				
 				// TODO execute and write back to client
+				Thread.sleep(30000); // simulate execution
 				
-				// TODO set effort
+				out.writeUTF("task completed successfull");
+				
+				//close all after finishing
+				in.close();
+				out.close();
+				sock.close();
+				
+				manager.removeLoad(load);
 			}
-			
-		
-		
-		
 		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

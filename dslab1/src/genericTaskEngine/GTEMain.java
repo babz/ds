@@ -27,16 +27,18 @@ public class GTEMain {
 		String taskDir = args[6];
 
 		try {
-			EngineManager manager = new EngineManager(udpPort, tcpPort,
+			 EngineManager manager = new EngineManager(udpPort, tcpPort,
 					schedulerHost, alivePeriod, minConsumption, maxConsumption, taskDir);
 			new Thread(manager).start();
+			
+			EngineInfoPoint commandReader = new EngineInfoPoint(manager);
+			commandReader.read();
+			
 		} catch (SocketException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
-		EngineInfoPoint commandReader = new EngineInfoPoint();
-		commandReader.read();
 	}
 
 }

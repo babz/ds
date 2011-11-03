@@ -11,6 +11,8 @@ import java.util.logging.Logger;
  *
  */
 public class CompanyAgent implements Runnable {
+	private static final int BUF_LENGTH = 100;
+
 	private static Logger log = Logger.getLogger("class client socket chatter");
 
 	private PrintWriter serverWriter;
@@ -83,8 +85,33 @@ public class CompanyAgent implements Runnable {
 						System.out.println("No task with Id " + taskId + " prepared.");
 						continue;
 					}
-					String effortType = taskManager.getEffort(taskId);
-					serverWriter.println(command + " " + effortType);
+					TaskInfo task = taskManager.getTask(taskId);
+
+					// open connection to assigned engine
+					Socket socket = new Socket(task.getAssignedEngineAddress(), task.getAssignedEnginePort());
+					DataOutputStream out = new DataOutputStream(socket.getOutputStream());
+					DataInputStream in = new DataInputStream(socket.getInputStream());
+
+					out.writeUTF("!executeTask " + task.getEffortType() + " " + input[2] + " " + task.getName());
+					// TODO write file to engine
+					byte[] buf = new byte[BUF_LENGTH];
+					out.write(buf);
+
+					try {
+						while(true) {
+							String answer;
+							answer = in.readUTF();
+							System.out.println(answer);
+						}
+					} catch (IOException e) {
+						// no more output from engine
+					}
+					
+					//closeAll after finishing
+					out.close();
+					in.close();
+					socket.close();
+
 				}
 				//!info <taskId>.effort
 				else if (command.equals("!info")) {

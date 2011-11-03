@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.net.DatagramSocket;
 import java.net.SocketException;
 
+import com.sun.swing.internal.plaf.synth.resources.synth;
+
 /**
  * manages datagram sockets: aliveSignalEmitter and SchedulerListener
  * @author babz
@@ -21,6 +23,7 @@ public class EngineManager implements Runnable {
 	private SchedulerListener scheduleListener;
 	private AliveSignalEmitter emitter;
 	private String taskDir;
+	private int load;
 
 	public EngineManager(int udpPort, int tcpPort, String schedulerHost,
 			int alivePeriod, int minConsumption, int maxConsumption, String taskDir) throws SocketException {
@@ -32,6 +35,7 @@ public class EngineManager implements Runnable {
 		this.minConsumption = minConsumption;
 		this.maxConsumption = maxConsumption;
 		this.taskDir = taskDir;
+		this.load = 0;
 	}
 
 	@Override
@@ -43,7 +47,7 @@ public class EngineManager implements Runnable {
 			new Thread(emitter).start();
 			scheduleListener = new SchedulerListener(datagramSocket, emitter);
 			new Thread(scheduleListener).start();
-			ConnectionListener connectionListener = new ConnectionListener(tcp, taskDir);
+			ConnectionListener connectionListener = new ConnectionListener(tcp, taskDir, this);
 			new Thread(connectionListener).start();
 		} catch (SocketException e) {
 			// TODO Auto-generated catch block
@@ -52,6 +56,18 @@ public class EngineManager implements Runnable {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	public int getLoad() {
+		return load;
+	}
+	
+	public synchronized void addLoad(int loadToAdd) {
+		load += loadToAdd;
+	}
+	
+	public synchronized void removeLoad(int loadToRemove) {
+		load -= loadToRemove;
 	}
 	
 	public void terminate() {

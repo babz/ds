@@ -52,6 +52,14 @@ public class TaskInfo {
 		engineAddress = address;
 		enginePort = port;
 	}
+
+	public String getAssignedEngineAddress() {
+		return engineAddress;
+	}
+
+	public int getAssignedEnginePort() {
+		return enginePort;
+	}
 	
 	
 }

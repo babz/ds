@@ -70,4 +70,8 @@ public class TaskManager {
 	public void assignEngine(int taskId, String address, int port) {
 		preparedTasks.get(taskId).assignEngine(address, port);
 	}
+
+	public TaskInfo getTask(int taskId) {
+		return preparedTasks.get(taskId);
+	}
 }
