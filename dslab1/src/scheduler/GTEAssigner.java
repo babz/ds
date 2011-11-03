@@ -18,7 +18,7 @@ public class GTEAssigner {
 	}
 
 	public EngineIdentifier getEngine(String taskEffort) {
-		
+		return null;
 	}
 
 }

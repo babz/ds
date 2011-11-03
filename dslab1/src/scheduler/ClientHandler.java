@@ -59,12 +59,11 @@ public class ClientHandler implements Runnable {
 						out.println("You have to log in first.");
 					}
 				} 
-				//!requestEngine <taskId>
+				//!requestEngine <taskId>.effort
 				else if (cmd.command() == UserCommand.Cmds.REQUESTENGINE) {
 					if(currentlyLoggedIn == null) {
 						out.println("Login required!");
 					} else {
-						int taskId = Integer.parseInt(cmd.getArg(0));
 						gteAssigner.getEngine(cmd.getArg(0));
 					}
 				}
