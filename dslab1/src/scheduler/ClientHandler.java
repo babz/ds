@@ -1,5 +1,7 @@
 package scheduler;
 
+import genericTaskEngine.EngineIdentifier;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -64,14 +66,20 @@ public class ClientHandler implements Runnable {
 					if(currentlyLoggedIn == null) {
 						out.println("Login required!");
 					} else {
-						gteAssigner.getEngine(cmd.getArg(0));
+						EngineIdentifier engine = gteAssigner.getEngine(cmd.getArg(0));
+						//TODO saveable for client weiterreichen
+						if (engine == null) {
+							out.println("Not enough capacity. Try again later.");
+						} else {
+							out.println("Assigned engine: " + engine.getAddress() + " Port: " + engine.getPort());
+						}
 					}
 				}
-				//!executeTask <taskId> <startScript>
+				//!executeTask <taskId>.effort <startScript>
 				else if (cmd.command() == UserCommand.Cmds.EXECUTETASK) {
 					//TODO
 				}
-				//!info <taskId>
+				//!info <taskId>.effort
 				else if (cmd.command() == UserCommand.Cmds.INFO) {
 					//TODO
 				}

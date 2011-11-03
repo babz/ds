@@ -6,9 +6,9 @@ public class EngineIdentifier {
 	private InetAddress address;
 	private int port;
 	
-	public EngineIdentifier(InetAddress addr, int port) {
+	public EngineIdentifier(InetAddress addr, int tcpPort) {
 		address = addr;
-		this.port = port;
+		this.port = tcpPort;
 	}
 	
 	public InetAddress getAddress() {
