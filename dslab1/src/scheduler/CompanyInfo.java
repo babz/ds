@@ -38,24 +38,22 @@ public class CompanyInfo {
 		return lowRequests;
 	}
 
-	public void increaseLowRequests() {
-		this.lowRequests++;
+	public void increaseRequests(String effort) {
+		if(effort.equals("LOW")) {
+			this.lowRequests++;
+		}else if(effort.equals("MIDDLE")){
+			this.middleRequests++;
+		}else if (effort.equals("HIGH")) {
+			this.highRequests++;
+		}
 	}
 
 	public int getMiddleRequests() {
 		return middleRequests;
 	}
 
-	public void increaseMiddleRequests() {
-		this.middleRequests++;
-	}
-
 	public int getHighRequests() {
 		return highRequests;
-	}
-
-	public void increaseHighRequests() {
-		this.highRequests++;
 	}
 
 	@Override

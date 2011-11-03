@@ -52,6 +52,10 @@ public class CompanyManager {
 		return companies.get(name).loginIfPasswordCorrect(pw);
 	}
 	
+	public CompanyInfo getCompanyInfo(String name) {
+		return companies.get(name);
+	}
+	
 	/**
 	 * @param username 
 	 * @return true if logout successful

@@ -56,6 +56,8 @@ public class ConnectionListener implements Runnable {
 				} else if(input.equals("Successfully logged out.")) {
 					companyAgent.loggedOut();
 					System.out.println(input);
+				}  else if(input.startsWith("!engineRequestFailed")) {
+					System.out.println("Not enough capacity. Try again later.");
 				}
 				else {
 					System.out.println(input);
