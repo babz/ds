@@ -24,11 +24,11 @@ public class GTEMain {
 		int alivePeriod = Integer.parseInt(args[3]);
 		int minConsumption = Integer.parseInt(args[4]);
 		int maxConsumption = Integer.parseInt(args[5]);
-		String taskdir = args[6];
+		String taskDir = args[6];
 
 		try {
 			EngineManager manager = new EngineManager(udpPort, tcpPort,
-					schedulerHost, alivePeriod, minConsumption, maxConsumption);
+					schedulerHost, alivePeriod, minConsumption, maxConsumption, taskDir);
 			new Thread(manager).start();
 		} catch (SocketException e) {
 			// TODO Auto-generated catch block

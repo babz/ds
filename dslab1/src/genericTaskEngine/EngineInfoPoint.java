@@ -16,10 +16,11 @@ public class EngineInfoPoint {
 			String command = sc.next();
 			if(command.equals("!load")) {
 				//TODO
-				System.out.println("Current load: " + "%");
+				int load = 0;
+				System.out.println("Current load: " + load + "%");
 			} else if (command.equals("!exit")) {
 				//TODO executor service shutdown
-				//disconnect each engine
+				//disconnect each client
 			} else {
 				System.out.println("Invalid command!");
 			}

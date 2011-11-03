@@ -41,9 +41,9 @@ public class ConnectionListener implements Runnable {
 
 					taskManager.assignEngine(taskId, address, port);
 					System.out.println("Assigned engine: " + address + " Port: " + port);
+				} else {
+					System.out.println(input);
 				}
-				
-				System.out.println(input);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

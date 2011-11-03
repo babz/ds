@@ -29,10 +29,6 @@ public class GTEAssigner {
 		EngineIdentifier assignedEngine = null;
 		consideredEngines = new Hashtable<EngineIdentifier, GTEInfo>();
 		for (Entry<EngineIdentifier, GTEInfo> tmpEngine: engines.entrySet()) {
-			
-			assignedEngine = tmpEngine.getKey(); //TODO delete this line
-			
-			
 			//check if enough capacity
 			if((100 - tmpEngine.getValue().getLoad()) >= effort) {
 				consideredEngines.put(tmpEngine.getKey(), tmpEngine.getValue());
@@ -40,13 +36,27 @@ public class GTEAssigner {
 		}
 		
 		//check welche engine energietechnisch am besten geeignet - lineare interpolation
+		double minExpectedCons = Double.MAX_VALUE;
 		for (Entry<EngineIdentifier, GTEInfo> tmpEngine: consideredEngines.entrySet()) {
-			//TODO implement
+			/* expectedConsumption (using LINEAR interpolation)
+			 expectedConsumption = 
+			 	minCons + ((maxCons - minCons) * (currentLoad/100 + expectedAdditionalLoad/100))
+			 */
+			int minCons = tmpEngine.getValue().getMinConsumption();
+			int maxCons = tmpEngine.getValue().getMaxConsumption();
+			double load = (double) tmpEngine.getValue().getLoad();
+			double expectedConsumption = minCons + ((maxCons - minCons) * (load/100 + ((double) effort)/100));
 			
+			if(expectedConsumption < minExpectedCons) {
+				minExpectedCons = expectedConsumption;
+				assignedEngine = tmpEngine.getKey();
+			}
 		}
 		
 		//update load information on assigned engine
-		engines.get(assignedEngine).updateLoad(effort);
+		if(assignedEngine != null) {
+			engines.get(assignedEngine).updateLoad(effort);
+		}
 		return assignedEngine;
 	}
 
