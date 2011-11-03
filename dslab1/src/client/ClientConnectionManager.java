@@ -24,7 +24,7 @@ public class ClientConnectionManager implements Runnable {
 	@Override
 	public void run() {
 		try {
-			agent = new CompanyAgent(clientSocket, taskManager);
+			agent = new CompanyAgent(clientSocket, taskManager, this);
 			new Thread(agent).start();
 			listener = new ConnectionListener(clientSocket, taskManager, agent);
 			new Thread(listener).start();
@@ -34,9 +34,11 @@ public class ClientConnectionManager implements Runnable {
 		}
 	}
 	
-	public void terminate() throws IOException {
-		clientSocket.close();
-		agent.terminate();
-		listener.terminate();
+	public void terminate() {
+		try {
+			agent.terminate();
+			listener.terminate();
+			clientSocket.close();
+		} catch (IOException e) { }
 	}
 }

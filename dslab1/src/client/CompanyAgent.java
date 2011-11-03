@@ -22,16 +22,18 @@ public class CompanyAgent implements Runnable {
 	private BufferedReader streamIn;
 
 	private TaskManager taskManager;
+	private ClientConnectionManager connectionManager;
 
 	private boolean loggedIn = false;
 
 
 	//establish the socket connection between client and server
-	public CompanyAgent(Socket clientSocket, TaskManager taskManager) throws IOException{
+	public CompanyAgent(Socket clientSocket, TaskManager taskManager, ClientConnectionManager connectionManager) throws IOException{
 		log.info("init");
 		serverWriter = new PrintWriter(clientSocket.getOutputStream(), true);
 		alive = true;
 		this.taskManager = taskManager;
+		this.connectionManager = connectionManager;
 	}
 
 
@@ -64,6 +66,8 @@ public class CompanyAgent implements Runnable {
 					int prepared = taskManager.prepareTask(taskName, type);
 					if(prepared == -1) {
 						System.out.println("Task not found.");
+					} else if (prepared == -2) {
+						System.out.println("Invalid type.");
 					} else {
 						System.out.println("Task with id " + prepared + " prepared.");
 					}
@@ -151,6 +155,12 @@ public class CompanyAgent implements Runnable {
 					}
 					TaskInfo task = taskManager.getTask(taskId);
 					System.out.println(task.getInfo());
+				}
+				
+				//!exit -- logout user and shutdown the client
+				else if (command.equals("!exit")) {
+					serverWriter.println("!exit");
+					connectionManager.terminate();
 				}
 				//forward to server
 				else {

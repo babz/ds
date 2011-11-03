@@ -38,11 +38,19 @@ public class TaskManager {
 		if(!valid(taskName)) {
 			return -1;
 		}
+		if(!validType(type)) {
+			return -2;
+		}
+		
 		int newTaskId = ++taskIdAssign;
 		preparedTasks.put(newTaskId, new TaskInfo(newTaskId, taskName, type, StatusType.PREPARED));
 		return newTaskId;
 	}
 	
+	private boolean validType(String type) {
+		return type.equals("HIGH") || type.equals("LOW") || type.equals("MIDDLE");
+	}
+
 	/**
 	 * checks if task exists in taskDir
 	 * @param taskName name of task

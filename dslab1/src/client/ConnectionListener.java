@@ -55,14 +55,8 @@ public class ConnectionListener implements Runnable {
 					System.out.println(input);
 				}
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
 			} //answer from server
 		}
-	}
-
-	public void destroy() {
-		log.info("connection listener: destroy");
 	}
 
 	public void terminate() throws IOException {

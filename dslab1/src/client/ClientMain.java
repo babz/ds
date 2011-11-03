@@ -24,8 +24,8 @@ public class ClientMain {
 		
 		TaskManager taskManager = null;
 		ClientConnectionManager connection = null;
+		taskManager = new TaskManager(taskDir);
 		try {
-			taskManager = new TaskManager(taskDir);
 			connection = new ClientConnectionManager(schedulerHost, schedulerTCPPort, taskManager);
 			new Thread(connection).start();
 		} catch (IOException exc) {
