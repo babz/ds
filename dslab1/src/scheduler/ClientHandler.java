@@ -46,6 +46,10 @@ public class ClientHandler implements Runnable {
 				} 
 				//!login <company> <password>
 				else if(cmd.command() == UserCommand.Cmds.LOGIN) {
+					if(currentlyLoggedIn != null) {
+						out.println("Already logged in.");
+						continue;
+					}
 					if(companyManager.checkLogin(cmd.getArg(0), cmd.getArg(1))) {
 						currentlyLoggedIn = cmd.getArg(0);
 						out.println("Successfully logged in.");
@@ -56,6 +60,7 @@ public class ClientHandler implements Runnable {
 				//!logout
 				else if (cmd.command() == UserCommand.Cmds.LOGOUT) {
 					if(companyManager.logout(currentlyLoggedIn)) {
+						currentlyLoggedIn = null;
 						out.println("Successfully logged out.");
 					} else {
 						out.println("You have to log in first.");
@@ -80,7 +85,7 @@ public class ClientHandler implements Runnable {
 					if(currentlyLoggedIn == null) {
 						out.println("Login required!");
 					} else {
-
+						//TODO
 					}
 				}
 				//!info <taskId>.effort

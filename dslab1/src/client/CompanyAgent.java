@@ -21,6 +21,8 @@ public class CompanyAgent implements Runnable {
 
 	private TaskManager taskManager;
 
+	private boolean loggedIn = false;
+
 
 	//establish the socket connection between client and server
 	public CompanyAgent(Socket clientSocket, TaskManager taskManager) throws IOException{
@@ -47,6 +49,10 @@ public class CompanyAgent implements Runnable {
 				} 
 				//locally: !prepare <taskname> <type>
 				else if (command.equals("!prepare")) {
+					if(!loggedIn) {
+						System.out.println("You have to login first");
+						continue;
+					}
 					if(input.length != 3) {
 						System.out.println("Usage: !prepare <taskname> <type>");
 						continue;
@@ -142,5 +148,14 @@ public class CompanyAgent implements Runnable {
 		alive = false;
 		serverWriter.close();
 		streamIn.close();
+	}
+
+
+	public void loggedIn() {
+		loggedIn = true;
+	}
+	
+	public void loggedOut() {
+		loggedIn = false;
 	}
 }

@@ -6,6 +6,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
+import client.TaskInfo.StatusType;
+
 public class TaskManager {
 
 	private static int taskIdAssign = 0;
@@ -37,7 +39,7 @@ public class TaskManager {
 			return -1;
 		}
 		int newTaskId = ++taskIdAssign;
-		preparedTasks.put(newTaskId, new TaskInfo(taskName, type));
+		preparedTasks.put(newTaskId, new TaskInfo(taskName, type, StatusType.PREPARED));
 		return newTaskId;
 	}
 	

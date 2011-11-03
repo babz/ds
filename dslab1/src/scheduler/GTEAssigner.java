@@ -2,6 +2,13 @@ package scheduler;
 
 import genericTaskEngine.EngineIdentifier;
 
+import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.Socket;
 import java.util.Hashtable;
 import java.util.Map.Entry;
 
@@ -23,12 +30,25 @@ public class GTEAssigner {
 	 * chooses an engine for the required task
 	 * @param taskEffort
 	 * @return null if not enough capacity left
+	 * @throws IOException 
 	 */
-	public EngineIdentifier getEngine(String taskEffort) {
+	public EngineIdentifier getEngine(String taskEffort) throws IOException {
 		int effort = getTaskEffortInInt(taskEffort);
 		EngineIdentifier assignedEngine = null;
 		consideredEngines = new Hashtable<EngineIdentifier, GTEInfo>();
+		
 		for (Entry<EngineIdentifier, GTEInfo> tmpEngine: engines.entrySet()) {
+			// update load information
+			Socket engineSock = new Socket(tmpEngine.getValue().getIpAddress(), tmpEngine.getValue().getTcpPort());
+			DataInputStream in = new DataInputStream(engineSock.getInputStream());
+			DataOutputStream out = new DataOutputStream(engineSock.getOutputStream());
+			out.writeUTF("!currentLoad");
+			tmpEngine.getValue().setLoad(in.readInt());
+			
+			out.close();
+			in.close();
+			engineSock.close();
+			
 			//check if enough capacity
 			if((100 - tmpEngine.getValue().getLoad()) >= effort) {
 				consideredEngines.put(tmpEngine.getKey(), tmpEngine.getValue());
@@ -53,10 +73,10 @@ public class GTEAssigner {
 			}
 		}
 		
-		//update load information on assigned engine
-		if(assignedEngine != null) {
-			engines.get(assignedEngine).updateLoad(effort);
-		}
+		//update load information on assigned engine (????)
+//		if(assignedEngine != null) {
+//			engines.get(assignedEngine).setLoad(effort);
+//		}
 		return assignedEngine;
 	}
 

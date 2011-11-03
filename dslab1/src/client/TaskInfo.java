@@ -11,10 +11,10 @@ public class TaskInfo {
 	private int enginePort;
 	private String engineAddress;
 
-	public TaskInfo(String taskName, String taskEffort) {
+	public TaskInfo(String taskName, String taskEffort, StatusType statusType) {
 		name = taskName;
 		this.setEffort(taskEffort);
-		status = null;
+		status = statusType;
 	}
 
 	public String getName() {

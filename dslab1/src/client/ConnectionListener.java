@@ -19,10 +19,13 @@ public class ConnectionListener implements Runnable {
 
 	private TaskManager taskManager;
 
-	public ConnectionListener(Socket clientSocket, TaskManager taskManager) throws IOException {
+	private CompanyAgent companyAgent;
+
+	public ConnectionListener(Socket clientSocket, TaskManager taskManager, CompanyAgent agent) throws IOException {
 		this.taskManager = taskManager;
 		in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 		alive = true;
+		companyAgent = agent;
 	}
 
 	@Override
@@ -41,7 +44,14 @@ public class ConnectionListener implements Runnable {
 
 					taskManager.assignEngine(taskId, address, port);
 					System.out.println("Assigned engine: " + address + " Port: " + port);
-				} else {
+				} else if(input.equals("Successfully logged in.")) {
+					companyAgent.loggedIn();
+					System.out.println(input);
+				} else if(input.equals("Successfully logged out.")) {
+					companyAgent.loggedOut();
+					System.out.println(input);
+				}
+				else {
 					System.out.println(input);
 				}
 			} catch (IOException e) {

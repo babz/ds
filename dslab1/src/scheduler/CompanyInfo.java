@@ -8,7 +8,9 @@ package scheduler;
 public class CompanyInfo {
 
 	private String name, pw;
-	private int lowRequests, middleRequests, highRequests;
+	private int lowRequests = 0;
+	private int middleRequests = 0;
+	private int highRequests = 0;
 	private StatusFlag status;
 	
 	public CompanyInfo(String name, String pw) {
@@ -36,24 +38,24 @@ public class CompanyInfo {
 		return lowRequests;
 	}
 
-	public void setLowRequests(int lowRequests) {
-		this.lowRequests = lowRequests;
+	public void increaseLowRequests() {
+		this.lowRequests++;
 	}
 
 	public int getMiddleRequests() {
 		return middleRequests;
 	}
 
-	public void setMiddleRequests(int middleRequests) {
-		this.middleRequests = middleRequests;
+	public void increaseMiddleRequests() {
+		this.middleRequests++;
 	}
 
 	public int getHighRequests() {
 		return highRequests;
 	}
 
-	public void setHighRequests(int highRequests) {
-		this.highRequests = highRequests;
+	public void increaseHighRequests() {
+		this.highRequests++;
 	}
 
 	@Override

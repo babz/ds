@@ -26,7 +26,7 @@ public class ClientConnectionManager implements Runnable {
 		try {
 			agent = new CompanyAgent(clientSocket, taskManager);
 			new Thread(agent).start();
-			listener = new ConnectionListener(clientSocket, taskManager);
+			listener = new ConnectionListener(clientSocket, taskManager, agent);
 			new Thread(listener).start();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

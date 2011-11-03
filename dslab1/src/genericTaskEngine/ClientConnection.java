@@ -62,7 +62,7 @@ public class ClientConnection implements Runnable {
 				// TODO execute and write back to client
 				Thread.sleep(30000); // simulate execution
 				
-				out.writeUTF("task completed successfull");
+				out.writeUTF("task completed successfully");
 				
 				//close all after finishing
 				in.close();
@@ -70,6 +70,11 @@ public class ClientConnection implements Runnable {
 				sock.close();
 				
 				manager.removeLoad(load);
+			} else if (cmd[0].equals("!currentLoad")) {
+				out.writeInt(manager.getLoad());
+				out.close();
+				in.close();
+				sock.close();
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
