@@ -39,6 +39,8 @@ public class GTEAssigner {
 		for (Entry<EngineIdentifier, GTEInfo> tmpEngine: consideredEngines.entrySet()) {
 			//TODO
 		}
+		//update load information on assigned engine
+		engines.get(assignedEngine).updateLoad(effort);
 		return assignedEngine;
 	}
 

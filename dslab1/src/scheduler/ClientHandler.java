@@ -67,32 +67,44 @@ public class ClientHandler implements Runnable {
 						out.println("Login required!");
 					} else {
 						EngineIdentifier engine = gteAssigner.getEngine(cmd.getArg(0));
-						//TODO saveable for client weiterreichen
+						int id = Integer.parseInt(cmd.getArg(1));
 						if (engine == null) {
-							out.println("Not enough capacity. Try again later.");
+							out.println("!engineRequestFailed:" + id);
 						} else {
-							out.println("Assigned engine: " + engine.getAddress() + " Port: " + engine.getPort());
+							out.println("!engineAssigned:" + id + ":" + engine.getAddress() + ":" + engine.getPort());
 						}
 					}
 				}
 				//!executeTask <taskId>.effort <startScript>
 				else if (cmd.command() == UserCommand.Cmds.EXECUTETASK) {
-					//TODO
+					if(currentlyLoggedIn == null) {
+						out.println("Login required!");
+					} else {
+
+					}
 				}
 				//!info <taskId>.effort
 				else if (cmd.command() == UserCommand.Cmds.INFO) {
-					//TODO
+					if(currentlyLoggedIn == null) {
+						out.println("Login required!");
+					} else {
+
+					}
 				}
 				//!exit
 				else if (cmd.command() == UserCommand.Cmds.EXIT) {
-					destroy();
-					break;
+					if(currentlyLoggedIn != null) {
+						companyManager.logout(currentlyLoggedIn);
+					}
+					//TODO
 				}
-			}
+				else {
+					destroy();
+				}
+			} 
 		} catch (IOException e) {
 			System.out.println("Error!");
 		}
-
 	}
 
 	private void destroy() throws IOException {
@@ -100,5 +112,4 @@ public class ClientHandler implements Runnable {
 		in.close();
 		clientSocket.close();
 	}
-
 }

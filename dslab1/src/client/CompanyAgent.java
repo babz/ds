@@ -38,11 +38,13 @@ public class CompanyAgent implements Runnable {
 		try {
 			while(alive && ((userInput = streamIn.readLine()) != null)) {
 				String[] input = userInput.split(" ");
-				//TODO scanner auf printwriter umstellen
 				String command = input[0];
+				//locally: !list
 				if(command.equals("!list")) {
 					System.out.println(taskManager);
-				} else if (command.equals("!prepare")) {
+				} 
+				//locally: !prepare <taskname> <type>
+				else if (command.equals("!prepare")) {
 					if(input.length != 3) {
 						System.out.println("Usage: !prepare <taskname> <type>");
 						continue;
@@ -55,7 +57,9 @@ public class CompanyAgent implements Runnable {
 					} else {
 						System.out.println("Task with id " + prepared + " prepared.");
 					}
-				} else if (command.equals("!request")) {
+				} 
+				//!requestEngine <taskId>.effort
+				else if (command.equals("!requestEngine")) {
 					if(input.length != 2) {
 						System.out.println("Usage: !requestEngine <taskId>");
 						continue;
@@ -63,10 +67,41 @@ public class CompanyAgent implements Runnable {
 					int taskId = Integer.parseInt(input[1]);
 					if (!taskManager.checkPrepared(taskId)) {
 						System.out.println("No task with Id " + taskId + " prepared.");
+						continue;
 					}
 					String effortType = taskManager.getEffort(taskId);
 					serverWriter.println(command + " " + effortType);
-				} else {
+				} 
+				//!executeTask <taskId>.effort <startScript>
+				else if (command.equals("!executeTask")) {
+					if (input.length != 3) {
+						System.out.println("Usage: !executeTask <taskId> <startScript>");
+						continue;
+					}
+					int taskId = Integer.parseInt(input[1]);
+					if (!taskManager.checkPrepared(taskId)) {
+						System.out.println("No task with Id " + taskId + " prepared.");
+						continue;
+					}
+					String effortType = taskManager.getEffort(taskId);
+					serverWriter.println(command + " " + effortType);
+				}
+				//!info <taskId>.effort
+				else if (command.equals("!info")) {
+					if (input.length != 2) {
+						System.out.println("Usage: !info <taskId>");
+						continue;
+					}
+					int taskId = Integer.parseInt(input[1]);
+					if (!taskManager.checkPrepared(taskId)) {
+						System.out.println("No task with Id " + taskId + " prepared.");
+						continue;
+					}
+					String effortType = taskManager.getEffort(taskId);
+					serverWriter.println(command + " " + effortType);
+				}
+				//forward to server
+				else {
 					serverWriter.println(userInput);
 				}
 			}

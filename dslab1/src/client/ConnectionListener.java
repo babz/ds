@@ -17,7 +17,10 @@ public class ConnectionListener implements Runnable {
 	private BufferedReader in;
 	private boolean alive;
 
-	public ConnectionListener(Socket clientSocket) throws IOException {
+	private TaskManager taskManager;
+
+	public ConnectionListener(Socket clientSocket, TaskManager taskManager) throws IOException {
+		this.taskManager = taskManager;
 		in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 		alive = true;
 	}
@@ -27,7 +30,20 @@ public class ConnectionListener implements Runnable {
 		log.info("catch answers from scheduler");
 		while(alive) {
 			try {
-				System.out.println(in.readLine());
+				String input = in.readLine();
+				if(input.equals("!engineRequestFailed")) {
+					System.out.println("Not enough capacity. Try again later.");
+				} else if(input.startsWith("!engineAssigned")) {
+					String[] cmd = input.split(":");
+					String taskId = cmd[1];
+					String address = cmd[2];
+					int port = Integer.parseInt(cmd[3]);
+
+					taskManager.assignEngine(taskId, address, port);
+					System.out.println("Assigned engine: " + address + " Port: " + port);
+				}
+				
+				System.out.println(input);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

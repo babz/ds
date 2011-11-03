@@ -67,6 +67,10 @@ public class GTEInfo {
 		return load;
 	}
 	
+	public void updateLoad(int newTaskEffort) {
+		load += newTaskEffort;
+	}
+	
 	public int getTcpPort() {
 		return tcpPort;
 	}
