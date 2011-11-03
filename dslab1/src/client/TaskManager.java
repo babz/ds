@@ -39,7 +39,7 @@ public class TaskManager {
 			return -1;
 		}
 		int newTaskId = ++taskIdAssign;
-		preparedTasks.put(newTaskId, new TaskInfo(taskName, type, StatusType.PREPARED));
+		preparedTasks.put(newTaskId, new TaskInfo(newTaskId, taskName, type, StatusType.PREPARED));
 		return newTaskId;
 	}
 	
@@ -77,7 +77,7 @@ public class TaskManager {
 		return preparedTasks.get(taskId);
 	}
 
-	public String getTaskDir() {
+	public File getTaskDir() {
 		return taskDir;
 	}
 }

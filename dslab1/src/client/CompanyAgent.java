@@ -4,6 +4,8 @@ import java.io.*;
 import java.net.*;
 import java.util.logging.Logger;
 
+import client.TaskInfo.StatusType;
+
 /**
  * Client Socket; forwards commands to scheduler
  * does everything for company (login, demand engine, ...)
@@ -101,15 +103,23 @@ public class CompanyAgent implements Runnable {
 					System.out.println("writing cmd to GTE");
 					out.writeUTF("!executeTask " + task.getEffortType() + " " + input[2] + " " + task.getName());
 
+					task.setStatus(StatusType.EXECUTING);
+					
+					
 					// TODO write file to engine
 					FileInputStream fis = new FileInputStream(taskManager.getTaskDir() + File.separator + task.getName());
 					
 					
 					byte[] buf = new byte[BUF_LENGTH];
-					System.out.println("writing data to GTE");
-					while(fis.read(buf) != -1) {
-						out.write(buf);
+					int length = 0;
+					while((length = fis.read(buf)) != -1) {
+						System.out.println("writing data to GTE");
+						out.write(buf, 0, length);
 					}
+										
+					fis.close();
+					out.flush();
+					
 
 					try {
 						while(true) {
@@ -121,8 +131,9 @@ public class CompanyAgent implements Runnable {
 						// no more output from engine
 					}
 					
+					task.setStatus(StatusType.FINISHED);
+					
 					//closeAll after finishing
-					out.close();
 					in.close();
 					socket.close();
 
@@ -138,8 +149,8 @@ public class CompanyAgent implements Runnable {
 						System.out.println("No task with Id " + taskId + " prepared.");
 						continue;
 					}
-					String effortType = taskManager.getEffort(taskId);
-					serverWriter.println(command + " " + effortType);
+					TaskInfo task = taskManager.getTask(taskId);
+					System.out.println(task.getInfo());
 				}
 				//forward to server
 				else {

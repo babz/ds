@@ -5,13 +5,15 @@ public class TaskInfo {
 	public enum EffortType { LOW, MIDDLE, HIGH }
 	public enum StatusType { PREPARED, ASSIGNED, EXECUTING, FINISHED }
 	
+	private int id;
 	private String name;
 	private EffortType effort;
 	private StatusType status;
 	private int enginePort;
 	private String engineAddress;
 
-	public TaskInfo(String taskName, String taskEffort, StatusType statusType) {
+	public TaskInfo(int id, String taskName, String taskEffort, StatusType statusType) {
+		this.id = id; 
 		name = taskName;
 		this.setEffort(taskEffort);
 		status = statusType;
@@ -61,5 +63,15 @@ public class TaskInfo {
 		return enginePort;
 	}
 	
-	
+	public String getInfo() {
+		String out = "Task " + id + " (" + name + ")";
+		out += "\nType: " + effort.toString();
+		if(engineAddress != null) {
+			out += "\nAssigned Engine: " + engineAddress + ":" + enginePort;
+		} else {
+			out += "\nAssigned Engine: none";
+		}
+		out += "\nStatus: " + status.toString();
+		return out;
+	}
 }

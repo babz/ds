@@ -77,6 +77,8 @@ public class ClientConnection implements Runnable {
 					fos.write(buf, 0, bytesReceived);
 				}
 				
+				fos.close();
+				
 				// TODO set status of file to executable
 				
 				System.out.println("finished reading file from client");
@@ -87,7 +89,7 @@ public class ClientConnection implements Runnable {
 				manager.addLoad(load);
 				
 				// TODO execute and write back to client
-				Thread.sleep(30000); // simulate execution
+				Thread.sleep(20000); // simulate execution
 				
 				out.writeUTF("task completed successfully");
 
