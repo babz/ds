@@ -27,6 +27,10 @@ public class GTEManager implements Runnable {
 	private Hashtable<EngineIdentifier, GTEInfo> allEngines = new Hashtable<EngineIdentifier, GTEInfo>();
 
 	private GTEAssigner assigner;
+
+	private GTEController controller;
+
+	private GTEListener listener;
 	
 
 	public GTEManager(int udpPort, int min, int max, int timeout,
@@ -43,15 +47,21 @@ public class GTEManager implements Runnable {
 		log.info("manager started");
 
 		// listener (precisely aliveMsgParser) fills 'allEngines'
-		GTEListener listener = new GTEListener(datagramSocket, allEngines);
+		listener = new GTEListener(datagramSocket, allEngines);
 		new Thread(listener).start();
-		GTEController controller = new GTEController(datagramSocket, allEngines, min, max, timeout, checkPeriod);
+		controller = new GTEController(datagramSocket, allEngines, min, max, timeout, checkPeriod);
 		new Thread(controller).start();
 		assigner = new GTEAssigner(allEngines);
 	}
 	
 	public GTEAssigner getGTEAssigner() {
 		return assigner;
+	}
+	
+	public void terminate() {
+		controller.terminate();
+		listener.terminate();
+		datagramSocket.close();
 	}
 
 	public String toString() {

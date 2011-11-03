@@ -71,6 +71,10 @@ public class GTEInfo {
 		load = newLoad;
 	}
 	
+	public void addLoad(int effort) {
+		load += effort;	
+	}
+
 	public int getTcpPort() {
 		return tcpPort;
 	}
@@ -98,4 +102,5 @@ public class GTEInfo {
 				+ minConsumption + "W, max " + maxConsumption + "W, " 
 				+ ", Load: " + load + "%";
 	}
+
 }

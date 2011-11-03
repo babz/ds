@@ -73,10 +73,10 @@ public class GTEAssigner {
 			}
 		}
 		
-		//update load information on assigned engine (????)
-//		if(assignedEngine != null) {
-//			engines.get(assignedEngine).setLoad(effort);
-//		}
+		//update load information on assigned engine (estimated only...)
+		if(assignedEngine != null) {
+			engines.get(assignedEngine).addLoad(effort);
+		}
 		return assignedEngine;
 	}
 

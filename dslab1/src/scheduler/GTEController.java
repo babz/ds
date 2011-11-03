@@ -24,6 +24,8 @@ public class GTEController implements Runnable {
 
 	private Hashtable<EngineIdentifier, GTEInfo> allEngines;
 
+	private boolean alive = true;
+
 	private enum EngineCommands {
 		SUSPEND, ACTIVATE
 	}
@@ -44,7 +46,7 @@ public class GTEController implements Runnable {
 		log.info("run");
 		Hashtable<EngineIdentifier, GTEInfo> activeEngines = new Hashtable<EngineIdentifier, GTEInfo>();
 		Hashtable<EngineIdentifier, GTEInfo> zeroLoadEngines = new Hashtable<EngineIdentifier, GTEInfo>();
-		while (true) {
+		while (alive) {
 			synchronized (allEngines) {
 				for (Entry<EngineIdentifier, GTEInfo> engine : allEngines.entrySet()) {
 					// if active add to activeEngines
@@ -175,6 +177,13 @@ public class GTEController implements Runnable {
 		}
 		return energySaver;
 	}
+	
+	
+	public void terminate() {
+		alive = false;
+		Thread.currentThread().interrupt();
+	}
+	
 
 	private void talkToEngine(EngineIdentifier engine, EngineCommands message)
 			throws IOException {

@@ -22,8 +22,7 @@ public class EngineInfoPoint {
 			if(command.equals("!load")) {
 				System.out.println("Current load: " + engineManager.getLoad() + "%");
 			} else if (command.equals("!exit")) {
-				//TODO executor service shutdown
-				//disconnect each client
+				return;
 			} else {
 				System.out.println("Invalid command!");
 			}

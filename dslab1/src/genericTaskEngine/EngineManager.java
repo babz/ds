@@ -24,6 +24,7 @@ public class EngineManager implements Runnable {
 	private AliveSignalEmitter emitter;
 	private String taskDir;
 	private int load;
+	private ConnectionListener connectionListener;
 
 	public EngineManager(int udpPort, int tcpPort, String schedulerHost,
 			int alivePeriod, int minConsumption, int maxConsumption, String taskDir) throws SocketException {
@@ -47,14 +48,11 @@ public class EngineManager implements Runnable {
 			new Thread(emitter).start();
 			scheduleListener = new SchedulerListener(datagramSocket, emitter);
 			new Thread(scheduleListener).start();
-			ConnectionListener connectionListener = new ConnectionListener(tcp, taskDir, this);
+			connectionListener = new ConnectionListener(tcp, taskDir, this);
 			new Thread(connectionListener).start();
 		} catch (SocketException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 	}
 	
@@ -71,9 +69,10 @@ public class EngineManager implements Runnable {
 	}
 	
 	public void terminate() {
-		datagramSocket.close();
+		connectionListener.terminate();
 		scheduleListener.terminate();
 		emitter.terminate();
+		datagramSocket.close();
 	}
 
 }

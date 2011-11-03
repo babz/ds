@@ -23,11 +23,14 @@ public class ClientHandler implements Runnable {
 	private CompanyManager companyManager;
 	private GTEAssigner gteAssigner;
 	private String currentlyLoggedIn = null;
+	private ClientManager clientManager;
 
-	public ClientHandler(Socket socket, CompanyManager companyManager, GTEAssigner gteAssigner) throws IOException {
+	public ClientHandler(Socket socket, CompanyManager companyManager, GTEAssigner gteAssigner, ClientManager clientManager) throws IOException {
 		clientSocket = socket;
 		this.companyManager = companyManager;
 		this.gteAssigner = gteAssigner;
+		this.clientManager = clientManager;
+		clientManager.addClientHandler(this);
 		out = new PrintWriter(clientSocket.getOutputStream(), true);
 		in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 	}
@@ -100,21 +103,29 @@ public class ClientHandler implements Runnable {
 				else if (cmd.command() == UserCommand.Cmds.EXIT) {
 					if(currentlyLoggedIn != null) {
 						companyManager.logout(currentlyLoggedIn);
+						return;
 					}
-					//TODO
-				}
-				else {
-					destroy();
 				}
 			} 
 		} catch (IOException e) {
-			System.out.println("Error!");
+			// shutdown
+		} finally {
+			clientManager.removeClientHandler(this);
+			destroy();
 		}
 	}
+	
+	public void logoutClientAtExit() {
+		out.println("Scheduler shutting down. You will be logged out.");
+		out.println("Successfully logged out.");
+		destroy();
+	}
 
-	private void destroy() throws IOException {
+	private void destroy() {
 		out.close();
-		in.close();
-		clientSocket.close();
+		try {
+			in.close();
+			clientSocket.close();
+		} catch (IOException e) { }
 	}
 }

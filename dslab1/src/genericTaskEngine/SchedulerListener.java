@@ -35,8 +35,7 @@ public class SchedulerListener implements Runnable {
 				socket.receive(packet);
 				unpack(packet);
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				// shutdown
 			}
 
 		}

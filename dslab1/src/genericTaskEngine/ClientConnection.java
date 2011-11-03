@@ -16,22 +16,20 @@ public class ClientConnection implements Runnable {
 	private Socket sock;
 	private String dir;
 	private EngineManager manager;
+	private DataInputStream in = null;
+	private DataOutputStream out = null;
+	private ConnectionListener connectionListener;
 
-	public ClientConnection(Socket socket, String taskDir, EngineManager engineManager) {
-		
-		
-		System.out.println("new Client connection");
-		
-		
+	public ClientConnection(Socket socket, String taskDir, EngineManager engineManager, ConnectionListener connectionListener) {
 		sock = socket;
 		dir = taskDir;
 		manager = engineManager;
+		this.connectionListener = connectionListener;
+		connectionListener.addClient(this);
 	}
 
 	@Override
 	public void run() {
-		DataInputStream in = null;
-		DataOutputStream out = null;
 		try {
 			
 			System.out.println("opening streams");
@@ -99,15 +97,14 @@ public class ClientConnection implements Runnable {
 				out.writeInt(manager.getLoad());
 			}
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			
+		}
+		catch (InterruptedException e) {
+		
 		} finally {
+			connectionListener.removeClient(this);
 			
 			//close all after finishing
-			
 			
 			System.out.println("closing streams");
 
@@ -117,6 +114,16 @@ public class ClientConnection implements Runnable {
 				sock.close();
 			} catch (IOException e) { }
 		}
+	}
+
+	public void terminate() {
+		try {
+			out.writeUTF("Engine shutting down");
+			
+			out.close();
+			in.close();
+			sock.close();
+		} catch (IOException e) { }
 	}
 
 }

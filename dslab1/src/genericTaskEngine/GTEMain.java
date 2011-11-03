@@ -26,8 +26,10 @@ public class GTEMain {
 		int maxConsumption = Integer.parseInt(args[5]);
 		String taskDir = args[6];
 
+		EngineManager manager = null;
+		
 		try {
-			 EngineManager manager = new EngineManager(udpPort, tcpPort,
+			 manager = new EngineManager(udpPort, tcpPort,
 					schedulerHost, alivePeriod, minConsumption, maxConsumption, taskDir);
 			new Thread(manager).start();
 			
@@ -37,6 +39,10 @@ public class GTEMain {
 		} catch (SocketException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} finally {
+			if(manager != null) {
+				manager.terminate();
+			}
 		}
 		
 	}

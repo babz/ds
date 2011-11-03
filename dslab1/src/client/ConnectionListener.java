@@ -15,17 +15,19 @@ public class ConnectionListener implements Runnable {
 	private static Logger log = Logger.getLogger("class client socket listener");
 
 	private BufferedReader in;
-	private boolean alive;
+	private boolean alive = true;
 
 	private TaskManager taskManager;
 
 	private CompanyAgent companyAgent;
 
-	public ConnectionListener(Socket clientSocket, TaskManager taskManager, CompanyAgent agent) throws IOException {
+	private ClientConnectionManager clientConnectionManager;
+
+	public ConnectionListener(Socket clientSocket, TaskManager taskManager, CompanyAgent agent, ClientConnectionManager ccManager) throws IOException {
 		this.taskManager = taskManager;
 		in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-		alive = true;
 		companyAgent = agent;
+		clientConnectionManager = ccManager;
 	}
 
 	@Override
@@ -34,7 +36,11 @@ public class ConnectionListener implements Runnable {
 		while(alive) {
 			try {
 				String input = in.readLine();
-				if(input.equals("!engineRequestFailed")) {
+				if(input == null) {
+					// shutdown of scheduler
+					clientConnectionManager.terminate();
+					return;
+				} else if(input.equals("!engineRequestFailed")) {
 					System.out.println("Not enough capacity. Try again later.");
 				} else if(input.startsWith("!engineAssigned")) {
 					String[] cmd = input.split(":");

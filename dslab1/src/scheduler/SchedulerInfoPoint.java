@@ -27,8 +27,8 @@ public class SchedulerInfoPoint {
 			} else if (command.equals("!companies")) {
 				System.out.println(companies);
 			} else if (command.equals("!exit")) {
-				//TODO executor service shutdown
-				//logout each company
+				return;
+				
 			} else {
 				System.out.println("Invalid command!");
 			}

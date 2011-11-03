@@ -18,6 +18,10 @@ public class ClientManager implements Runnable {
 
 	private GTEManager engineManager;
 
+	private List<ClientHandler> clients = Collections.synchronizedList(new LinkedList<ClientHandler>());
+
+	private boolean alive = true;
+
 	public ClientManager(int tcpPort, GTEManager engineManager) throws IOException {
 		serverSocket = new ServerSocket(tcpPort);
 		companyManager = CompanyManager.getInstance();
@@ -26,19 +30,41 @@ public class ClientManager implements Runnable {
 
 	@Override
 	public void run() {
-		while (true) {
+		while (alive ) {
 			try {
 				//gibt GTEAssigner mit
-				new Thread(new ClientHandler(serverSocket.accept(), companyManager, engineManager.getGTEAssigner())).start();
+				new Thread(new ClientHandler(serverSocket.accept(), companyManager, engineManager.getGTEAssigner(), this)).start();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				// shutdown
 			}
 		}
 	}
 	
-	public void destroy() throws IOException {
-		log.info("scheduler: close all");
-		serverSocket.close();
+	/**
+	 * tracks all online clients. used for emergency logout at scheduler shutdown.
+	 */
+	public void addClientHandler(ClientHandler handler) {
+		clients.add(handler);
+	}
+	
+	public void removeClientHandler(ClientHandler handler) {
+		clients.remove(handler);
+	}
+	
+
+	/**
+	 * logs out all clients and closes socket
+	 */
+	public void terminate() {
+		alive = false;
+		
+		synchronized(clients) {
+			for(ClientHandler c : clients) {
+				c.logoutClientAtExit();
+			}
+		}
+		try {
+			serverSocket.close();
+		} catch (IOException e) { }
 	}
 }

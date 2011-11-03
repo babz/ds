@@ -46,6 +46,10 @@ public class SchedulerMain {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} finally {
+			// shutdown
+			engineManager.terminate();
+			clientManager.terminate();
 		}
 	}
 

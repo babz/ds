@@ -20,6 +20,8 @@ public class GTEListener implements Runnable {
 	private DatagramSocket datagramSocket;
 	private Hashtable<EngineIdentifier, GTEInfo> engines;
 
+	private boolean alive = true;
+
 	public GTEListener(DatagramSocket datagramSocket, Hashtable<EngineIdentifier, GTEInfo> engines) {
 		int packetLength = 100;
 		byte[] buf = new byte[packetLength];
@@ -31,16 +33,19 @@ public class GTEListener implements Runnable {
 	@Override
 	public void run() {
 		log.info("run");
-		while (true) {
+		while (alive ) {
 			try {
 				//receive packages and forward them
 				datagramSocket.receive(packet);
 				new Thread(new GTEAliveMsgParser(packet, engines)).start();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				// shutdown
 			}
 
 		}
+	}
+	
+	public void terminate() {
+		alive = false;
 	}
 }

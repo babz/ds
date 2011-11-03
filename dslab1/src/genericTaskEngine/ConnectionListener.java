@@ -2,12 +2,16 @@ package genericTaskEngine;
 
 import java.io.IOException;
 import java.net.ServerSocket;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
 
 public class ConnectionListener implements Runnable {
 
 	private ServerSocket socket;
 	private String taskDir;
 	private EngineManager engineManager;
+	private List<ClientConnection> clients = Collections.synchronizedList(new LinkedList<ClientConnection>());
 
 	public ConnectionListener(int tcp, String taskDir, EngineManager engineManager) throws IOException {
 		socket = new ServerSocket(tcp);
@@ -19,14 +23,29 @@ public class ConnectionListener implements Runnable {
 	public void run() {
 		try {
 			while(true) {
-				// TODO save connection for shutdown
-				ClientConnection connection = new ClientConnection(socket.accept(), taskDir, engineManager);
+				ClientConnection connection = new ClientConnection(socket.accept(), taskDir, engineManager, this);
 				new Thread(connection).start();
 			}
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (IOException e) { }
+	}
+	
+	public void addClient(ClientConnection handler) {
+		clients.add(handler);
+	}
+	
+	public void removeClient(ClientConnection handler) {
+		clients.remove(handler);
+	}
+
+	public void terminate() {
+		synchronized (clients) {
+			for(ClientConnection c : clients) {
+				c.terminate();
+			}
 		}
+		try {
+			socket.close();
+		} catch (IOException e) { }
 	}
 
 }
