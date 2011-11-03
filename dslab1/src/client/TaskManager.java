@@ -67,7 +67,7 @@ public class TaskManager {
 		return allTasks;
 	}
 
-	public void assignEngine(String taskId, String address, int port) {
+	public void assignEngine(int taskId, String address, int port) {
 		preparedTasks.get(taskId).assignEngine(address, port);
 	}
 }

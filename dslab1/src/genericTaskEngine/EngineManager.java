@@ -23,7 +23,7 @@ public class EngineManager implements Runnable {
 	public EngineManager(int udpPort, int tcpPort, String schedulerHost,
 			int alivePeriod, int minConsumption, int maxConsumption) throws SocketException {
 		udp = udpPort;
-		datagramSocket = new DatagramSocket(udpPort);
+		datagramSocket = new DatagramSocket();
 		tcp = tcpPort;
 		host = schedulerHost;
 		this.alivePeriod = alivePeriod;

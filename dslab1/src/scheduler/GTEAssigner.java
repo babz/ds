@@ -29,6 +29,10 @@ public class GTEAssigner {
 		EngineIdentifier assignedEngine = null;
 		consideredEngines = new Hashtable<EngineIdentifier, GTEInfo>();
 		for (Entry<EngineIdentifier, GTEInfo> tmpEngine: engines.entrySet()) {
+			
+			assignedEngine = tmpEngine.getKey(); //TODO delete this line
+			
+			
 			//check if enough capacity
 			if((100 - tmpEngine.getValue().getLoad()) >= effort) {
 				consideredEngines.put(tmpEngine.getKey(), tmpEngine.getValue());
@@ -37,8 +41,10 @@ public class GTEAssigner {
 		
 		//check welche engine energietechnisch am besten geeignet - lineare interpolation
 		for (Entry<EngineIdentifier, GTEInfo> tmpEngine: consideredEngines.entrySet()) {
-			//TODO
+			//TODO implement
+			
 		}
+		
 		//update load information on assigned engine
 		engines.get(assignedEngine).updateLoad(effort);
 		return assignedEngine;

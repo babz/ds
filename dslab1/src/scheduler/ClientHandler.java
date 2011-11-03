@@ -66,8 +66,8 @@ public class ClientHandler implements Runnable {
 					if(currentlyLoggedIn == null) {
 						out.println("Login required!");
 					} else {
-						EngineIdentifier engine = gteAssigner.getEngine(cmd.getArg(0));
-						int id = Integer.parseInt(cmd.getArg(1));
+						int id = Integer.parseInt(cmd.getArg(0));
+						EngineIdentifier engine = gteAssigner.getEngine(cmd.getArg(1));
 						if (engine == null) {
 							out.println("!engineRequestFailed:" + id);
 						} else {

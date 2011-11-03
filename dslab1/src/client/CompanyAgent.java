@@ -70,9 +70,9 @@ public class CompanyAgent implements Runnable {
 						continue;
 					}
 					String effortType = taskManager.getEffort(taskId);
-					serverWriter.println(command + " " + effortType);
+					serverWriter.println(command + " " + taskId + " " + effortType);
 				} 
-				//!executeTask <taskId>.effort <startScript>
+				//TODO !executeTask <taskId>.effort <startScript>
 				else if (command.equals("!executeTask")) {
 					if (input.length != 3) {
 						System.out.println("Usage: !executeTask <taskId> <startScript>");

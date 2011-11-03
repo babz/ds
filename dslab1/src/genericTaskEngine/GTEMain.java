@@ -29,6 +29,7 @@ public class GTEMain {
 		try {
 			EngineManager manager = new EngineManager(udpPort, tcpPort,
 					schedulerHost, alivePeriod, minConsumption, maxConsumption);
+			new Thread(manager).start();
 		} catch (SocketException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

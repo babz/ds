@@ -36,6 +36,7 @@ public class AliveSignalEmitter implements Runnable {
 		this.schedulerHost = schedulerHost;
 		this.minConsumption = minConsumption;
 		this.maxConsumption = maxConsumption;
+		datagramSocket = socket;
 	}
 
 	// send alive-packages
@@ -60,6 +61,7 @@ public class AliveSignalEmitter implements Runnable {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (InterruptedException e) {
+				e.printStackTrace(); // TODO remove
 				return;
 			}
 		}

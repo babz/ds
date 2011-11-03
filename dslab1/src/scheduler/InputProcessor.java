@@ -31,7 +31,7 @@ public class InputProcessor {
 			}
 			//!requestEngine <taskId>
 			else if(cmd.equals("!requestEngine")) {
-				if(args.length != 1) {
+				if(args.length != 2) {
 					return null;
 				}
 				return new UserCommand(UserCommand.Cmds.REQUESTENGINE, args);

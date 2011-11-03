@@ -35,7 +35,7 @@ public class ConnectionListener implements Runnable {
 					System.out.println("Not enough capacity. Try again later.");
 				} else if(input.startsWith("!engineAssigned")) {
 					String[] cmd = input.split(":");
-					String taskId = cmd[1];
+					int taskId = Integer.parseInt(cmd[1]);
 					String address = cmd[2];
 					int port = Integer.parseInt(cmd[3]);
 

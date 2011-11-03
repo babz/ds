@@ -27,6 +27,7 @@ public class ClientMain {
 		try {
 			taskManager = new TaskManager(taskDir);
 			connection = new ClientConnectionManager(schedulerHost, schedulerTCPPort, taskManager);
+			new Thread(connection).start();
 		} catch (IOException exc) {
 			System.out.println("connection from client failed");
 		}
