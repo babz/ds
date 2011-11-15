@@ -138,6 +138,7 @@ public class CompanyAgent implements Runnable {
 					task.setStatus(StatusType.FINISHED);
 					
 					//closeAll after finishing
+					out.close();
 					in.close();
 					socket.close();
 
