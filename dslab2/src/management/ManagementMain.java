@@ -2,7 +2,15 @@ package management;
 
 import java.io.File;
 import java.io.IOException;
+import java.rmi.AlreadyBoundException;
 import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
+import java.rmi.server.UnicastRemoteObject;
+
+import propertyReader.RegistryReader;
+
+import remote.LoginImpl;
+
 
 /**
  * handles authentication and billing etc for the clients (companies)
@@ -29,18 +37,19 @@ public class ManagementMain {
 		int preparationCosts = Integer.parseInt(args[3]);
 		File taskDir = new File(args[4]);
 
-		RegistryReader registry = null;
 		try {
-			registry = new RegistryReader();
+			RegistryReader registryLocation = new RegistryReader();
+			//Creates and exports a Registry instance on the local host that accepts requests on the specified port.
+			Registry registry = LocateRegistry.createRegistry(registryLocation.getRegistryPort());
+			LoginImpl login = new LoginImpl();
+			UnicastRemoteObject.exportObject(login, 0);
+			//register name in registry
+			registry.bind(bindingName, login);
 		} catch (IOException e1) {
 			System.out.println("Something wrong with registry.properties");
 			e1.printStackTrace();
-		}
-		//creates and exports a registry instance on localhost
-		try {
-			LocateRegistry.createRegistry(registry.getRegistryPort());
-		} catch (IOException e) {
-			System.out.println("registry.properties is empty or not found");
+		} catch (AlreadyBoundException e) {
+			System.err.println("mgmt registry already bound");
 			e.printStackTrace();
 		}
 
@@ -53,7 +62,14 @@ public class ManagementMain {
 		} catch (IOException exc) {
 			System.out.println("connection from management failed");
 		}
-
+		
+		MgmtInfoPoint commandReader;
+		try {
+			commandReader = new MgmtInfoPoint();
+			commandReader.read();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
-
 }

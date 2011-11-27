@@ -1,9 +1,13 @@
-package common;
+package remote;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
-public interface Compute extends Remote {
+import remote.Task;
+
+
+public interface ICompanyMode extends Remote {
+
+	//Companies
 	<T> T executeTask(Task<T> t) throws RemoteException;
 }
-

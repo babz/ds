@@ -7,6 +7,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
 
+import wastebin.CompanyInfo;
+
 /**
  * reads company properties-file and provides methods for companies
  * @author babz
@@ -17,7 +19,7 @@ public class CompanyManager {
 	private Map<String, CompanyInfo> companies; //map with names and passwords
 
 	private CompanyManager() throws IOException {
-		readCompanies();
+//		readCompanies();
 	}
 	
 	public static synchronized CompanyManager getInstance() throws IOException {
@@ -27,21 +29,22 @@ public class CompanyManager {
 		return instance;
 	}
 
-	private void readCompanies() throws IOException {
-		InputStream inputStream = ClassLoader.getSystemResourceAsStream("company.properties");
-		if (inputStream != null) {
-			Properties companyProps = new Properties();
-			companyProps.load(inputStream);
-			companies = new HashMap<String, CompanyInfo>() ; 
-			for (String companyName : companyProps.stringPropertyNames()) { // get all company names
-				String password = companyProps.getProperty(companyName); // get password for user with company name
-				companies.put(companyName, new CompanyInfo(companyName, password));
-			}
-		} else {
-			//TODO company.properties could not be found
-			System.err.println("read companies failed.");
-		} 
-	}
+//	NO LONGER REQUIRED!!
+//	private void readCompanies() throws IOException {
+//		InputStream inputStream = ClassLoader.getSystemResourceAsStream("company.properties");
+//		if (inputStream != null) {
+//			Properties companyProps = new Properties();
+//			companyProps.load(inputStream);
+//			companies = new HashMap<String, CompanyInfo>() ; 
+//			for (String companyName : companyProps.stringPropertyNames()) { // get all company names
+//				String password = companyProps.getProperty(companyName); // get password for user with company name
+//				companies.put(companyName, new CompanyInfo(companyName, password));
+//			}
+//		} else {
+//			//TODO company.properties could not be found
+//			System.err.println("read companies failed.");
+//		} 
+//	}
 	
 	public boolean checkLogin(String name, String pw) {
 		if(!companies.containsKey(name)) {

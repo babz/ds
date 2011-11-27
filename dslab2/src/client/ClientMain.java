@@ -1,6 +1,15 @@
 package client;
 
 import java.io.File;
+import java.io.IOException;
+import java.rmi.NotBoundException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
+
+import propertyReader.RegistryReader;
+
+import remote.LoginImpl;
+
 
 public class ClientMain {
 
@@ -9,6 +18,8 @@ public class ClientMain {
 	 */
 	public static void main(String[] args) {
 
+		//TODO
+		
 //		params = String schedulerHost, int schedulerTCPPort, String taskDir
 		int noOfParams = 2;
 		if(args.length != noOfParams) {
@@ -18,6 +29,18 @@ public class ClientMain {
 		
 		String mgmtComponent = args[0];
 		File taskDir = new File(args[1]);
+		
+		try {
+			RegistryReader registryDetails = new RegistryReader(); 
+			Registry registry = LocateRegistry.getRegistry(registryDetails.getRegistryHost(), registryDetails.getRegistryPort());
+			LoginImpl login = (LoginImpl) registry.lookup(mgmtComponent);
+			//TODO comp.executeTask() -> aufruf der engineAnforderung u der prepare
+		} catch (NotBoundException e) {
+			System.err.println("ClientMain Exception");
+			e.printStackTrace();
+		} catch (IOException ioExc) {
+			//TODO
+		}
 		
 //		TaskManager taskManager = null;
 //		ClientConnectionManager connection = null;

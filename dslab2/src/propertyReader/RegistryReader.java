@@ -1,4 +1,4 @@
-package management;
+package propertyReader;
 
 import java.io.IOException;
 import java.util.HashMap;

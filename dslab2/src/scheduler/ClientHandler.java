@@ -47,28 +47,28 @@ public class ClientHandler implements Runnable {
 				if(cmd == null) {
 					out.println("Invalid command!");
 				} 
-				//!login <company> <password>
-				else if(cmd.command() == UserCommand.Cmds.LOGIN) {
-					if(currentlyLoggedIn != null) {
-						out.println("Already logged in.");
-						continue;
-					}
-					if(companyManager.checkLogin(cmd.getArg(0), cmd.getArg(1))) {
-						currentlyLoggedIn = cmd.getArg(0);
-						out.println("Successfully logged in.");
-					} else {
-						out.println("Wrong company or password.");
-					}
-				} 
-				//!logout
-				else if (cmd.command() == UserCommand.Cmds.LOGOUT) {
-					if(companyManager.logout(currentlyLoggedIn)) {
-						currentlyLoggedIn = null;
-						out.println("Successfully logged out.");
-					} else {
-						out.println("You have to log in first.");
-					}
-				} 
+//				//!login <company> <password>
+//				else if(cmd.command() == UserCommand.Cmds.LOGIN) {
+//					if(currentlyLoggedIn != null) {
+//						out.println("Already logged in.");
+//						continue;
+//					}
+//					if(companyManager.checkLogin(cmd.getArg(0), cmd.getArg(1))) {
+//						currentlyLoggedIn = cmd.getArg(0);
+//						out.println("Successfully logged in.");
+//					} else {
+//						out.println("Wrong company or password.");
+//					}
+//				} 
+//				//!logout
+//				else if (cmd.command() == UserCommand.Cmds.LOGOUT) {
+//					if(companyManager.logout(currentlyLoggedIn)) {
+//						currentlyLoggedIn = null;
+//						out.println("Successfully logged out.");
+//					} else {
+//						out.println("You have to log in first.");
+//					}
+//				} 
 				//!requestEngine <taskId>.effort
 				else if (cmd.command() == UserCommand.Cmds.REQUESTENGINE) {
 					if(currentlyLoggedIn == null) {
@@ -84,22 +84,22 @@ public class ClientHandler implements Runnable {
 						}
 					}
 				}
-				//!executeTask <taskId>.effort <startScript>
-				else if (cmd.command() == UserCommand.Cmds.EXECUTETASK) {
-					if(currentlyLoggedIn == null) {
-						out.println("Login required!");
-					} else {
-						//TODO
-					}
-				}
-				//!info <taskId>.effort
-				else if (cmd.command() == UserCommand.Cmds.INFO) {
-					if(currentlyLoggedIn == null) {
-						out.println("Login required!");
-					} else {
-
-					}
-				}
+//				//!executeTask <taskId>.effort <startScript>
+//				else if (cmd.command() == UserCommand.Cmds.EXECUTETASK) {
+//					if(currentlyLoggedIn == null) {
+//						out.println("Login required!");
+//					} else {
+//						//TODO
+//					}
+//				}
+//				//!info <taskId>.effort
+//				else if (cmd.command() == UserCommand.Cmds.INFO) {
+//					if(currentlyLoggedIn == null) {
+//						out.println("Login required!");
+//					} else {
+//
+//					}
+//				}
 				//!exit
 				else if (cmd.command() == UserCommand.Cmds.EXIT) {
 					if(currentlyLoggedIn != null) {

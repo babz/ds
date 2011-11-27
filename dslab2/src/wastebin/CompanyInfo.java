@@ -1,4 +1,4 @@
-package scheduler;
+package wastebin;
 
 /**
  * Company with all attributes
