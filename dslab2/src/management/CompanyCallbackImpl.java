@@ -21,14 +21,12 @@ public class CompanyCallbackImpl implements ICompanyMode {
 	
 	@Override
 	public int getCredit() throws RemoteException {
-		// TODO Auto-generated method stub
-		return 0;
+		return company.getCredits();
 	}
 
 	@Override
-	public String buyCredits(int amount) throws RemoteException {
-		// TODO Auto-generated method stub
-		return null;
+	public int buyCredits(int amount) throws RemoteException {
+		return company.increaseCredit(amount);
 	}
 
 	@Override

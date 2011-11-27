@@ -36,7 +36,7 @@ public class CompanyManager {
 		return allUsers.get(name).loginIfPasswordCorrect(pw);
 	}
 
-	public UserInfo getCompanyInfo(String name) {
+	public UserInfo getUserInfo(String name) {
 		return allUsers.get(name);
 	}
 

@@ -25,7 +25,7 @@ public interface ICompanyMode extends Remote {
 	 * @return message
 	 * @throws RemoteException thrown if amount is negative
 	 */
-	String buyCredits(int amount) throws RemoteException;
+	int buyCredits(int amount) throws RemoteException;
 	
 	/**
 	 * company credits are reduced for the preparation of the task

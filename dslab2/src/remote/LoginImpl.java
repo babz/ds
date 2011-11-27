@@ -27,7 +27,7 @@ public class LoginImpl implements ILogin {
 	public ICompanyMode login(String companyName, String pw) throws RemoteException, ManagementException {
 		if(cManager.login(companyName, pw)) {
 			System.out.println("Successfully logged in. Using company mode.");
-			ICompanyMode company = new CompanyCallbackImpl(cManager.getCompanyInfo(companyName));
+			ICompanyMode company = new CompanyCallbackImpl(cManager.getUserInfo(companyName));
 			UnicastRemoteObject.exportObject(company, 0);
 			return company;
 		} else {

@@ -47,12 +47,14 @@ public class UserInfo {
 		return credits_;
 	}
 	
-	public void increaseCredit(int c) {
+	public int increaseCredit(int c) {
 		credits_ += c;
+		return credits_;
 	}
 	
-	public void decreaseCredit(int c) {
+	public int decreaseCredit(int c) {
 		credits_ -= c;
+		return credits_;
 	}
 
 	public boolean isOnline() {
