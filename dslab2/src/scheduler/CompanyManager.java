@@ -1,13 +1,13 @@
 package scheduler;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Properties;
+import java.util.Map.Entry;
 
-import wastebin.CompanyInfo;
+import propertyReader.UserReader;
+
+import management.UserInfo;
 
 /**
  * reads company properties-file and provides methods for companies
@@ -16,12 +16,12 @@ import wastebin.CompanyInfo;
  */
 public class CompanyManager {
 	private static CompanyManager instance;
-	private Map<String, CompanyInfo> companies; //map with names and passwords
+	private Map<String, UserInfo> allUsers; //map with names and passwords
 
 	private CompanyManager() throws IOException {
-//		readCompanies();
+		allUsers = new UserReader().getAllUsers();
 	}
-	
+
 	public static synchronized CompanyManager getInstance() throws IOException {
 		if(instance == null) {
 			instance = new CompanyManager();
@@ -29,55 +29,38 @@ public class CompanyManager {
 		return instance;
 	}
 
-//	NO LONGER REQUIRED!!
-//	private void readCompanies() throws IOException {
-//		InputStream inputStream = ClassLoader.getSystemResourceAsStream("company.properties");
-//		if (inputStream != null) {
-//			Properties companyProps = new Properties();
-//			companyProps.load(inputStream);
-//			companies = new HashMap<String, CompanyInfo>() ; 
-//			for (String companyName : companyProps.stringPropertyNames()) { // get all company names
-//				String password = companyProps.getProperty(companyName); // get password for user with company name
-//				companies.put(companyName, new CompanyInfo(companyName, password));
-//			}
-//		} else {
-//			//TODO company.properties could not be found
-//			System.err.println("read companies failed.");
-//		} 
-//	}
-	
-	public boolean checkLogin(String name, String pw) {
-		if(!companies.containsKey(name)) {
+	public boolean login(String name, String pw) {
+		if(!allUsers.containsKey(name)) {
 			return false;
 		} 
-		return companies.get(name).loginIfPasswordCorrect(pw);
+		return allUsers.get(name).loginIfPasswordCorrect(pw);
 	}
-	
-	public CompanyInfo getCompanyInfo(String name) {
-		return companies.get(name);
+
+	public UserInfo getCompanyInfo(String name) {
+		return allUsers.get(name);
 	}
-	
+
 	/**
 	 * @param username 
 	 * @return true if logout successful
 	 */
 	public boolean logout(String username) {
-		CompanyInfo company = companies.get(username);
-		if(company.isOnline()) {
-			company.setOffline();
+		UserInfo user = allUsers.get(username);
+		if(user.isOnline()) {
+			user.setOffline();
 			return true;
 		}
 		return false;
 	}
 	
 	//TODO check online status and amount of requested tasks per category
-	
+
 	public String toString() {
-		String companyList = "";
-		for(Entry<String, CompanyInfo> company: companies.entrySet()) {
-			companyList += company.getValue() + "\n";
+		String userList = "";
+		for(Entry<String, UserInfo> user: allUsers.entrySet()) {
+			userList += user.getValue() + "\n";
 		}
-		return companyList;
+		return userList;
 	}
-	
+
 }

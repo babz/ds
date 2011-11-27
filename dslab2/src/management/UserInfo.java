@@ -1,4 +1,4 @@
-package client;
+package management;
 
 
 public class UserInfo {

@@ -3,14 +3,13 @@ package propertyReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
-import client.UserInfo;
-
-import wastebin.CompanyInfo;
+import management.UserInfo;
 
 public class UserReader {
-	private HashMap<String, UserInfo> user = new HashMap<String, UserInfo>();
+	private Map<String, UserInfo> user = new HashMap<String, UserInfo>();
 
 	public UserReader() throws IOException {
 		InputStream inputStream = ClassLoader.getSystemResourceAsStream("user.properties");
@@ -38,28 +37,9 @@ public class UserReader {
 		}  
 	}
 	
-	public boolean isAdmin(String username) {
-		return user.get(username).isAdmin_();
+	public Map<String, UserInfo> getAllUsers()  {
+		return user;
 	}
 	
-	public int getCredits(String companyname) {
-		return user.get(companyname).getCredits();
-	}
 	
-	public void increaseCredits(String companyname, int credit) {
-		user.get(companyname).increaseCredit(credit);
-	}
-	
-	public void decreaseCredits(String companyname, int credit) {
-		user.get(companyname).decreaseCredit(credit);
-	}
-	
-	/**
-	 * checks if pw is correct
-	 * @param pw typed in pw
-	 * @return true if pw correct
-	 */
-	public boolean checkPw(String companyname, String pw) {
-		return (user.get(companyname).getPw_()).equals(pw);
-	}
 }

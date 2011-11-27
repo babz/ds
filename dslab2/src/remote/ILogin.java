@@ -11,6 +11,6 @@ import java.rmi.RemoteException;
  */
 public interface ILogin extends Remote {
 	
-	public ICompanyMode login() throws RemoteException;
+	public ICompanyMode login(String companyName, String pw) throws RemoteException, ManagementException;
 
 }
