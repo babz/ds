@@ -8,14 +8,14 @@ import java.util.TreeSet;
 
 import management.TaskInfo.StatusType;
 
-public class TaskManager {
+public class MgmtTaskManager {
 
 	private static int taskIdAssign = 0;
 	
 	private File taskDir;
 	private Map<Integer, TaskInfo> preparedTasks = new HashMap<Integer, TaskInfo>();
 
-	public TaskManager(File taskDir) {
+	public MgmtTaskManager(File taskDir) {
 		this.taskDir = taskDir;
 	}
 	

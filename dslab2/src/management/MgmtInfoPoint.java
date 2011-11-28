@@ -26,7 +26,6 @@ public class MgmtInfoPoint {
 				System.out.println();
 			} else if (command.equals("!exit")) {
 				return;
-				
 			} else {
 				System.out.println("Invalid command!");
 			}

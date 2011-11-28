@@ -17,13 +17,13 @@ public class ConnectionListener implements Runnable {
 	private BufferedReader in;
 	private boolean alive = true;
 
-	private TaskManager taskManager;
+	private MgmtTaskManager taskManager;
 
 	private CompanyAgent companyAgent;
 
 	private ClientConnectionManager clientConnectionManager;
 
-	public ConnectionListener(Socket clientSocket, TaskManager taskManager, CompanyAgent agent, ClientConnectionManager ccManager) throws IOException {
+	public ConnectionListener(Socket clientSocket, MgmtTaskManager taskManager, CompanyAgent agent, ClientConnectionManager ccManager) throws IOException {
 		this.taskManager = taskManager;
 		in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 		companyAgent = agent;

@@ -9,6 +9,7 @@ import java.rmi.server.UnicastRemoteObject;
 
 import propertyReader.RegistryReader;
 
+import remote.ILogin;
 import remote.LoginImpl;
 
 
@@ -41,7 +42,7 @@ public class ManagementMain {
 			RegistryReader registryLocation = new RegistryReader();
 			//Creates and exports a Registry instance on the local host that accepts requests on the specified port.
 			Registry registry = LocateRegistry.createRegistry(registryLocation.getRegistryPort());
-			LoginImpl login = new LoginImpl();
+			ILogin login = new LoginImpl(preparationCosts);
 			UnicastRemoteObject.exportObject(login, 0);
 			//register name in registry
 			registry.bind(bindingName, login);
@@ -53,9 +54,9 @@ public class ManagementMain {
 			e.printStackTrace();
 		}
 
-		TaskManager taskManager = null;
+		MgmtTaskManager taskManager = null;
 		ClientConnectionManager connection = null;
-		taskManager = new TaskManager(taskDir);
+		taskManager = new MgmtTaskManager(taskDir);
 		try {
 			connection = new ClientConnectionManager(schedulerHost, schedulerTCPPort, taskManager);
 			new Thread(connection).start();

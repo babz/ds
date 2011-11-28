@@ -1,9 +1,10 @@
-package remote;
+package management;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
-import management.UserInfo;
+import remote.IAdminMode;
+
 
 public class AdminCallbackImpl implements IAdminMode {
 
@@ -12,14 +13,14 @@ public class AdminCallbackImpl implements IAdminMode {
 	public AdminCallbackImpl(UserInfo adminInfo) {
 		admin = adminInfo;
 	}
-	
+
 	@Override
 	public void logout() throws RemoteException {
 		//callback instantiated only after successful login
 		admin.setOffline();
 		UnicastRemoteObject.unexportObject(this, false);
 	}
-
+	
 	@Override
 	public boolean isAdmin() throws RemoteException {
 		return true;
@@ -32,7 +33,12 @@ public class AdminCallbackImpl implements IAdminMode {
 
 	@Override
 	public void setPriceStep(int taskCount, double percent) throws RemoteException {
-		admin.setPriceStep(taskCount, percent);
+		if(taskCount < 0) {
+			throw new RemoteException("Error: Invalid task count!");
+		} else if (percent > 100) {
+			throw new RemoteException("Error: Invalid percentage!");
+		} else {
+			admin.setPriceStep(taskCount, percent);
+		}
 	}
-
 }

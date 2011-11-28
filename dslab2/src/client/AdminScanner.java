@@ -23,25 +23,12 @@ public class AdminScanner implements ICommandScanner {
 			if(!checkNoOfArgs(cmd, 2)) {
 				return;
 			}
-			int taskCount = 0;
+			int taskCount = Integer.parseInt(cmd[1]);
 			double percent = 0.00;
-			try {
-				taskCount = Integer.parseInt(cmd[1]);
-				if(taskCount < 0) { 
-					throw new NumberFormatException();
-				}
-			} catch (NumberFormatException e) {
-				System.out.println("Error: Invalid task count!");
-			}
-			try {
-				percent = Double.parseDouble(cmd[2]);
-			} catch (NumberFormatException e) {
-				System.out.println("Error: Invalid percentage!");
-			}
 			admin.setPriceStep(taskCount, percent);
 			System.out.println("Successfully inserted price step.");
 		} else {
-			System.out.println("Command not allowed. You are not an admin.");
+			System.out.println("Invalid command");
 		}
 
 	}

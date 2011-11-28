@@ -3,6 +3,7 @@ package client;
 import java.io.File;
 import java.io.IOException;
 import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
@@ -12,6 +13,7 @@ import propertyReader.RegistryReader;
 
 import remote.ILogin;
 import remote.LoginImpl;
+import remote.ManagementException;
 
 
 public class ClientMain {
@@ -44,6 +46,23 @@ public class ClientMain {
 			//TODO
 		}
 		
+		ClientInfoPoint commandReader;
+		try {
+			commandReader = new ClientInfoPoint(login, taskDir);
+			try {
+				commandReader.read();
+			} catch (ManagementException e) {
+				System.err.println("Fix your management!");
+				e.printStackTrace();
+			} catch (RemoteException re) {
+				System.err.println("exception from scanner classes");
+				re.printStackTrace();
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 //		NOW IN MANAGEMENT-MAIN !!
 //		TaskManager taskManager = null;
 //		ClientConnectionManager connection = null;
@@ -54,15 +73,7 @@ public class ClientMain {
 //		} catch (IOException exc) {
 //			System.out.println("connection from client failed");
 //		}
-
-		ClientInfoPoint commandReader;
-		try {
-			commandReader = new ClientInfoPoint(login);
-			commandReader.read();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		
 	}
 
 }

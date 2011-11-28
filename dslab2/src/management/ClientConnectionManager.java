@@ -14,9 +14,9 @@ public class ClientConnectionManager implements Runnable {
 	private Socket clientSocket;
 	private ConnectionListener listener;
 	private CompanyAgent agent;
-	private TaskManager taskManager;
+	private MgmtTaskManager taskManager;
 
-	public ClientConnectionManager(String schedulerHost, int schedulerTCPPort, TaskManager taskManager) throws UnknownHostException, IOException {
+	public ClientConnectionManager(String schedulerHost, int schedulerTCPPort, MgmtTaskManager taskManager) throws UnknownHostException, IOException {
 		clientSocket = new Socket(schedulerHost, schedulerTCPPort);
 		this.taskManager = taskManager;
 	}

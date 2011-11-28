@@ -21,14 +21,14 @@ public class CompanyAgent implements Runnable {
 	private boolean alive;
 	private BufferedReader streamIn;
 
-	private TaskManager taskManager;
+	private MgmtTaskManager taskManager;
 	private ClientConnectionManager connectionManager;
 
 	private boolean loggedIn = false;
 
 
 	//establish the socket connection between client and server
-	public CompanyAgent(Socket clientSocket, TaskManager taskManager, ClientConnectionManager connectionManager) throws IOException{
+	public CompanyAgent(Socket clientSocket, MgmtTaskManager taskManager, ClientConnectionManager connectionManager) throws IOException{
 		log.info("init");
 		serverWriter = new PrintWriter(clientSocket.getOutputStream(), true);
 		alive = true;

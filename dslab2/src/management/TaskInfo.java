@@ -3,7 +3,7 @@ package management;
 public class TaskInfo {
 
 	public enum EffortType { LOW, MIDDLE, HIGH }
-	public enum StatusType { PREPARED, ASSIGNED, EXECUTING, FINISHED }
+	public enum StatusType { PREPARED, EXECUTING, FINISHED }
 	
 	private int id;
 	private String name;
@@ -50,7 +50,6 @@ public class TaskInfo {
 	}
 
 	public void assignEngine(String address, int port) {
-		status = StatusType.ASSIGNED;
 		engineAddress = address;
 		enginePort = port;
 	}

@@ -1,5 +1,6 @@
 package client;
 
+import java.io.File;
 import java.rmi.RemoteException;
 
 import remote.ICompanyMode;
@@ -7,57 +8,74 @@ import remote.ICompanyMode;
 public class CompanyScanner implements ICommandScanner {
 
 	private ICompanyMode company;
+	private File taskDir;
 
-	public CompanyScanner(ICompanyMode loggedInCompany) {
+	public CompanyScanner(ICompanyMode loggedInCompany, File clientTaskDir) {
 		company = loggedInCompany;
+		taskDir = clientTaskDir;
 	}
 
 	@Override
 	public void readCommand(String[] cmd) throws RemoteException {
-		if (cmd[0].equals("!list")) {
+		if (cmd[0].equals("!list")) { //LOCALLY
 			if(!checkNoOfArgs(cmd, 0)) {
 				return;
 			}
-			//TODO
+			System.out.println(listAllTasksInDir());
+
 		} else if (cmd[0].equals("!credits")) {
 			if(!checkNoOfArgs(cmd, 0)) {
 				return;
 			}
 			System.out.println("You have " + company.getCredit() + " credits left.");
+
 		} else if (cmd[0].equals("!buy")) {
 			if(!checkNoOfArgs(cmd, 1)) {
 				return;
 			}
 			int credit = Integer.parseInt(cmd[1]);
-			if(credit < 0) {
-				System.out.println("Invalid amount of credits.");
-				return;
-			}
 			company.buyCredits(credit);
 			System.out.println("Successfully bought credits. You have " + company.getCredit() + " credits left.");
+
 		} else if (cmd[0].equals("!prepare")) {
 			if(!checkNoOfArgs(cmd, 2)) {
 				return;
 			}
-			//TODO
+			String taskName = cmd[1];
+			String taskType = cmd[2];
+			if(!taskExists(taskName)) {
+				System.out.println("Task not found.");
+			}
+			int id = 0;
+			id = company.prepareTask(taskName, taskType);
+			System.out.println("Task with id " + id + " prepared.");
+
 		} else if (cmd[0].equals("!executeTask")) {
 			if(!checkNoOfArgs(cmd, 2)) {
 				return;
 			}
 			//TODO
+
 		} else if (cmd[0].equals("!info")) {
 			if(!checkNoOfArgs(cmd, 1)) {
 				return;
 			}
-			//TODO
+			System.out.println(company.getInfo(Integer.parseInt(cmd[1])));
+
 		} else if (cmd[0].equals("!getOutput")) {
 			if(!checkNoOfArgs(cmd, 1)) {
 				return;
 			}
-			//TODO
+			System.out.println(company.getOutput(Integer.parseInt(cmd[1])));
+
 		} else {
-			System.out.println("Command not allowed. You are not a company.");
+			System.out.println("Invalid command");
 		}
+	}
+
+	@Override
+	public void logout() throws RemoteException {
+		company.logout();
 	}
 
 	private boolean checkNoOfArgs(String[] cmd, int noOfSupposedArgs) {
@@ -68,9 +86,20 @@ public class CompanyScanner implements ICommandScanner {
 		return true;
 	}
 
-	@Override
-	public void logout() throws RemoteException {
-		company.logout();
+	private String listAllTasksInDir() {
+		String[] tmp = taskDir.list();
+		String allTasks = "";
+		for(int i = 0; i < tmp.length; i++) {
+			allTasks += tmp[i] + "\n";
+		}
+		return allTasks;
+	}
+
+	private boolean taskExists(String taskName) {
+		if(!listAllTasksInDir().contains(taskName)) {
+			return false;
+		}
+		return true;
 	}
 }
 

@@ -6,6 +6,7 @@ import java.rmi.server.UnicastRemoteObject;
 
 import scheduler.UserManager;
 
+import management.AdminCallbackImpl;
 import management.CompanyCallbackImpl;
 
 
@@ -18,9 +19,11 @@ import management.CompanyCallbackImpl;
 public class LoginImpl implements ILogin {
 
 	private UserManager cManager = null;
+	private int prepCosts;
 
-	public LoginImpl() throws IOException {
+	public LoginImpl(int preparationCosts) throws IOException {
 		cManager = UserManager.getInstance();
+		prepCosts = preparationCosts;
 	}
 
 	@Override
@@ -32,7 +35,7 @@ public class LoginImpl implements ILogin {
 				user = new AdminCallbackImpl(cManager.getUserInfo(userName));
 			} else {
 				//Company Mode
-				user = new CompanyCallbackImpl(cManager.getUserInfo(userName));
+				user = new CompanyCallbackImpl(cManager.getUserInfo(userName), prepCosts);
 			}
 			UnicastRemoteObject.exportObject(user, 0);
 			return user;
