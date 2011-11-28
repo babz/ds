@@ -3,7 +3,6 @@ package management;
 import java.io.IOException;
 import java.util.Scanner;
 
-import scheduler.UserManager;
 import scheduler.GTEManager;
 
 public class MgmtInfoPoint {
@@ -18,7 +17,6 @@ public class MgmtInfoPoint {
 	}
 
 	public void read() {
-		//scheduler commands: engines, companies, exit
 		while(sc.hasNext()) {
 			String command = sc.next();
 			if (command.equals("!users")) {

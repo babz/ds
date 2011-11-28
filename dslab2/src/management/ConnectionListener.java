@@ -19,14 +19,14 @@ public class ConnectionListener implements Runnable {
 
 	private MgmtTaskManager taskManager;
 
-	private CompanyAgent companyAgent;
+//	private CompanyAgent companyAgent;
 
 	private ClientConnectionManager clientConnectionManager;
 
-	public ConnectionListener(Socket clientSocket, MgmtTaskManager taskManager, CompanyAgent agent, ClientConnectionManager ccManager) throws IOException {
+	public ConnectionListener(Socket clientSocket, MgmtTaskManager taskManager, ClientConnectionManager ccManager) throws IOException {
 		this.taskManager = taskManager;
 		in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-		companyAgent = agent;
+//		companyAgent = agent;
 		clientConnectionManager = ccManager;
 	}
 
@@ -50,12 +50,12 @@ public class ConnectionListener implements Runnable {
 
 					taskManager.assignEngine(taskId, address, port);
 					System.out.println("Assigned engine: " + address + " Port: " + port);
-				} else if(input.equals("Successfully logged in.")) {
-					companyAgent.loggedIn();
-					System.out.println(input);
-				} else if(input.equals("Successfully logged out.")) {
-					companyAgent.loggedOut();
-					System.out.println(input);
+//				} else if(input.equals("Successfully logged in.")) {
+//					companyAgent.loggedIn();
+//					System.out.println(input);
+//				} else if(input.equals("Successfully logged out.")) {
+//					companyAgent.loggedOut();
+//					System.out.println(input);
 				}  else if(input.startsWith("!engineRequestFailed")) {
 					System.out.println("Not enough capacity. Try again later.");
 				}

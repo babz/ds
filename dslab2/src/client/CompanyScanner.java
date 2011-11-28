@@ -45,6 +45,7 @@ public class CompanyScanner implements ICommandScanner {
 			String taskType = cmd[2];
 			if(!taskExists(taskName)) {
 				System.out.println("Task not found.");
+				return;
 			}
 			int id = 0;
 			id = company.prepareTask(taskName, taskType);

@@ -15,13 +15,12 @@ public class UserInfo {
 	private int middleRequests = 0;
 	private int highRequests = 0;
 	private StatusFlag status;
-	private Map<Integer, Double> pricingCurve = new TreeMap<Integer, Double>();
+	
 	
 	public UserInfo(String name, String pw) {
 		name_ = name;
 		pw_ = pw;
 		status = StatusFlag.OFFLINE;
-		pricingCurve.put(0, 0.00);
 	}
 
 	public void setAdmin(String admin) {
@@ -108,25 +107,5 @@ public class UserInfo {
 	public String toString() {
 		return name_ + " (" + status.toString().toLowerCase() + "): LOW " 
 				+ lowRequests + ", MIDDLE " + middleRequests + ", HIGH " + highRequests;
-	}
-
-	/**
-	 * only for admins
-	 * @param taskCount
-	 * @param percent
-	 */
-	public void setPriceStep(int taskCount, double percent) {
-		pricingCurve.put(taskCount, percent);
-	}
-
-	/**
-	 * only for admins
-	 */
-	public String getPriceCurve() {
-		String curve = "Task count | Discount\n";
-		for(Entry<Integer, Double> priceStep: pricingCurve.entrySet()) {
-			curve += priceStep.getKey() + " | " + priceStep.getValue() + " %\n";
-		}
-		return curve;
 	}
 }

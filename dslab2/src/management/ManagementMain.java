@@ -36,7 +36,7 @@ public class ManagementMain {
 		String schedulerHost = args[1];
 		int schedulerTCPPort = Integer.parseInt(args[2]);
 		int preparationCosts = Integer.parseInt(args[3]);
-		File taskDir = new File(args[4]);
+		File taskDir = new File(args[4]); //optional
 
 		try {
 			RegistryReader registryLocation = new RegistryReader();
@@ -56,7 +56,7 @@ public class ManagementMain {
 
 		MgmtTaskManager taskManager = null;
 		ClientConnectionManager connection = null;
-		taskManager = new MgmtTaskManager(taskDir);
+		taskManager = new MgmtTaskManager();
 		try {
 			connection = new ClientConnectionManager(schedulerHost, schedulerTCPPort, taskManager);
 			new Thread(connection).start();
@@ -69,7 +69,6 @@ public class ManagementMain {
 			commandReader = new MgmtInfoPoint();
 			commandReader.read();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

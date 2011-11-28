@@ -3,7 +3,11 @@ package remote;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
-
+/**
+ * remote interface handles all commands valid for companies
+ * @author babz
+ *
+ */
 public interface ICompanyMode extends Remote, IUser {
 
 	/**

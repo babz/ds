@@ -1,5 +1,12 @@
 package management;
 
+import remote.ICompanyMode;
+
+/**
+ * handles ONE task
+ * @author babz
+ *
+ */
 public class TaskInfo {
 
 	public enum EffortType { LOW, MIDDLE, HIGH }

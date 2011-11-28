@@ -1,4 +1,4 @@
-package scheduler;
+package management;
 
 import java.io.IOException;
 import java.util.Map;
@@ -7,7 +7,6 @@ import java.util.Map.Entry;
 
 import propertyReader.UserReader;
 
-import management.UserInfo;
 
 /**
  * reads company properties-file and provides methods for companies
@@ -39,7 +38,7 @@ public class UserManager {
 	public UserInfo getUserInfo(String name) {
 		return allUsers.get(name);
 	}
-
+	
 	/**
 	 * @param username 
 	 * @return true if logout successful

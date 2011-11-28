@@ -111,17 +111,17 @@ public class CompanyAgent implements Runnable {
 					
 					
 					// TODO write file to engine
-					FileInputStream fis = new FileInputStream(taskManager.getTaskDir() + File.separator + task.getName());
+//					FileInputStream fis = new FileInputStream(taskManager.getTaskDir() + File.separator + task.getName());
 					
 					
-					byte[] buf = new byte[BUF_LENGTH];
-					int length = 0;
-					while((length = fis.read(buf)) != -1) {
-						System.out.println("writing data to GTE");
-						out.write(buf, 0, length);
-					}
-										
-					fis.close();
+//					byte[] buf = new byte[BUF_LENGTH];
+//					int length = 0;
+//					while((length = fis.read(buf)) != -1) {
+//						System.out.println("writing data to GTE");
+//						out.write(buf, 0, length);
+//					}
+//										
+//					fis.close();
 					out.flush();
 					
 

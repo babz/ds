@@ -12,21 +12,20 @@ public class MgmtTaskManager {
 
 	private static int taskIdAssign = 0;
 	
-	private File taskDir;
-	private Map<Integer, TaskInfo> preparedTasks = new HashMap<Integer, TaskInfo>();
+	public Map<Integer, TaskInfo> preparedTasks = new HashMap<Integer, TaskInfo>();
 
-	public MgmtTaskManager(File taskDir) {
-		this.taskDir = taskDir;
+	public MgmtTaskManager() {
 	}
 	
-	public Set<String> tasksInTaskDir() {
-		String[] tmp = taskDir.list();
-		Set<String> allTasks = new TreeSet<String>();
-		for(String s: tmp) {
-			allTasks.add(s);
-		}
-		return allTasks;
-	}
+//	MOVED TO COMPANYSCANNER
+//	public Set<String> tasksInTaskDir() {
+//		String[] tmp = taskDir.list();
+//		Set<String> allTasks = new TreeSet<String>();
+//		for(String s: tmp) {
+//			allTasks.add(s);
+//		}
+//		return allTasks;
+//	}
 	
 	/**
 	 * prepares task for execution
@@ -35,11 +34,9 @@ public class MgmtTaskManager {
 	 * @return true if task was successfully prepared, false if invalid taskName
 	 */
 	public int prepareTask(String taskName, String type) {
-		if(!valid(taskName)) {
-			return -1;
-		}
+
 		if(!validType(type)) {
-			return -2;
+			return -1;
 		}
 		
 		int newTaskId = ++taskIdAssign;
@@ -50,15 +47,20 @@ public class MgmtTaskManager {
 	private boolean validType(String type) {
 		return type.equals("HIGH") || type.equals("LOW") || type.equals("MIDDLE");
 	}
-
-	/**
-	 * checks if task exists in taskDir
-	 * @param taskName name of task
-	 * @return true if task exists in taskDir
-	 */
-	private boolean valid(String taskName) {
-		return tasksInTaskDir().contains(taskName);
+	
+	public boolean taskExists(int id) {
+		return preparedTasks.containsKey(id);
 	}
+
+//	MOVED TO COMPANYSCANNER
+//	/**
+//	 * checks if task exists in taskDir
+//	 * @param taskName name of task
+//	 * @return true if task exists in taskDir
+//	 */
+//	private boolean valid(String taskName) {
+//		return tasksInTaskDir().contains(taskName);
+//	}
 
 	public boolean checkPrepared(int taskId) {
 		return preparedTasks.containsKey(taskId);
@@ -68,15 +70,6 @@ public class MgmtTaskManager {
 		return preparedTasks.get(id).getEffortType().toString();
 	}
 	
-	public String toString() {
-		String[] tmp = taskDir.list();
-		String allTasks = "";
-		for(int i = 0; i < tmp.length; i++) {
-			allTasks += tmp[i] + "\n";
-		}
-		return allTasks;
-	}
-
 	public void assignEngine(int taskId, String address, int port) {
 		preparedTasks.get(taskId).assignEngine(address, port);
 	}
@@ -85,7 +78,13 @@ public class MgmtTaskManager {
 		return preparedTasks.get(taskId);
 	}
 
-	public File getTaskDir() {
-		return taskDir;
-	}
+//	MOVED TO COMPANYSCANNER
+//	public String toString() {
+//		String[] tmp = taskDir.list();
+//		String allTasks = "";
+//		for(int i = 0; i < tmp.length; i++) {
+//			allTasks += tmp[i] + "\n";
+//		}
+//		return allTasks;
+//	}
 }

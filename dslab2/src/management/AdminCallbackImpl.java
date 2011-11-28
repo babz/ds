@@ -2,12 +2,15 @@ package management;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.Map;
+import java.util.TreeMap;
+import java.util.Map.Entry;
 
 import remote.IAdminMode;
 
 
 public class AdminCallbackImpl implements IAdminMode {
-
+	
 	private UserInfo admin;
 	
 	public AdminCallbackImpl(UserInfo adminInfo) {
@@ -28,7 +31,7 @@ public class AdminCallbackImpl implements IAdminMode {
 
 	@Override
 	public String getPricingCurve() throws RemoteException {
-		return admin.getPriceCurve();
+		return PricingCurve.getInstance().getCurve();
 	}
 
 	@Override
@@ -38,7 +41,7 @@ public class AdminCallbackImpl implements IAdminMode {
 		} else if (percent > 100) {
 			throw new RemoteException("Error: Invalid percentage!");
 		} else {
-			admin.setPriceStep(taskCount, percent);
+			PricingCurve.getInstance().setOrAddPriceStep(taskCount, percent);
 		}
 	}
 }
