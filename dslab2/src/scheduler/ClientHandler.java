@@ -20,12 +20,12 @@ public class ClientHandler implements Runnable {
 	private PrintWriter out;
 	private BufferedReader in;
 	private Socket clientSocket;
-	private CompanyManager companyManager;
+	private UserManager companyManager;
 	private GTEAssigner gteAssigner;
 	private String currentlyLoggedIn = null;
 	private ClientManager clientManager;
 
-	public ClientHandler(Socket socket, CompanyManager companyManager, GTEAssigner gteAssigner, ClientManager clientManager) throws IOException {
+	public ClientHandler(Socket socket, UserManager companyManager, GTEAssigner gteAssigner, ClientManager clientManager) throws IOException {
 		clientSocket = socket;
 		this.companyManager = companyManager;
 		this.gteAssigner = gteAssigner;

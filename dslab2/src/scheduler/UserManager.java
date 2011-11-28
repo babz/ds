@@ -14,17 +14,17 @@ import management.UserInfo;
  * @author babz
  *
  */
-public class CompanyManager {
-	private static CompanyManager instance;
+public class UserManager {
+	private static UserManager instance;
 	private Map<String, UserInfo> allUsers; //map with names and passwords
 
-	private CompanyManager() throws IOException {
+	private UserManager() throws IOException {
 		allUsers = new UserReader().getAllUsers();
 	}
 
-	public static synchronized CompanyManager getInstance() throws IOException {
+	public static synchronized UserManager getInstance() throws IOException {
 		if(instance == null) {
-			instance = new CompanyManager();
+			instance = new UserManager();
 		}
 		return instance;
 	}

@@ -6,8 +6,11 @@ import java.rmi.NotBoundException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
+import management.MgmtInfoPoint;
+
 import propertyReader.RegistryReader;
 
+import remote.ILogin;
 import remote.LoginImpl;
 
 
@@ -18,8 +21,6 @@ public class ClientMain {
 	 */
 	public static void main(String[] args) {
 
-		//TODO
-		
 //		params = String schedulerHost, int schedulerTCPPort, String taskDir
 		int noOfParams = 2;
 		if(args.length != noOfParams) {
@@ -30,10 +31,11 @@ public class ClientMain {
 		String mgmtComponent = args[0];
 		File taskDir = new File(args[1]);
 		
+		ILogin login = null;
 		try {
 			RegistryReader registryDetails = new RegistryReader(); 
 			Registry registry = LocateRegistry.getRegistry(registryDetails.getRegistryHost(), registryDetails.getRegistryPort());
-			LoginImpl login = (LoginImpl) registry.lookup(mgmtComponent);
+			login = (ILogin) registry.lookup(mgmtComponent);
 			//TODO comp.executeTask() -> aufruf der engineAnforderung u der prepare
 		} catch (NotBoundException e) {
 			System.err.println("ClientMain Exception");
@@ -42,6 +44,7 @@ public class ClientMain {
 			//TODO
 		}
 		
+//		NOW IN MANAGEMENT-MAIN !!
 //		TaskManager taskManager = null;
 //		ClientConnectionManager connection = null;
 //		taskManager = new TaskManager(taskDir);
@@ -52,6 +55,14 @@ public class ClientMain {
 //			System.out.println("connection from client failed");
 //		}
 
+		ClientInfoPoint commandReader;
+		try {
+			commandReader = new ClientInfoPoint(login);
+			commandReader.read();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }

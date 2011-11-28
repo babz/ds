@@ -4,7 +4,7 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 
 
-public interface ICompanyMode extends Remote {
+public interface ICompanyMode extends Remote, IUser {
 
 	/**
 	 * logs out company

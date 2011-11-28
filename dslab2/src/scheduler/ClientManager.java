@@ -15,7 +15,7 @@ public class ClientManager implements Runnable {
 	private static Logger log = Logger.getLogger("class client handler");
 
 	private ServerSocket serverSocket;
-	private CompanyManager companyManager;
+	private UserManager companyManager;
 
 	private GTEManager engineManager;
 
@@ -25,7 +25,7 @@ public class ClientManager implements Runnable {
 
 	public ClientManager(int tcpPort, GTEManager engineManager) throws IOException {
 		serverSocket = new ServerSocket(tcpPort);
-		companyManager = CompanyManager.getInstance();
+		companyManager = UserManager.getInstance();
 		this.engineManager = engineManager;
 	}
 

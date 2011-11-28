@@ -3,14 +3,14 @@ package management;
 import java.io.IOException;
 import java.util.Scanner;
 
-import scheduler.CompanyManager;
+import scheduler.UserManager;
 import scheduler.GTEManager;
 
 public class MgmtInfoPoint {
 
 	private Scanner sc = new Scanner(System.in);
 	private GTEManager manager;
-	private CompanyManager companies;
+	private UserManager companies;
 
 	public MgmtInfoPoint() throws IOException {
 //		manager = engineManager;

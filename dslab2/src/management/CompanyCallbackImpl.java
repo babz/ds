@@ -1,6 +1,7 @@
 package management;
 
 import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 
 import remote.ICompanyMode;
 
@@ -17,6 +18,7 @@ public class CompanyCallbackImpl implements ICompanyMode {
 	public void logout() throws RemoteException {
 		//callback instantiated only after successful login
 		company.setOffline();
+		UnicastRemoteObject.unexportObject(this, false);
 	}
 	
 	@Override
@@ -53,6 +55,11 @@ public class CompanyCallbackImpl implements ICompanyMode {
 	public String getOutput(int taskId) throws RemoteException {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public boolean isAdmin() throws RemoteException {
+		return false;
 	}
 
 }

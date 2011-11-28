@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
-import scheduler.CompanyManager;
+import scheduler.UserManager;
 
 import management.CompanyCallbackImpl;
 
@@ -17,19 +17,25 @@ import management.CompanyCallbackImpl;
  */
 public class LoginImpl implements ILogin {
 
-	private CompanyManager cManager = null;
+	private UserManager cManager = null;
 
 	public LoginImpl() throws IOException {
-		cManager = CompanyManager.getInstance();
+		cManager = UserManager.getInstance();
 	}
 
 	@Override
-	public ICompanyMode login(String companyName, String pw) throws RemoteException, ManagementException {
-		if(cManager.login(companyName, pw)) {
-			System.out.println("Successfully logged in. Using company mode.");
-			ICompanyMode company = new CompanyCallbackImpl(cManager.getUserInfo(companyName));
-			UnicastRemoteObject.exportObject(company, 0);
-			return company;
+	public IUser login(String userName, String pw) throws RemoteException, ManagementException {
+		if(cManager.login(userName, pw)) {
+			IUser user = null;
+			if(cManager.getUserInfo(userName).isAdmin()) {
+				//Admin Mode
+				user = new AdminCallbackImpl(cManager.getUserInfo(userName));
+			} else {
+				//Company Mode
+				user = new CompanyCallbackImpl(cManager.getUserInfo(userName));
+			}
+			UnicastRemoteObject.exportObject(user, 0);
+			return user;
 		} else {
 			throw new ManagementException("login failed");
 		}
