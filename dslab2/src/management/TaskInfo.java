@@ -74,6 +74,22 @@ public class TaskInfo {
 		return enginePort;
 	}
 	
+	public int getCosts() {
+		/* RELIEF:
+		 * low = 0,5 min
+		 * middle = 3 min
+		 * high = 5 min
+		 */
+		int costsPerMin = 10;
+		if(effort == EffortType.LOW) {
+			return (int) (costsPerMin * 0.5);
+		} else if (effort == EffortType.MIDDLE) {
+			return costsPerMin * 3;
+		} else {
+			return costsPerMin * 5;
+		}
+	}
+	
 	public String getInfo() {
 		String out = "Task " + id + " (" + name + ")";
 		out += "\nType: " + effort.toString();
@@ -83,6 +99,11 @@ public class TaskInfo {
 			out += "\nAssigned Engine: none";
 		}
 		out += "\nStatus: " + status.toString();
+		if(status != StatusType.FINISHED) {
+			out += "\nCosts: unknown";
+		} else {
+			out += "\nCosts: " + getCosts();
+		}
 		return out;
 	}
 }

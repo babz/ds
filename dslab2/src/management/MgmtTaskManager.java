@@ -123,6 +123,17 @@ public class MgmtTaskManager {
 		return false;
 	}
 
+	/**
+	 * checks the costs for the task considering the effort
+	 * @param taskId task for which the costs are calculated
+	 * @return cost of execution of task
+	 */
+	public int calculateCostsForTask(int taskId) {
+		
+		return allTasks.get(taskId).getCosts();
+		
+	}
+
 //	MOVED TO COMPANYSCANNER
 //	public String toString() {
 //		String[] tmp = taskDir.list();
