@@ -9,16 +9,24 @@ import java.net.UnknownHostException;
  * @author babz
  *
  */
-public class ClientConnectionManager implements Runnable {
+public class SchedulerConnectionManager implements Runnable {
 
+	private static SchedulerConnectionManager instance;
 	private Socket clientSocket;
 	private ConnectionListener listener;
 	private CompanyAgent agent;
 	private MgmtTaskManager taskManager;
 
-	public ClientConnectionManager(String schedulerHost, int schedulerTCPPort, MgmtTaskManager taskManager) throws UnknownHostException, IOException {
+	private SchedulerConnectionManager(String schedulerHost, int schedulerTCPPort, MgmtTaskManager taskManager) throws UnknownHostException, IOException {
 		clientSocket = new Socket(schedulerHost, schedulerTCPPort);
 		this.taskManager = taskManager;
+	}
+	
+	public static synchronized SchedulerConnectionManager getInstance(String host, int port, MgmtTaskManager tasks) throws UnknownHostException, IOException {
+		if(instance == null) {
+			instance = new SchedulerConnectionManager(host, port, tasks);
+		}
+		return instance;
 	}
 
 	@Override

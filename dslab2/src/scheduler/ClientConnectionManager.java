@@ -1,18 +1,18 @@
 package scheduler;
 
-import java.io.*;
-import java.net.*;
-import java.util.*;
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.logging.Logger;
-
-import management.UserManager;
 
 /**
  * manages Server Socket
  * @author babz
  *
  */
-public class RequestManager implements Runnable {
+public class ClientConnectionManager implements Runnable {
 	@SuppressWarnings("unused")
 	private static Logger log = Logger.getLogger("class client handler");
 
@@ -21,11 +21,11 @@ public class RequestManager implements Runnable {
 
 	private GTEManager engineManager;
 
-	private List<ClientHandler> clients = Collections.synchronizedList(new LinkedList<ClientHandler>());
+	private List<ClientListener> clients = Collections.synchronizedList(new LinkedList<ClientListener>());
 
 	private boolean alive = true;
 
-	public RequestManager(int tcpPort, GTEManager engineManager) throws IOException {
+	public ClientConnectionManager(int tcpPort, GTEManager engineManager) throws IOException {
 		serverSocket = new ServerSocket(tcpPort);
 //		companyManager = UserManager.getInstance();
 		this.engineManager = engineManager;
@@ -36,7 +36,7 @@ public class RequestManager implements Runnable {
 		while (alive ) {
 			try {
 				//gibt GTEAssigner mit
-				new Thread(new ClientHandler(serverSocket.accept(), engineManager.getGTEAssigner(), this)).start();
+				new Thread(new ClientListener(serverSocket.accept(), engineManager.getGTEAssigner(), this)).start();
 			} catch (IOException e) {
 				// shutdown
 			}
@@ -46,11 +46,11 @@ public class RequestManager implements Runnable {
 	/**
 	 * tracks all online clients. used for emergency logout at scheduler shutdown.
 	 */
-	public void addClientHandler(ClientHandler handler) {
+	public void addClientHandler(ClientListener handler) {
 		clients.add(handler);
 	}
 	
-	public void removeClientHandler(ClientHandler handler) {
+	public void removeClientHandler(ClientListener handler) {
 		clients.remove(handler);
 	}
 	
@@ -62,7 +62,7 @@ public class RequestManager implements Runnable {
 		alive = false;
 		
 		synchronized(clients) {
-			for(ClientHandler c : clients) {
+			for(ClientListener c : clients) {
 				c.logoutClientAtExit();
 			}
 		}

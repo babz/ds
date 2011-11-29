@@ -14,56 +14,24 @@ public class InputProcessor {
 			return null;
 		}
 
-		//cmds:	LOGIN, LOGOUT, REQUESTENGINE, EXECUTETASK, INFO, EXIT
+		//cmds:	REQUESTENGINE, EXECUTETASK, EXIT
 		String cmd = cmdArray[0];
 
-		//divide only when there are params
-		if(cmdArray.length > 1) {
+		//!requestEngine <taskId>
+		if(cmd.equals("!requestEngine")) {
 			String[] args = removeCmd(cmdArray);
-			//!login <company> <password>
-			if(cmd.equals("!login")) {
-				if(args.length != 2) {
-					return null;
-				}
-				return new UserCommand(UserCommand.Cmds.LOGIN, args);
+			if(args.length != 2) {
+				return null;
 			}
-			//!requestEngine <taskId>
-			else if(cmd.equals("!requestEngine")) {
-				if(args.length != 2) {
-					return null;
-				}
-				return new UserCommand(UserCommand.Cmds.REQUESTENGINE, args);
-			}
-			//!executeTask <taskId> <startScript>
-			else if(cmd.equals("!executeTask")) {
-				if(args.length != 2) {
-					return null;
-				}
-				return new UserCommand(UserCommand.Cmds.EXECUTETASK, args);
-			}
-			//!info <taskId>
-			else if(cmd.equals("!info")) {
-				if(args.length != 1) {
-					return null;
-				}
-				return new UserCommand(UserCommand.Cmds.INFO, args);
-			}
-		} 
-		//commands with no params
-		else {
-			//!logout
-			if(cmd.equals("!logout")) {
-				return new UserCommand(UserCommand.Cmds.LOGOUT, null);
-			} 
-			//!exit
-			else if (cmd.equals("!exit")) {
-				return new UserCommand(UserCommand.Cmds.EXIT, null);
-			}
+			return new UserCommand(UserCommand.Cmds.REQUESTENGINE, args);
+		}
+		//!exit
+		else if (cmd.equals("!exit")) {
+			return new UserCommand(UserCommand.Cmds.EXIT, null);
 		}
 
 		return null;
 	}
-
 
 	private static String[] removeCmd(String[] cmd) {
 		return Arrays.copyOfRange(cmd, 1, cmd.length);

@@ -22,6 +22,7 @@ public class ManagementMain {
 	/**
 	 * @param args
 	 */
+	@SuppressWarnings("unused")
 	public static void main(String[] args) {
 
 		// params = String bindingName, String schedulerHost, int schedulerTCPPort, int preparationCosts, String taskDir
@@ -41,7 +42,7 @@ public class ManagementMain {
 			RegistryReader registryLocation = new RegistryReader();
 			//Creates and exports a Registry instance on the local host that accepts requests on the specified port.
 			Registry registry = LocateRegistry.createRegistry(registryLocation.getRegistryPort());
-			ILogin login = new LoginImpl(preparationCosts);
+			ILogin login = new LoginImpl(preparationCosts, schedulerHost, schedulerTCPPort);
 			UnicastRemoteObject.exportObject(login, 0);
 			//register name in registry
 			registry.bind(bindingName, login);
@@ -53,23 +54,9 @@ public class ManagementMain {
 			e.printStackTrace();
 		}
 
-		MgmtTaskManager taskManager = null;
-		ClientConnectionManager connection = null;
-		//TODO remove from main
-		taskManager = MgmtTaskManager.getInstance();
-		try {
-			connection = new ClientConnectionManager(schedulerHost, schedulerTCPPort, taskManager);
-			new Thread(connection).start();
-		} catch (IOException exc) {
-			System.out.println("connection from management failed");
-		}
-		
 		MgmtInfoPoint commandReader;
-		UserManager userManager;
 		try {
-			userManager = UserManager.getInstance();
-			commandReader = new MgmtInfoPoint(userManager);
-			commandReader.read();
+			commandReader = new MgmtInfoPoint(UserManager.getInstance(), MgmtTaskManager.getInstance());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

@@ -21,9 +21,9 @@ public class ConnectionListener implements Runnable {
 
 //	private CompanyAgent companyAgent;
 
-	private ClientConnectionManager clientConnectionManager;
+	private SchedulerConnectionManager clientConnectionManager;
 
-	public ConnectionListener(Socket clientSocket, MgmtTaskManager taskManager, ClientConnectionManager ccManager) throws IOException {
+	public ConnectionListener(Socket clientSocket, MgmtTaskManager taskManager, SchedulerConnectionManager ccManager) throws IOException {
 		this.taskManager = taskManager;
 		in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 //		companyAgent = agent;

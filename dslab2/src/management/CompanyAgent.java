@@ -7,12 +7,12 @@ import java.util.logging.Logger;
 import management.TaskInfo.StatusType;
 
 /**
- * Client Socket; forwards commands to scheduler
- * does everything for company (login, demand engine, ...)
+ * Client Socket; forward ONLY engine request to scheduler
  * @author babz
  *
  */
 public class CompanyAgent implements Runnable {
+
 	private static final int BUF_LENGTH = 100;
 
 	private static Logger log = Logger.getLogger("class client socket chatter");
@@ -22,13 +22,13 @@ public class CompanyAgent implements Runnable {
 	private BufferedReader streamIn;
 
 	private MgmtTaskManager taskManager;
-	private ClientConnectionManager connectionManager;
+	private SchedulerConnectionManager connectionManager;
 
 	private boolean loggedIn = false;
 
 
 	//establish the socket connection between client and server
-	public CompanyAgent(Socket clientSocket, MgmtTaskManager taskManager, ClientConnectionManager connectionManager) throws IOException{
+	public CompanyAgent(Socket clientSocket, MgmtTaskManager taskManager, SchedulerConnectionManager connectionManager) throws IOException{
 		log.info("init");
 		serverWriter = new PrintWriter(clientSocket.getOutputStream(), true);
 		alive = true;
@@ -48,31 +48,6 @@ public class CompanyAgent implements Runnable {
 			while(alive && ((userInput = streamIn.readLine()) != null)) {
 				String[] input = userInput.split(" ");
 				String command = input[0];
-				//locally: !list
-//				if(command.equals("!list")) {
-//					System.out.println(taskManager);
-//				} 
-//				//locally: !prepare <taskname> <type>
-//				else if (command.equals("!prepare")) {
-//					if(!loggedIn) {
-//						System.out.println("You have to login first");
-//						continue;
-//					}
-//					if(input.length != 3) {
-//						System.out.println("Usage: !prepare <taskname> <type>");
-//						continue;
-//					}
-//					String taskName = input[1];
-//					String type = input[2];
-//					int prepared = taskManager.prepareTask(taskName, type);
-//					if(prepared == -1) {
-//						System.out.println("Task not found.");
-//					} else if (prepared == -2) {
-//						System.out.println("Invalid type.");
-//					} else {
-//						System.out.println("Task with id " + prepared + " prepared.");
-//					}
-//				} 
 				//!requestEngine <taskId>.effort
 				if (command.equals("!requestEngine")) {
 					if(input.length != 2) {
@@ -80,11 +55,6 @@ public class CompanyAgent implements Runnable {
 						continue;
 					}
 					int taskId = Integer.parseInt(input[1]);
-//					CHECKED FROM MGMT
-//					if (!taskManager.checkPrepared(taskId)) {
-//						System.out.println("No task with Id " + taskId + " prepared.");
-//						continue;
-//					}
 					String effortType = taskManager.getEffort(taskId);
 					serverWriter.println(command + " " + taskId + " " + effortType);
 				} 
@@ -145,21 +115,6 @@ public class CompanyAgent implements Runnable {
 					socket.close();
 
 				}
-				//!info <taskId>.effort
-//				else if (command.equals("!info")) {
-//					if (input.length != 2) {
-//						System.out.println("Usage: !info <taskId>");
-//						continue;
-//					}
-//					int taskId = Integer.parseInt(input[1]);
-//					if (!taskManager.checkPrepared(taskId)) {
-//						System.out.println("No task with Id " + taskId + " prepared.");
-//						continue;
-//					}
-//					TaskInfo task = taskManager.getTask(taskId);
-//					System.out.println(task.getInfo());
-//				}
-				
 				//!exit -- logout user and shutdown the client
 				else if (command.equals("!exit")) {
 					serverWriter.println("!exit");

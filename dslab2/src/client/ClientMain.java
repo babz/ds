@@ -7,12 +7,8 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
-import management.MgmtInfoPoint;
-
 import propertyReader.RegistryReader;
-
 import remote.ILogin;
-import remote.LoginImpl;
 import remote.ManagementException;
 
 

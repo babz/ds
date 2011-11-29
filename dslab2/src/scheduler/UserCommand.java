@@ -7,7 +7,7 @@ package scheduler;
  *
  */
 public class UserCommand {
-	public enum Cmds { LOGIN, LOGOUT, REQUESTENGINE, EXECUTETASK, INFO, EXIT}
+	public enum Cmds { REQUESTENGINE, EXIT}
 
 	private Cmds cmd;
 	private String[] args;

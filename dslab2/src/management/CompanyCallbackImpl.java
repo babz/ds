@@ -51,7 +51,8 @@ public class CompanyCallbackImpl implements ICompanyMode {
 	@Override
 	public String executeTask(int taskId, String startScript)
 			throws RemoteException {
-		// TODO Auto-generated method stub
+		// TODO check prepared
+		
 		return null;
 	}
 

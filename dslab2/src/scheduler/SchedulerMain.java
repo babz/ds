@@ -26,11 +26,11 @@ public class SchedulerMain {
 
 
 		GTEManager engineManager = null;
-		RequestManager clientManager = null;
+		ClientConnectionManager clientManager = null;
 		try {
 			engineManager = new GTEManager(udpPort, min, max, timeout, checkPeriod);
 			new Thread(engineManager).start();
-			clientManager = new RequestManager(tcpPort, engineManager);
+			clientManager = new ClientConnectionManager(tcpPort, engineManager);
 			new Thread(clientManager).start();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

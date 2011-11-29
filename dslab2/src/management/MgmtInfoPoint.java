@@ -3,8 +3,6 @@ package management;
 import java.io.IOException;
 import java.util.Scanner;
 
-import scheduler.GTEManager;
-
 public class MgmtInfoPoint {
 
 	private Scanner sc = new Scanner(System.in);
@@ -14,9 +12,10 @@ public class MgmtInfoPoint {
 	public MgmtInfoPoint(UserManager userManager, MgmtTaskManager taskManager) throws IOException {
 		user = userManager;
 		tasks = taskManager;
+		read();
 	}
 
-	public void read() {
+	private void read() {
 		while(sc.hasNext()) {
 			String command = sc.next();
 			if (command.equals("!users")) {
