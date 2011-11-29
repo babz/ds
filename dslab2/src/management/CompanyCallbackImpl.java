@@ -57,20 +57,29 @@ public class CompanyCallbackImpl implements ICompanyMode {
 
 	@Override
 	public String getInfo(int taskId) throws RemoteException {
-		// TODO throw exc for unknown id
-		//TODO throw exc for wrong company
+		checkTaskExistanceAndOwner(taskId);
 		//TODO return details
 		return null;
 	}
 
 	@Override
 	public String getOutput(int taskId) throws RemoteException {
-		// TODO throw exc for unfinished task
-		//TODO throw new exc for task not of company
-		//TODO throw new exc for unexistent task
+		checkTaskExistanceAndOwner(taskId);
+		if(!taskManager.checkFinished(taskId)) {
+			throw new RemoteException("Task " + taskId + " has not been finished yet.");
+		}
 		//TODO buy credits first
 		//TODO return output
 		return null;
+	}
+
+	private void checkTaskExistanceAndOwner(int taskId) throws RemoteException {
+		if(!taskManager.taskExists(taskId)) {
+			throw new RemoteException("Task " + taskId + " doesn't exist.");
+		}
+		if(!taskManager.checkTaskOwner(taskId, company.getName())) {
+			throw new RemoteException("Task " + " does not belong to your company.");
+		}
 	}
 
 	@Override

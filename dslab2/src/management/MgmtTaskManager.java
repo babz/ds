@@ -13,7 +13,8 @@ public class MgmtTaskManager {
 	private static int taskIdAssign = 0;
 	private static MgmtTaskManager instance;
 	
-	private Map<Integer, TaskInfo> preparedTasks = new HashMap<Integer, TaskInfo>();
+	//new tasks are only put if prepare is requested, so all tasks in the map are at least prepared!
+	private Map<Integer, TaskInfo> allTasks = new HashMap<Integer, TaskInfo>();
 
 	private MgmtTaskManager() {}
 	
@@ -48,15 +49,13 @@ public class MgmtTaskManager {
 		}
 		
 		int newTaskId = ++taskIdAssign;
-		preparedTasks.put(newTaskId, new TaskInfo(newTaskId, taskName, type, companyName, StatusType.PREPARED));
+		allTasks.put(newTaskId, new TaskInfo(newTaskId, taskName, type, companyName, StatusType.PREPARED));
 		return newTaskId;
 	}
 	
-	//TODO methods for getting finished tasks by company by type
-	
-	public Set<Integer> getPreparedTasksByCompany(String name) {
+	public Set<Integer> getTasksByCompany(String name) {
 		Set<Integer> tasks = new TreeSet<Integer>();
-		for(Entry<Integer, TaskInfo> task: preparedTasks.entrySet()) {
+		for(Entry<Integer, TaskInfo> task: allTasks.entrySet()) {
 			if(name.equals(task.getValue().getCompanyName())) {
 				tasks.add(task.getKey());
 			}
@@ -68,8 +67,13 @@ public class MgmtTaskManager {
 		return type.equals("HIGH") || type.equals("LOW") || type.equals("MIDDLE");
 	}
 	
+	/**
+	 * 
+	 * @param id
+	 * @return true if tasks exists
+	 */
 	public boolean taskExists(int id) {
-		return preparedTasks.containsKey(id);
+		return allTasks.containsKey(id);
 	}
 
 //	MOVED TO COMPANYSCANNER
@@ -82,20 +86,41 @@ public class MgmtTaskManager {
 //		return tasksInTaskDir().contains(taskName);
 //	}
 
-	public boolean checkPrepared(int taskId) {
-		return preparedTasks.containsKey(taskId);
-	}
-	
 	public String getEffort(int id) {
-		return preparedTasks.get(id).getEffortType().toString();
+		return allTasks.get(id).getEffortType().toString();
 	}
 	
 	public void assignEngine(int taskId, String address, int port) {
-		preparedTasks.get(taskId).assignEngine(address, port);
+		allTasks.get(taskId).assignEngine(address, port);
 	}
 
 	public TaskInfo getTask(int taskId) {
-		return preparedTasks.get(taskId);
+		return allTasks.get(taskId);
+	}
+
+	/**
+	 * checks if a company is the owner of a task
+	 * @param taskId id of requested task
+	 * @param companyName company that requests the task
+	 * @return true if company is owner of task
+	 */
+	public boolean checkTaskOwner(int taskId, String companyName) {
+		if(companyName.equals(allTasks.get(taskId).getCompanyName())) {
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * checks if a task has already been executed
+	 * @param taskId id of requested task
+	 * @return true if statusflag of task equals finished
+	 */
+	public boolean checkFinished(int taskId) {
+		if(allTasks.get(taskId).getStatus() == StatusType.FINISHED) {
+			return true;
+		}
+		return false;
 	}
 
 //	MOVED TO COMPANYSCANNER

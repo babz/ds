@@ -95,10 +95,10 @@ public class CompanyAgent implements Runnable {
 						continue;
 					}
 					int taskId = Integer.parseInt(input[1]);
-					if (!taskManager.checkPrepared(taskId)) {
-						System.out.println("No task with Id " + taskId + " prepared.");
-						continue;
-					}
+//					if (!taskManager.checkPrepared(taskId)) {
+//						System.out.println("No task with Id " + taskId + " prepared.");
+//						continue;
+//					}
 					TaskInfo task = taskManager.getTask(taskId);
 
 					// open connection to assigned engine
