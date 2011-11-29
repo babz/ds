@@ -2,7 +2,6 @@ package management;
 
 import java.io.IOException;
 import java.util.Map;
-import java.util.Properties;
 import java.util.Map.Entry;
 
 import propertyReader.UserReader;

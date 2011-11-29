@@ -1,6 +1,5 @@
 package management;
 
-import remote.ICompanyMode;
 
 /**
  * handles ONE task
@@ -18,12 +17,18 @@ public class TaskInfo {
 	private StatusType status;
 	private int enginePort;
 	private String engineAddress;
+	private String companyName;
 
-	public TaskInfo(int id, String taskName, String taskEffort, StatusType statusType) {
+	public TaskInfo(int id, String taskName, String taskEffort, String companyName, StatusType statusType) {
 		this.id = id; 
 		name = taskName;
 		this.setEffort(taskEffort);
+		this.companyName = companyName;
 		status = statusType;
+	}
+
+	public String getCompanyName() {
+		return companyName;
 	}
 
 	public String getName() {

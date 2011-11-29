@@ -40,7 +40,7 @@ public class ConnectionListener implements Runnable {
 					// shutdown of scheduler
 					clientConnectionManager.terminate();
 					return;
-				} else if(input.equals("!engineRequestFailed")) {
+				} else if(input.startsWith("!engineRequestFailed")) {
 					System.out.println("Not enough capacity. Try again later.");
 				} else if(input.startsWith("!engineAssigned")) {
 					String[] cmd = input.split(":");
@@ -56,10 +56,7 @@ public class ConnectionListener implements Runnable {
 //				} else if(input.equals("Successfully logged out.")) {
 //					companyAgent.loggedOut();
 //					System.out.println(input);
-				}  else if(input.startsWith("!engineRequestFailed")) {
-					System.out.println("Not enough capacity. Try again later.");
-				}
-				else {
+				} else {
 					System.out.println(input);
 				}
 			} catch (IOException e) {

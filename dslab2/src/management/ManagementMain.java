@@ -8,7 +8,6 @@ import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 
 import propertyReader.RegistryReader;
-
 import remote.ILogin;
 import remote.LoginImpl;
 
@@ -56,6 +55,7 @@ public class ManagementMain {
 
 		MgmtTaskManager taskManager = null;
 		ClientConnectionManager connection = null;
+		//TODO remove from main
 		taskManager = new MgmtTaskManager();
 		try {
 			connection = new ClientConnectionManager(schedulerHost, schedulerTCPPort, taskManager);

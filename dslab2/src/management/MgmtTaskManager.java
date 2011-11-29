@@ -1,8 +1,8 @@
 package management;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -11,10 +11,17 @@ import management.TaskInfo.StatusType;
 public class MgmtTaskManager {
 
 	private static int taskIdAssign = 0;
+	private static MgmtTaskManager instance;
 	
-	public Map<Integer, TaskInfo> preparedTasks = new HashMap<Integer, TaskInfo>();
+	private Map<Integer, TaskInfo> preparedTasks = new HashMap<Integer, TaskInfo>();
 
-	public MgmtTaskManager() {
+	private MgmtTaskManager() {}
+	
+	public static synchronized MgmtTaskManager getInstance() {
+		if(instance == null) {
+			instance = new MgmtTaskManager();
+		}
+		return instance;
 	}
 	
 //	MOVED TO COMPANYSCANNER
@@ -31,17 +38,30 @@ public class MgmtTaskManager {
 	 * prepares task for execution
 	 * @param taskName name of task
 	 * @param type level of effort
+	 * @param companyName name of company that requests the task
 	 * @return true if task was successfully prepared, false if invalid taskName
 	 */
-	public int prepareTask(String taskName, String type) {
+	public int prepareTask(String taskName, String type, String companyName) {
 
 		if(!validType(type)) {
 			return -1;
 		}
 		
 		int newTaskId = ++taskIdAssign;
-		preparedTasks.put(newTaskId, new TaskInfo(newTaskId, taskName, type, StatusType.PREPARED));
+		preparedTasks.put(newTaskId, new TaskInfo(newTaskId, taskName, type, companyName, StatusType.PREPARED));
 		return newTaskId;
+	}
+	
+	//TODO methods for getting finished tasks by company by type
+	
+	public Set<Integer> getPreparedTasksByCompany(String name) {
+		Set<Integer> tasks = new TreeSet<Integer>();
+		for(Entry<Integer, TaskInfo> task: preparedTasks.entrySet()) {
+			if(name.equals(task.getValue().getCompanyName())) {
+				tasks.add(task.getKey());
+			}
+		}
+		return tasks;
 	}
 	
 	private boolean validType(String type) {

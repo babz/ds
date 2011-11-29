@@ -36,7 +36,8 @@ public class CompanyAgent implements Runnable {
 		this.connectionManager = connectionManager;
 	}
 
-
+	//TODO socket ausmisten!!
+	
 	//read one line at a time from the input stream and send to server by writing it to PrintWriter
 	@Override
 	public void run(){
@@ -48,41 +49,42 @@ public class CompanyAgent implements Runnable {
 				String[] input = userInput.split(" ");
 				String command = input[0];
 				//locally: !list
-				if(command.equals("!list")) {
-					System.out.println(taskManager);
-				} 
-				//locally: !prepare <taskname> <type>
-				else if (command.equals("!prepare")) {
-					if(!loggedIn) {
-						System.out.println("You have to login first");
-						continue;
-					}
-					if(input.length != 3) {
-						System.out.println("Usage: !prepare <taskname> <type>");
-						continue;
-					}
-					String taskName = input[1];
-					String type = input[2];
-					int prepared = taskManager.prepareTask(taskName, type);
-					if(prepared == -1) {
-						System.out.println("Task not found.");
-					} else if (prepared == -2) {
-						System.out.println("Invalid type.");
-					} else {
-						System.out.println("Task with id " + prepared + " prepared.");
-					}
-				} 
+//				if(command.equals("!list")) {
+//					System.out.println(taskManager);
+//				} 
+//				//locally: !prepare <taskname> <type>
+//				else if (command.equals("!prepare")) {
+//					if(!loggedIn) {
+//						System.out.println("You have to login first");
+//						continue;
+//					}
+//					if(input.length != 3) {
+//						System.out.println("Usage: !prepare <taskname> <type>");
+//						continue;
+//					}
+//					String taskName = input[1];
+//					String type = input[2];
+//					int prepared = taskManager.prepareTask(taskName, type);
+//					if(prepared == -1) {
+//						System.out.println("Task not found.");
+//					} else if (prepared == -2) {
+//						System.out.println("Invalid type.");
+//					} else {
+//						System.out.println("Task with id " + prepared + " prepared.");
+//					}
+//				} 
 				//!requestEngine <taskId>.effort
-				else if (command.equals("!requestEngine")) {
+				if (command.equals("!requestEngine")) {
 					if(input.length != 2) {
 						System.out.println("Usage: !requestEngine <taskId>");
 						continue;
 					}
 					int taskId = Integer.parseInt(input[1]);
-					if (!taskManager.checkPrepared(taskId)) {
-						System.out.println("No task with Id " + taskId + " prepared.");
-						continue;
-					}
+//					CHECKED FROM MGMT
+//					if (!taskManager.checkPrepared(taskId)) {
+//						System.out.println("No task with Id " + taskId + " prepared.");
+//						continue;
+//					}
 					String effortType = taskManager.getEffort(taskId);
 					serverWriter.println(command + " " + taskId + " " + effortType);
 				} 
@@ -144,19 +146,19 @@ public class CompanyAgent implements Runnable {
 
 				}
 				//!info <taskId>.effort
-				else if (command.equals("!info")) {
-					if (input.length != 2) {
-						System.out.println("Usage: !info <taskId>");
-						continue;
-					}
-					int taskId = Integer.parseInt(input[1]);
-					if (!taskManager.checkPrepared(taskId)) {
-						System.out.println("No task with Id " + taskId + " prepared.");
-						continue;
-					}
-					TaskInfo task = taskManager.getTask(taskId);
-					System.out.println(task.getInfo());
-				}
+//				else if (command.equals("!info")) {
+//					if (input.length != 2) {
+//						System.out.println("Usage: !info <taskId>");
+//						continue;
+//					}
+//					int taskId = Integer.parseInt(input[1]);
+//					if (!taskManager.checkPrepared(taskId)) {
+//						System.out.println("No task with Id " + taskId + " prepared.");
+//						continue;
+//					}
+//					TaskInfo task = taskManager.getTask(taskId);
+//					System.out.println(task.getInfo());
+//				}
 				
 				//!exit -- logout user and shutdown the client
 				else if (command.equals("!exit")) {

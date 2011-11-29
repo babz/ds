@@ -1,8 +1,5 @@
 package management;
 
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.TreeMap;
 
 public class UserInfo {
 	
@@ -16,6 +13,7 @@ public class UserInfo {
 	private int highRequests = 0;
 	private StatusFlag status;
 	
+	//TODO wenn lustig dann noch nach admin u company aufsplitten
 	
 	public UserInfo(String name, String pw) {
 		name_ = name;
@@ -73,28 +71,6 @@ public class UserInfo {
 		status = StatusFlag.OFFLINE;
 	}
 
-	public int getLowRequests() {
-		return lowRequests;
-	}
-
-	public void increaseRequests(String effort) {
-		if(effort.equals("LOW")) {
-			this.lowRequests++;
-		}else if(effort.equals("MIDDLE")){
-			this.middleRequests++;
-		}else if (effort.equals("HIGH")) {
-			this.highRequests++;
-		}
-	}
-
-	public int getMiddleRequests() {
-		return middleRequests;
-	}
-
-	public int getHighRequests() {
-		return highRequests;
-	}
-	
 	public boolean loginIfPasswordCorrect(String password) {
 		if(password.equals(pw_)) {
 			setOnline();

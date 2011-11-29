@@ -4,12 +4,10 @@ import java.io.IOException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
-
 import management.AdminCallbackImpl;
 import management.CompanyCallbackImpl;
+import management.MgmtTaskManager;
 import management.UserManager;
-
-
 
 /**
  * Implements the Remote-Interface and implements login for one user
@@ -20,9 +18,11 @@ public class LoginImpl implements ILogin {
 
 	private UserManager cManager = null;
 	private int prepCosts;
+	private MgmtTaskManager taskManager;
 
 	public LoginImpl(int preparationCosts) throws IOException {
 		cManager = UserManager.getInstance();
+		taskManager = MgmtTaskManager.getInstance();
 		prepCosts = preparationCosts;
 	}
 
@@ -35,7 +35,7 @@ public class LoginImpl implements ILogin {
 				user = new AdminCallbackImpl(cManager.getUserInfo(userName));
 			} else {
 				//Company Mode
-				user = new CompanyCallbackImpl(cManager.getUserInfo(userName), prepCosts);
+				user = new CompanyCallbackImpl(cManager.getUserInfo(userName), taskManager, prepCosts);
 			}
 			UnicastRemoteObject.exportObject(user, 0);
 			return user;

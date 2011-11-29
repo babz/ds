@@ -12,12 +12,12 @@ import management.UserManager;
  * @author babz
  *
  */
-public class ClientManager implements Runnable {
+public class RequestManager implements Runnable {
 	@SuppressWarnings("unused")
 	private static Logger log = Logger.getLogger("class client handler");
 
 	private ServerSocket serverSocket;
-	private UserManager companyManager;
+//	private UserManager companyManager;
 
 	private GTEManager engineManager;
 
@@ -25,9 +25,9 @@ public class ClientManager implements Runnable {
 
 	private boolean alive = true;
 
-	public ClientManager(int tcpPort, GTEManager engineManager) throws IOException {
+	public RequestManager(int tcpPort, GTEManager engineManager) throws IOException {
 		serverSocket = new ServerSocket(tcpPort);
-		companyManager = UserManager.getInstance();
+//		companyManager = UserManager.getInstance();
 		this.engineManager = engineManager;
 	}
 
@@ -36,7 +36,7 @@ public class ClientManager implements Runnable {
 		while (alive ) {
 			try {
 				//gibt GTEAssigner mit
-				new Thread(new ClientHandler(serverSocket.accept(), companyManager, engineManager.getGTEAssigner(), this)).start();
+				new Thread(new ClientHandler(serverSocket.accept(), engineManager.getGTEAssigner(), this)).start();
 			} catch (IOException e) {
 				// shutdown
 			}

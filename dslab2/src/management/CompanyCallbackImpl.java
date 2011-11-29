@@ -10,9 +10,11 @@ public class CompanyCallbackImpl implements ICompanyMode {
 	
 	private UserInfo company;
 	private int prepCosts;
+	private MgmtTaskManager taskManager;
 
-	public CompanyCallbackImpl(UserInfo companyInfo, int preparationCosts) {
+	public CompanyCallbackImpl(UserInfo companyInfo, MgmtTaskManager taskManager, int preparationCosts) {
 		company = companyInfo;
+		this.taskManager = taskManager;
 		prepCosts = preparationCosts;
 	}
 
@@ -43,10 +45,7 @@ public class CompanyCallbackImpl implements ICompanyMode {
 			throw new RemoteException("Not enough credits to prepare a task.");
 		}
 		company.decreaseCredit(prepCosts);
-		//TODO increase EffordTypeCounter
-		//TODO change status type of task
-		//TODO create unique id for whole cloud
-		return 0;
+		return taskManager.prepareTask(taskName, taskType, company.getName());
 	}
 
 	@Override

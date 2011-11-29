@@ -22,16 +22,16 @@ public class ClientHandler implements Runnable {
 	private PrintWriter out;
 	private BufferedReader in;
 	private Socket clientSocket;
-	private UserManager companyManager;
+//	private UserManager companyManager;
 	private GTEAssigner gteAssigner;
 	private String currentlyLoggedIn = null;
-	private ClientManager clientManager;
+	private RequestManager incomingRequests;
 
-	public ClientHandler(Socket socket, UserManager companyManager, GTEAssigner gteAssigner, ClientManager clientManager) throws IOException {
+	public ClientHandler(Socket socket, GTEAssigner gteAssigner, RequestManager clientManager) throws IOException {
 		clientSocket = socket;
-		this.companyManager = companyManager;
+//		this.companyManager = companyManager;
 		this.gteAssigner = gteAssigner;
-		this.clientManager = clientManager;
+		this.incomingRequests = clientManager;
 		clientManager.addClientHandler(this);
 		out = new PrintWriter(clientSocket.getOutputStream(), true);
 		in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
@@ -73,27 +73,27 @@ public class ClientHandler implements Runnable {
 //				} 
 				//!requestEngine <taskId>.effort
 				else if (cmd.command() == UserCommand.Cmds.REQUESTENGINE) {
-					if(currentlyLoggedIn == null) {
-						out.println("Login required!");
-					} else {
+//					if(currentlyLoggedIn == null) {
+//						out.println("Login required!");
+//					} else {
 						int id = Integer.parseInt(cmd.getArg(0));
 						EngineIdentifier engine = gteAssigner.getEngine(cmd.getArg(1));
 						if (engine == null) {
 							out.println("!engineRequestFailed:" + id);
 						} else {
-							companyManager.getUserInfo(currentlyLoggedIn).increaseRequests(cmd.getArg(1));
+//							companyManager.getUserInfo(currentlyLoggedIn).increaseRequests(cmd.getArg(1));
 							out.println("!engineAssigned:" + id + ":" + engine.getAddress().getHostAddress() + ":" + engine.getPort());
 						}
+//					}
+				}
+				//!executeTask <taskId>.effort <startScript>
+				else if (cmd.command() == UserCommand.Cmds.EXECUTETASK) {
+					if(currentlyLoggedIn == null) {
+						out.println("Login required!");
+					} else {
+						//TODO
 					}
 				}
-//				//!executeTask <taskId>.effort <startScript>
-//				else if (cmd.command() == UserCommand.Cmds.EXECUTETASK) {
-//					if(currentlyLoggedIn == null) {
-//						out.println("Login required!");
-//					} else {
-//						//TODO
-//					}
-//				}
 //				//!info <taskId>.effort
 //				else if (cmd.command() == UserCommand.Cmds.INFO) {
 //					if(currentlyLoggedIn == null) {
@@ -104,16 +104,17 @@ public class ClientHandler implements Runnable {
 //				}
 				//!exit
 				else if (cmd.command() == UserCommand.Cmds.EXIT) {
-					if(currentlyLoggedIn != null) {
-						companyManager.logout(currentlyLoggedIn);
-						return;
-					}
+					//TODO
+//					if(currentlyLoggedIn != null) {
+//						companyManager.logout(currentlyLoggedIn);
+//						return;
+//					}
 				}
 			} 
 		} catch (IOException e) {
 			// shutdown
 		} finally {
-			clientManager.removeClientHandler(this);
+			incomingRequests.removeClientHandler(this);
 			destroy();
 		}
 	}
