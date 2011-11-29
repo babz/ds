@@ -8,20 +8,19 @@ import scheduler.GTEManager;
 public class MgmtInfoPoint {
 
 	private Scanner sc = new Scanner(System.in);
-	private GTEManager manager;
-	private UserManager companies;
+	private UserManager user;
+	private MgmtTaskManager tasks;
 
-	public MgmtInfoPoint() throws IOException {
-//		manager = engineManager;
-//		companies = CompanyManager.getInstance();
+	public MgmtInfoPoint(UserManager userManager, MgmtTaskManager taskManager) throws IOException {
+		user = userManager;
+		tasks = taskManager;
 	}
 
 	public void read() {
 		while(sc.hasNext()) {
 			String command = sc.next();
 			if (command.equals("!users")) {
-				//TODO
-				System.out.println();
+				System.out.println(user.getUsersAndTasks(tasks));
 			} else if (command.equals("!exit")) {
 				return;
 			} else {

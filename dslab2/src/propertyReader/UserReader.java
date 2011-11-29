@@ -9,6 +9,7 @@ import java.util.Properties;
 import management.UserInfo;
 
 public class UserReader {
+	//key: username
 	private Map<String, UserInfo> user = new HashMap<String, UserInfo>();
 
 	public UserReader() throws IOException {

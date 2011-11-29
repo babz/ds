@@ -8,9 +8,6 @@ public class UserInfo {
 	private boolean isAdmin_;
 	private String name_, pw_;
 	private int credits_;
-	private int lowRequests = 0;
-	private int middleRequests = 0;
-	private int highRequests = 0;
 	private StatusFlag status;
 	
 	//TODO wenn lustig dann noch nach admin u company aufsplitten
@@ -81,7 +78,8 @@ public class UserInfo {
 	
 	@Override
 	public String toString() {
-		return name_ + " (" + status.toString().toLowerCase() + "): LOW " 
-				+ lowRequests + ", MIDDLE " + middleRequests + ", HIGH " + highRequests;
+		StringBuffer userInfo = new StringBuffer();
+		userInfo.append(name_ + " (" + status.toString().toLowerCase() + ")");
+		return userInfo.toString();
 	}
 }

@@ -56,7 +56,7 @@ public class ManagementMain {
 		MgmtTaskManager taskManager = null;
 		ClientConnectionManager connection = null;
 		//TODO remove from main
-		taskManager = new MgmtTaskManager();
+		taskManager = MgmtTaskManager.getInstance();
 		try {
 			connection = new ClientConnectionManager(schedulerHost, schedulerTCPPort, taskManager);
 			new Thread(connection).start();
@@ -65,8 +65,10 @@ public class ManagementMain {
 		}
 		
 		MgmtInfoPoint commandReader;
+		UserManager userManager;
 		try {
-			commandReader = new MgmtInfoPoint();
+			userManager = UserManager.getInstance();
+			commandReader = new MgmtInfoPoint(userManager);
 			commandReader.read();
 		} catch (IOException e) {
 			e.printStackTrace();

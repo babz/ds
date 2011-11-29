@@ -75,6 +75,7 @@ public class CompanyCallbackImpl implements ICompanyMode {
 							+ costs
 							+ " credits) Buy new credits for retrieving the output.");
 		}
+		company.decreaseCredit(costs);
 		// TODO return output
 		return null;
 	}

@@ -6,67 +6,108 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeSet;
 
+import management.TaskInfo.EffortType;
 import management.TaskInfo.StatusType;
 
 public class MgmtTaskManager {
 
 	private static int taskIdAssign = 0;
 	private static MgmtTaskManager instance;
-	
-	//new tasks are only put if prepare is requested, so all tasks in the map are at least prepared!
+
+	// new tasks are only put if prepare is requested, so all tasks in the map
+	// are at least prepared!
 	private Map<Integer, TaskInfo> allTasks = new HashMap<Integer, TaskInfo>();
 
-	private MgmtTaskManager() {}
-	
+	private MgmtTaskManager() {
+	}
+
 	public static synchronized MgmtTaskManager getInstance() {
-		if(instance == null) {
+		if (instance == null) {
 			instance = new MgmtTaskManager();
 		}
 		return instance;
 	}
-	
-//	MOVED TO COMPANYSCANNER
-//	public Set<String> tasksInTaskDir() {
-//		String[] tmp = taskDir.list();
-//		Set<String> allTasks = new TreeSet<String>();
-//		for(String s: tmp) {
-//			allTasks.add(s);
-//		}
-//		return allTasks;
-//	}
-	
+
+	// MOVED TO COMPANYSCANNER
+	// public Set<String> tasksInTaskDir() {
+	// String[] tmp = taskDir.list();
+	// Set<String> allTasks = new TreeSet<String>();
+	// for(String s: tmp) {
+	// allTasks.add(s);
+	// }
+	// return allTasks;
+	// }
+
 	/**
 	 * prepares task for execution
-	 * @param taskName name of task
-	 * @param type level of effort
-	 * @param companyName name of company that requests the task
+	 * 
+	 * @param taskName
+	 *            name of task
+	 * @param type
+	 *            level of effort
+	 * @param companyName
+	 *            name of company that requests the task
 	 * @return true if task was successfully prepared, false if invalid taskName
 	 */
 	public int prepareTask(String taskName, String type, String companyName) {
 
-		if(!validType(type)) {
+		if (!validType(type)) {
 			return -1;
 		}
-		
+
 		int newTaskId = ++taskIdAssign;
-		allTasks.put(newTaskId, new TaskInfo(newTaskId, taskName, type, companyName, StatusType.PREPARED));
+		allTasks.put(newTaskId, new TaskInfo(newTaskId, taskName, type,
+				companyName, StatusType.PREPARED));
 		return newTaskId;
 	}
-	
-	public Set<Integer> getTasksByCompany(String name) {
+
+	public Set<Integer> getTaskIdsByCompany(String name) {
 		Set<Integer> tasks = new TreeSet<Integer>();
-		for(Entry<Integer, TaskInfo> task: allTasks.entrySet()) {
-			if(name.equals(task.getValue().getCompanyName())) {
+		for (Entry<Integer, TaskInfo> task : allTasks.entrySet()) {
+			if (name.equals(task.getValue().getCompanyName())) {
 				tasks.add(task.getKey());
 			}
 		}
 		return tasks;
 	}
 	
-	private boolean validType(String type) {
-		return type.equals("HIGH") || type.equals("LOW") || type.equals("MIDDLE");
+	public Set<Integer> getFinishedTasksByCompany(String companyName) {
+		Set<Integer> tasks = getTaskIdsByCompany(companyName);
+		Set<Integer> finishedTasks = new TreeSet<Integer>();
+		for(int task: tasks) {
+			if(allTasks.get(tasks).getStatus() == StatusType.FINISHED) {
+				finishedTasks.add(task);
+			}
+		}
+		return finishedTasks;
 	}
-	
+
+	public String getTaskEffortCountByCompany(String name) {
+		StringBuffer effortCounter = new StringBuffer();
+		int lowTasks = 0;
+		int middleTasks = 0;
+		int highTasks = 0;
+		Set<Integer> tasks = getFinishedTasksByCompany(name);
+		for(int taskId: tasks) {
+			EffortType taskEffort = allTasks.get(taskId).getEffortType();
+			if(taskEffort == EffortType.LOW) {
+				lowTasks++;
+			} else if(taskEffort == EffortType.MIDDLE) {
+				middleTasks++;
+			} else {
+				highTasks++;
+			}
+		}
+		effortCounter.append(": LOW " + lowTasks + ", MIDDLE " + middleTasks
+				+ ", HIGH " + highTasks);
+		return effortCounter.toString();
+	}
+
+	private boolean validType(String type) {
+		return type.equals("HIGH") || type.equals("LOW")
+				|| type.equals("MIDDLE");
+	}
+
 	/**
 	 * 
 	 * @param id
@@ -76,20 +117,20 @@ public class MgmtTaskManager {
 		return allTasks.containsKey(id);
 	}
 
-//	MOVED TO COMPANYSCANNER
-//	/**
-//	 * checks if task exists in taskDir
-//	 * @param taskName name of task
-//	 * @return true if task exists in taskDir
-//	 */
-//	private boolean valid(String taskName) {
-//		return tasksInTaskDir().contains(taskName);
-//	}
+	// MOVED TO COMPANYSCANNER
+	// /**
+	// * checks if task exists in taskDir
+	// * @param taskName name of task
+	// * @return true if task exists in taskDir
+	// */
+	// private boolean valid(String taskName) {
+	// return tasksInTaskDir().contains(taskName);
+	// }
 
 	public String getEffort(int id) {
 		return allTasks.get(id).getEffortType().toString();
 	}
-	
+
 	public void assignEngine(int taskId, String address, int port) {
 		allTasks.get(taskId).assignEngine(address, port);
 	}
@@ -100,12 +141,15 @@ public class MgmtTaskManager {
 
 	/**
 	 * checks if a company is the owner of a task
-	 * @param taskId id of requested task
-	 * @param companyName company that requests the task
+	 * 
+	 * @param taskId
+	 *            id of requested task
+	 * @param companyName
+	 *            company that requests the task
 	 * @return true if company is owner of task
 	 */
 	public boolean checkTaskOwner(int taskId, String companyName) {
-		if(companyName.equals(allTasks.get(taskId).getCompanyName())) {
+		if (companyName.equals(allTasks.get(taskId).getCompanyName())) {
 			return true;
 		}
 		return false;
@@ -113,11 +157,13 @@ public class MgmtTaskManager {
 
 	/**
 	 * checks if a task has already been executed
-	 * @param taskId id of requested task
+	 * 
+	 * @param taskId
+	 *            id of requested task
 	 * @return true if statusflag of task equals finished
 	 */
 	public boolean checkFinished(int taskId) {
-		if(allTasks.get(taskId).getStatus() == StatusType.FINISHED) {
+		if (allTasks.get(taskId).getStatus() == StatusType.FINISHED) {
 			return true;
 		}
 		return false;
@@ -125,22 +171,24 @@ public class MgmtTaskManager {
 
 	/**
 	 * checks the costs for the task considering the effort
-	 * @param taskId task for which the costs are calculated
+	 * 
+	 * @param taskId
+	 *            task for which the costs are calculated
 	 * @return cost of execution of task
 	 */
 	public int calculateCostsForTask(int taskId) {
-		
+
 		return allTasks.get(taskId).getCosts();
-		
+
 	}
 
-//	MOVED TO COMPANYSCANNER
-//	public String toString() {
-//		String[] tmp = taskDir.list();
-//		String allTasks = "";
-//		for(int i = 0; i < tmp.length; i++) {
-//			allTasks += tmp[i] + "\n";
-//		}
-//		return allTasks;
-//	}
+	// MOVED TO COMPANYSCANNER
+	// public String toString() {
+	// String[] tmp = taskDir.list();
+	// String allTasks = "";
+	// for(int i = 0; i < tmp.length; i++) {
+	// allTasks += tmp[i] + "\n";
+	// }
+	// return allTasks;
+	// }
 }
