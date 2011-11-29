@@ -49,6 +49,13 @@
 			<arg value="myAwesomeClientTaskdir"/><!-- taskDir -->
 		</java>
 	</target>
+	
+	<target name="run-client2" depends="compile" description="Run client.">
+			<java classname="client.ClientMain" fork="true" classpathref="project.classpath">
+				<arg value="manager"/><!-- binding name of the management component -->
+				<arg value="myAwesomeClientTaskdir"/><!-- taskDir -->
+			</java>
+		</target>
     
 	<target name="run-gtengine1" depends="compile" description="Run 1st Generic Task Engine.">
 		<java classname="GTEs.GTEMain" fork="true" classpathref="project.classpath">

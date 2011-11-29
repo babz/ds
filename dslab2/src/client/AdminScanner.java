@@ -24,7 +24,7 @@ public class AdminScanner implements ICommandScanner {
 				return;
 			}
 			int taskCount = Integer.parseInt(cmd[1]);
-			double percent = 0.00;
+			double percent = Double.parseDouble(cmd[2]);
 			admin.setPriceStep(taskCount, percent);
 			System.out.println("Successfully inserted price step.");
 		} else {
