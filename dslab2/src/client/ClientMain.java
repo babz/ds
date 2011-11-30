@@ -58,18 +58,5 @@ public class ClientMain {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-//		NOW IN MANAGEMENT-MAIN !!
-//		TaskManager taskManager = null;
-//		ClientConnectionManager connection = null;
-//		taskManager = new TaskManager(taskDir);
-//		try {
-//			connection = new ClientConnectionManager(schedulerHost, schedulerTCPPort, taskManager);
-//			new Thread(connection).start();
-//		} catch (IOException exc) {
-//			System.out.println("connection from client failed");
-//		}
-		
 	}
-
 }

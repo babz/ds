@@ -22,7 +22,8 @@ public interface IAdminMode extends Remote, IUser {
 	 * @param taskCount
 	 * @param percent
 	 * @throws RemoteException thrown if taskCount or percentage invalid
+	 * @throws ManagementException 
 	 */
-	public void setPriceStep(int taskCount, double percent) throws RemoteException;
+	public void setPriceStep(int taskCount, double percent) throws RemoteException, ManagementException;
 	
 }

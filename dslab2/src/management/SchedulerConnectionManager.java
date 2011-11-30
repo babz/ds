@@ -1,52 +1,60 @@
 package management;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.logging.Logger;
 
 /**
- * manages sockets: company agent, connection listener
+ * manages sockets: writes to server, listens to answer
  * @author babz
  *
  */
-public class SchedulerConnectionManager implements Runnable {
+public class SchedulerConnectionManager {
+
+	private static Logger log = Logger.getLogger("open scheduler connection");
 
 	private static SchedulerConnectionManager instance;
 	private Socket clientSocket;
-	private ConnectionListener listener;
-	private CompanyAgent agent;
-	private MgmtTaskManager taskManager;
 
-	private SchedulerConnectionManager(String schedulerHost, int schedulerTCPPort, MgmtTaskManager taskManager) throws UnknownHostException, IOException {
+	private PrintWriter serverWriter;
+	private BufferedReader schedulerIn;
+
+	private SchedulerConnectionManager(String schedulerHost, int schedulerTCPPort) throws UnknownHostException, IOException {
 		clientSocket = new Socket(schedulerHost, schedulerTCPPort);
-		this.taskManager = taskManager;
+		serverWriter = new PrintWriter(clientSocket.getOutputStream(), true);
+		schedulerIn = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 	}
-	
-	public static synchronized SchedulerConnectionManager getInstance(String host, int port, MgmtTaskManager tasks) throws UnknownHostException, IOException {
+
+	public static synchronized SchedulerConnectionManager getInstance(String host, int port) throws UnknownHostException, IOException {
 		if(instance == null) {
-			instance = new SchedulerConnectionManager(host, port, tasks);
+			instance = new SchedulerConnectionManager(host, port);
 		}
 		return instance;
 	}
 
-	@Override
-	public void run() {
+	public String requestEngine(String taskEffort) throws NumberFormatException, IOException {
+		log.info("forward request to scheduler");
+		serverWriter.println(taskEffort);
+		
+		log.info("catch answer from scheduler");
+		String answer = schedulerIn.readLine();
+		closeConnectionProperly();
+		return answer;
+	}
+
+	private void closeConnectionProperly() {
+		serverWriter.close();
 		try {
-			agent = new CompanyAgent(clientSocket, taskManager, this);
-			new Thread(agent).start();
-			listener = new ConnectionListener(clientSocket, taskManager, this);
-			new Thread(listener).start();
+			schedulerIn.close();
+			clientSocket.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	}
-	
-	public void terminate() {
-		try {
-			agent.terminate();
-			listener.terminate();
-			clientSocket.close();
-		} catch (IOException e) { }
+		
 	}
 }

@@ -64,13 +64,13 @@ public class ClientInfoPoint {
 				System.out.println("Successfully logged out.");
 			} else {
 				if(cmdScanner == null) {
-					System.out.println("Invalid command or login required!");
+					System.out.println("You have to log in first.");
 					continue;
 				}
 				try {
 					cmdScanner.readCommand(cmd);
-				} catch (RemoteException e) {
-					System.out.println(e.getMessage());
+				} catch (ManagementException e) {
+					System.out.println("Error: " + e.getMessage());
 				}
 			}				
 		}

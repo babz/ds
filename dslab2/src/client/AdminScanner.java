@@ -27,10 +27,22 @@ public class AdminScanner implements ICommandScanner {
 			double percent = Double.parseDouble(cmd[2]);
 			admin.setPriceStep(taskCount, percent);
 			System.out.println("Successfully inserted price step.");
+		} else if (checkForCompanyCommand(cmd[0])) {
+			System.out.println("Command not allowed. You are not a company.");
 		} else {
 			System.out.println("Invalid command");
 		}
 
+	}
+
+	/**
+	 * 
+	 * @param string
+	 * @return true if command is a company-command
+	 */
+	private boolean checkForCompanyCommand(String cmd) {
+		String companyCommands = "!list !credits !buy !prepare !executeTask !info !getOutput";
+		return companyCommands.contains(cmd); 
 	}
 
 	private boolean checkNoOfArgs(String[] cmd, int noOfSupposedArgs) {

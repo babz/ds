@@ -4,6 +4,7 @@ import java.io.File;
 import java.rmi.RemoteException;
 
 import remote.ICompanyMode;
+import remote.ManagementException;
 
 public class CompanyScanner implements ICommandScanner {
 
@@ -16,7 +17,7 @@ public class CompanyScanner implements ICommandScanner {
 	}
 
 	@Override
-	public void readCommand(String[] cmd) throws RemoteException {
+	public void readCommand(String[] cmd) throws RemoteException, ManagementException {
 		if (cmd[0].equals("!list")) { //LOCALLY
 			if(!checkNoOfArgs(cmd, 0)) {
 				return;
@@ -69,9 +70,16 @@ public class CompanyScanner implements ICommandScanner {
 			}
 			System.out.println(company.getOutput(Integer.parseInt(cmd[1])));
 
+		} else if (checkForAdminCommand(cmd[0])) {
+			System.out.println("Command not allowed. You are not an admin.");
 		} else {
 			System.out.println("Invalid command");
 		}
+	}
+
+	private boolean checkForAdminCommand(String cmd) {
+		String adminCommands = "!getPricingCurve !setPriceStep";
+		return adminCommands.contains(cmd); 
 	}
 
 	@Override

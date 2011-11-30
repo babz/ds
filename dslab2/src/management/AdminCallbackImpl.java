@@ -4,6 +4,7 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
 import remote.IAdminMode;
+import remote.ManagementException;
 
 
 public class AdminCallbackImpl implements IAdminMode {
@@ -32,11 +33,11 @@ public class AdminCallbackImpl implements IAdminMode {
 	}
 
 	@Override
-	public void setPriceStep(int taskCount, double percent) throws RemoteException {
+	public void setPriceStep(int taskCount, double percent) throws RemoteException, ManagementException {
 		if(taskCount < 0) {
-			throw new RemoteException("Error: Invalid task count!");
+			throw new ManagementException("Invalid task count!");
 		} else if (percent > 100) {
-			throw new RemoteException("Error: Invalid percentage!");
+			throw new ManagementException("Invalid percentage!");
 		} else {
 			PricingCurve.getInstance().setOrAddPriceStep(taskCount, percent);
 		}

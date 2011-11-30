@@ -21,13 +21,10 @@ public class ClientListener implements Runnable {
 	private BufferedReader in;
 	private Socket clientSocket;
 	private GTEAssigner gteAssigner;
-	private ClientConnectionManager incomingRequests;
 
-	public ClientListener(Socket socket, GTEAssigner gteAssigner, ClientConnectionManager clientManager) throws IOException {
+	public ClientListener(Socket socket, GTEAssigner gteAssigner) throws IOException {
 		clientSocket = socket;
 		this.gteAssigner = gteAssigner;
-		incomingRequests = clientManager;
-		clientManager.addClientHandler(this);
 		out = new PrintWriter(clientSocket.getOutputStream(), true);
 		in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 	}
@@ -39,37 +36,18 @@ public class ClientListener implements Runnable {
 		String input = null;
 		try {
 			while ((input = in.readLine()) != null) {
-				UserCommand cmd = InputProcessor.processInput(input);
-				if(cmd == null) {
-					out.println("Invalid command!");
-				} 
-				//!requestEngine <taskId>.effort
-				else if (cmd.command() == UserCommand.Cmds.REQUESTENGINE) {
-					int id = Integer.parseInt(cmd.getArg(0));
-					EngineIdentifier engine = gteAssigner.getEngine(cmd.getArg(1));
-					if (engine == null) {
-						out.println("!engineRequestFailed:" + id);
-					} else {
-						out.println("!engineAssigned:" + id + ":" + engine.getAddress().getHostAddress() + ":" + engine.getPort());
-					}
-				}
-				//!exit
-				else if (cmd.command() == UserCommand.Cmds.EXIT) {
-					//TODO
+				EngineIdentifier engine = gteAssigner.getEngine(input);
+				if (engine == null) {
+					out.println("!engineRequestFailed");
+				} else {
+					out.println(engine.getAddress().getHostAddress() + ":" + engine.getPort());
 				}
 			} 
 		} catch (IOException e) {
 			// shutdown
 		} finally {
-			incomingRequests.removeClientHandler(this);
 			destroy();
 		}
-	}
-
-	public void logoutClientAtExit() {
-		out.println("Scheduler shutting down. You will be logged out.");
-		out.println("Successfully logged out.");
-		destroy();
 	}
 
 	private void destroy() {

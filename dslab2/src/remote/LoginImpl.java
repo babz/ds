@@ -1,12 +1,10 @@
 package remote;
 
 import java.io.IOException;
-import java.net.UnknownHostException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
 import management.AdminCallbackImpl;
-import management.SchedulerConnectionManager;
 import management.CompanyCallbackImpl;
 import management.MgmtTaskManager;
 import management.UserManager;
@@ -20,16 +18,14 @@ public class LoginImpl implements ILogin {
 
 	private UserManager cManager = null;
 	private MgmtTaskManager taskManager;
-	private SchedulerConnectionManager schedulerConnection;
-	private int prepCosts, tcpPort;
-	private String host;
+	private int prepCosts;
+	private String schedulerHost;
+	private int schedulerPort;
 
-	public LoginImpl(int preparationCosts, String schedulerHost, int schedulerTCPPort) throws IOException {
+	public LoginImpl(int preparationCosts, String host, int port) throws IOException {
 		cManager = UserManager.getInstance();
 		taskManager = MgmtTaskManager.getInstance();
 		prepCosts = preparationCosts;
-		host = schedulerHost;
-		tcpPort = schedulerTCPPort;
 	}
 
 	@Override
@@ -41,17 +37,7 @@ public class LoginImpl implements ILogin {
 				user = new AdminCallbackImpl(cManager.getUserInfo(userName));
 			} else {
 				//Company Mode
-				user = new CompanyCallbackImpl(cManager.getUserInfo(userName), taskManager, prepCosts);
-				try {
-					schedulerConnection = SchedulerConnectionManager.getInstance(host, tcpPort, taskManager);
-					new Thread(schedulerConnection).start();
-				} catch (UnknownHostException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+				user = new CompanyCallbackImpl(cManager.getUserInfo(userName), taskManager, prepCosts, schedulerHost, schedulerPort);
 			}
 			UnicastRemoteObject.exportObject(user, 0);
 			return user;

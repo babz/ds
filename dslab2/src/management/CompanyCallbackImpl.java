@@ -1,21 +1,30 @@
 package management;
 
+import java.io.IOException;
+import java.net.UnknownHostException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
 import remote.ICompanyMode;
+import remote.ManagementException;
 
 public class CompanyCallbackImpl implements ICompanyMode {
 
 	private UserInfo company;
 	private int prepCosts;
 	private MgmtTaskManager taskManager;
+	private String host;
+	private int tcpPort;
+	private SchedulerConnectionManager scheduler;
 
 	public CompanyCallbackImpl(UserInfo companyInfo,
-			MgmtTaskManager taskManager, int preparationCosts) {
+			MgmtTaskManager taskManager, int preparationCosts,
+			String schedulerHost, int schedulerPort) {
 		company = companyInfo;
 		this.taskManager = taskManager;
 		prepCosts = preparationCosts;
+		host = schedulerHost;
+		tcpPort = schedulerPort;
 	}
 
 	@Override
@@ -31,18 +40,20 @@ public class CompanyCallbackImpl implements ICompanyMode {
 	}
 
 	@Override
-	public int buyCredits(int amount) throws RemoteException {
+	public int buyCredits(int amount) throws RemoteException,
+			ManagementException {
 		if (amount < 0) {
-			throw new RemoteException("Error: Invalid amount of credits.");
+			throw new ManagementException("Invalid amount of credits.");
 		}
 		return company.increaseCredit(amount);
 	}
 
 	@Override
 	public int prepareTask(String taskName, String taskType)
-			throws RemoteException {
+			throws RemoteException, ManagementException {
 		if (company.getCredits() < prepCosts) {
-			throw new RemoteException("Error: Not enough credits to prepare a task.");
+			throw new ManagementException(
+					"Not enough credits to prepare a task.");
 		}
 		company.decreaseCredit(prepCosts);
 		return taskManager.prepareTask(taskName, taskType, company.getName());
@@ -50,29 +61,62 @@ public class CompanyCallbackImpl implements ICompanyMode {
 
 	@Override
 	public String executeTask(int taskId, String startScript)
-			throws RemoteException {
-		// TODO check prepared
-		
+			throws RemoteException, ManagementException {
+		// TODO fehlerfälle
+		checkTaskExistanceAndOwner(taskId);
+		try {
+			String assignedEngine = requestEngine(taskId);
+			String[] engineDetails = assignedEngine.split(":");
+			String address = engineDetails[0];
+			int port = Integer.parseInt(engineDetails[1]);
+			taskManager.assignEngine(taskId, address, port);
+			// TODO open tcp connection to engine and forward task
+		} catch (NumberFormatException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 		return null;
 	}
 
+	private String requestEngine(int taskId) throws NumberFormatException,
+			IOException, ManagementException {
+		scheduler = SchedulerConnectionManager.getInstance(host, tcpPort);
+		String assignedEngine = scheduler.requestEngine(taskManager
+				.getEffort(taskId));
+		if (assignedEngine == null) {
+			throw new ManagementException("Connection to scheduler failed.");
+		}
+		if (assignedEngine.startsWith("!engineRequestFailed")) {
+			throw new ManagementException(
+					"No engine available for execution. Please try again later.");
+		}
+		return assignedEngine;
+
+	}
+
 	@Override
-	public String getInfo(int taskId) throws RemoteException {
+	public String getInfo(int taskId) throws RemoteException,
+			ManagementException {
 		checkTaskExistanceAndOwner(taskId);
 		return taskManager.getTask(taskId).getInfo();
 	}
 
 	@Override
-	public String getOutput(int taskId) throws RemoteException {
+	public String getOutput(int taskId) throws RemoteException,
+			ManagementException {
 		checkTaskExistanceAndOwner(taskId);
 		if (!taskManager.checkFinished(taskId)) {
-			throw new RemoteException("Error: Task " + taskId
+			throw new ManagementException("Task " + taskId
 					+ " has not been finished yet.");
 		}
 		int costs = taskManager.calculateCostsForTask(taskId);
 		if (costs > company.getCredits()) {
-			throw new RemoteException(
-					"Error: You do not have enough credits to pay this execution. (Costs: "
+			throw new ManagementException(
+					"You do not have enough credits to pay this execution. (Costs: "
 							+ costs
 							+ " credits) Buy new credits for retrieving the output.");
 		}
@@ -81,12 +125,13 @@ public class CompanyCallbackImpl implements ICompanyMode {
 		return null;
 	}
 
-	private void checkTaskExistanceAndOwner(int taskId) throws RemoteException {
+	private void checkTaskExistanceAndOwner(int taskId) throws RemoteException,
+			ManagementException {
 		if (!taskManager.taskExists(taskId)) {
-			throw new RemoteException("Error: Task " + taskId + " doesn't exist.");
+			throw new ManagementException("Task " + taskId + " doesn't exist.");
 		}
 		if (!taskManager.checkTaskOwner(taskId, company.getName())) {
-			throw new RemoteException("Error: Task "
+			throw new ManagementException("Task "
 					+ " does not belong to your company.");
 		}
 	}
