@@ -2,9 +2,6 @@ package scheduler;
 
 import java.io.IOException;
 import java.net.ServerSocket;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.logging.Logger;
 
 /**
@@ -14,7 +11,7 @@ import java.util.logging.Logger;
  */
 public class ClientConnectionManager implements Runnable {
 	@SuppressWarnings("unused")
-	private static Logger log = Logger.getLogger("class client handler");
+	private static Logger log = Logger.getLogger("class client connection manager");
 
 	private ServerSocket serverSocket;
 	private GTEManager engineManager;
@@ -30,7 +27,7 @@ public class ClientConnectionManager implements Runnable {
 	public void run() {
 		while (alive) {
 			try {
-				//gibt GTEAssigner mit
+				//da mehrere requests, je request 1 thread benötigt
 				new Thread(new ClientListener(serverSocket.accept(), engineManager.getGTEAssigner())).start();
 			} catch (IOException e) {
 				// shutdown

@@ -16,7 +16,7 @@ import GTEs.EngineIdentifier;
  *
  */
 public class ClientListener implements Runnable {
-	private static Logger log = Logger.getLogger("class clientHandler");
+	private static Logger log = Logger.getLogger("client listener");
 	private PrintWriter out;
 	private BufferedReader in;
 	private Socket clientSocket;
