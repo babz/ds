@@ -2,6 +2,7 @@ package management;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.EOFException;
 import java.io.IOException;
 import java.net.Socket;
 
@@ -39,17 +40,24 @@ public class ExecuteTaskRunnable implements Runnable {
 			
 			String lineFromEngine;
 			StringBuffer taskOutput = new StringBuffer();
-			while((lineFromEngine = in.readUTF()) != null) {
-				taskOutput.append(lineFromEngine);
-			}
+			try {
+				while(true) {
+					lineFromEngine = in.readUTF();
+					System.out.println("received: " + lineFromEngine);
+					taskOutput.append(lineFromEngine);
+				}
+			} catch(EOFException e) { }
+			System.out.println("finished reading");
 			task.setOutput(taskOutput.toString());
 			task.setStatus(StatusType.FINISHED);
 			
 			clientCb.sendNotification(task.getId());
 			
 		} catch (IOException e) {
+			e.printStackTrace();
 		} finally {
 			try {
+				System.out.println("closing streams");
 				in.close();
 				out.close();
 				engineSocket.close();
