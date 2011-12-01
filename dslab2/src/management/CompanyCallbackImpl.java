@@ -62,7 +62,6 @@ public class CompanyCallbackImpl implements ICompanyMode {
 		MgmtEngineManager engineManager = MgmtEngineManager.getInstance();
 		engineManager.requestEngine(taskId);
 		engineManager.executeTask(taskId, callback, startScript);
-		//TODO stop time
 		//INFO: engine manager notifies the client
 	}
 
@@ -81,7 +80,8 @@ public class CompanyCallbackImpl implements ICompanyMode {
 			throw new ManagementException("Task " + taskId
 					+ " has not been finished yet.");
 		}
-		int costs = taskManager.calculateCostsForTask(taskId);
+		int costs = taskManager.calculateCostsForTask(taskId, company.getName());
+		//TODO consider discount
 		if (costs > company.getCredits()) {
 			throw new ManagementException(
 					"You do not have enough credits to pay this execution. (Costs: "
@@ -89,7 +89,6 @@ public class CompanyCallbackImpl implements ICompanyMode {
 							+ " credits) Buy new credits for retrieving the output.");
 		}
 		company.decreaseCredit(costs);
-		//TODO consider discount
 		return taskManager.getTask(taskId).getOutput();
 	}
 

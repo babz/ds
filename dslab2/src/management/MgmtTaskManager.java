@@ -150,13 +150,20 @@ public class MgmtTaskManager {
 	}
 
 	/**
-	 * checks the costs for the task considering the effort
-	 * 
+	 * checks the costs for the task considering the effort and the discount;
+	 * discount is always auf die nächste int gerundet!
 	 * @param taskId
 	 *            task for which the costs are calculated
+	 * @param company 
 	 * @return cost of execution of task
 	 */
-	public int calculateCostsForTask(int taskId) {
-		return allTasks.get(taskId).getCosts();
+	public int calculateCostsForTask(int taskId, String company) {
+		int costs = allTasks.get(taskId).getCosts();
+		int sumOfExecutedTasks = getTaskIdsByCompany(company).size();
+		double discount = PricingCurve.getInstance().getDiscount(sumOfExecutedTasks);
+		if(discount == 0) {
+			return costs;
+		}
+		return (int) Math.ceil(costs - (costs / 100 * discount));
 	}
 }

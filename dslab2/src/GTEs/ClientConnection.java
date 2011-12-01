@@ -5,8 +5,6 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 
-import management.MgmtTaskManager;
-
 public class ClientConnection implements Runnable {
 
 	private Socket sock;

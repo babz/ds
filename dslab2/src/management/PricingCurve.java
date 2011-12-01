@@ -31,4 +31,14 @@ public class PricingCurve {
 	public synchronized void setOrAddPriceStep(int taskCount, double percent) {
 		curveMappings.put(taskCount, percent);
 	}
+	
+	/**
+	 * 
+	 * @param sumOfExecutedTask
+	 * @return discount in percent
+	 */
+	public synchronized double getDiscount(int sumOfExecutedTasks) {
+		//TODO
+		return sumOfExecutedTasks;
+	}
 }
