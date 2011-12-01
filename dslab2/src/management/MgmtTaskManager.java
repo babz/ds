@@ -28,16 +28,6 @@ public class MgmtTaskManager {
 		return instance;
 	}
 
-	// MOVED TO COMPANYSCANNER
-	// public Set<String> tasksInTaskDir() {
-	// String[] tmp = taskDir.list();
-	// Set<String> allTasks = new TreeSet<String>();
-	// for(String s: tmp) {
-	// allTasks.add(s);
-	// }
-	// return allTasks;
-	// }
-
 	/**
 	 * prepares task for execution
 	 * 
@@ -70,12 +60,12 @@ public class MgmtTaskManager {
 		}
 		return tasks;
 	}
-	
+
 	public Set<Integer> getFinishedTasksByCompany(String companyName) {
 		Set<Integer> tasks = getTaskIdsByCompany(companyName);
 		Set<Integer> finishedTasks = new TreeSet<Integer>();
-		for(int task: tasks) {
-			if(allTasks.get(tasks).getStatus() == StatusType.FINISHED) {
+		for (int task : tasks) {
+			if (allTasks.get(tasks).getStatus() == StatusType.FINISHED) {
 				finishedTasks.add(task);
 			}
 		}
@@ -88,11 +78,11 @@ public class MgmtTaskManager {
 		int middleTasks = 0;
 		int highTasks = 0;
 		Set<Integer> tasks = getFinishedTasksByCompany(name);
-		for(int taskId: tasks) {
+		for (int taskId : tasks) {
 			EffortType taskEffort = allTasks.get(taskId).getEffortType();
-			if(taskEffort == EffortType.LOW) {
+			if (taskEffort == EffortType.LOW) {
 				lowTasks++;
-			} else if(taskEffort == EffortType.MIDDLE) {
+			} else if (taskEffort == EffortType.MIDDLE) {
 				middleTasks++;
 			} else {
 				highTasks++;
@@ -116,16 +106,6 @@ public class MgmtTaskManager {
 	public boolean taskExists(int id) {
 		return allTasks.containsKey(id);
 	}
-
-	// MOVED TO COMPANYSCANNER
-	// /**
-	// * checks if task exists in taskDir
-	// * @param taskName name of task
-	// * @return true if task exists in taskDir
-	// */
-	// private boolean valid(String taskName) {
-	// return tasksInTaskDir().contains(taskName);
-	// }
 
 	public String getEffort(int id) {
 		return allTasks.get(id).getEffortType().toString();
@@ -177,18 +157,6 @@ public class MgmtTaskManager {
 	 * @return cost of execution of task
 	 */
 	public int calculateCostsForTask(int taskId) {
-
 		return allTasks.get(taskId).getCosts();
-
 	}
-
-	// MOVED TO COMPANYSCANNER
-	// public String toString() {
-	// String[] tmp = taskDir.list();
-	// String allTasks = "";
-	// for(int i = 0; i < tmp.length; i++) {
-	// allTasks += tmp[i] + "\n";
-	// }
-	// return allTasks;
-	// }
 }

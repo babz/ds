@@ -5,6 +5,8 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 
+import management.MgmtTaskManager;
+
 public class ClientConnection implements Runnable {
 
 	private Socket sock;
@@ -67,6 +69,7 @@ public class ClientConnection implements Runnable {
 				// TODO relief #2
 				out.writeUTF("begin task xyz");
 				Thread.sleep(sleepTime); // simulate execution
+				
 				out.writeUTF("task completed successfully");
 				
 				manager.removeLoad(load);

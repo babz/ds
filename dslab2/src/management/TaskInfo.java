@@ -12,6 +12,7 @@ public class TaskInfo {
 	public enum StatusType { PREPARED, EXECUTING, FINISHED }
 	
 	private int id;
+	private long beginTime, endTime;
 	private String name;
 	private EffortType effort;
 	private StatusType status;
@@ -55,6 +56,11 @@ public class TaskInfo {
 	
 	public void setStatus(StatusType statusType) {
 		status = statusType;
+		if(statusType == StatusType.EXECUTING) {
+			beginTime = System.currentTimeMillis();
+		} else if (statusType == StatusType.FINISHED) {
+			endTime = System.currentTimeMillis();
+		}
 	}
 
 	public void setEffort(String effortType) {
@@ -81,20 +87,9 @@ public class TaskInfo {
 	}
 	
 	public int getCosts() {
-		/* RELIEF:
-		 * low = 0,5 min
-		 * middle = 3 min
-		 * high = 5 min
-		 */
-		//TODO not so easy cheasy babz
-		int costsPerMin = 10;
-		if(effort == EffortType.LOW) {
-			return (int) (costsPerMin * 0.5);
-		} else if (effort == EffortType.MIDDLE) {
-			return costsPerMin * 3;
-		} else {
-			return costsPerMin * 5;
-		}
+		int costsPerMinBegun = 10;
+		long exeDuration = endTime - beginTime;
+		return (int) Math.ceil(exeDuration/((double)60000)) * costsPerMinBegun;
 	}
 	
 	public void setOutput(String outputFromEngine) {
