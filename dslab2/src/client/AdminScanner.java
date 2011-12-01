@@ -3,6 +3,7 @@ package client;
 import java.rmi.RemoteException;
 
 import remote.IAdminMode;
+import remote.ManagementException;
 
 public class AdminScanner implements ICommandScanner {
 
@@ -13,7 +14,7 @@ public class AdminScanner implements ICommandScanner {
 	}
 
 	@Override
-	public void readCommand(String[] cmd) throws RemoteException {
+	public void readCommand(String[] cmd) throws RemoteException, ManagementException {
 		if (cmd[0].equals("!getPricingCurve")) {
 			if(!checkNoOfArgs(cmd, 0)) {
 				return;

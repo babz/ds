@@ -18,6 +18,7 @@ public class TaskInfo {
 	private int enginePort;
 	private String engineAddress;
 	private String companyName;
+	private String output;
 
 	public TaskInfo(int id, String taskName, String taskEffort, String companyName, StatusType statusType) {
 		this.id = id; 
@@ -25,6 +26,7 @@ public class TaskInfo {
 		this.setEffort(taskEffort);
 		this.companyName = companyName;
 		status = statusType;
+		output = null;
 	}
 
 	public String getCompanyName() {
@@ -88,6 +90,14 @@ public class TaskInfo {
 		} else {
 			return costsPerMin * 5;
 		}
+	}
+	
+	public void setOutput(String outputFromEngine) {
+		output = outputFromEngine;
+	}
+	
+	public String getOutput() {
+		return output;
 	}
 	
 	public String getInfo() {

@@ -1,6 +1,9 @@
 package management;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
+import java.net.Socket;
 import java.net.UnknownHostException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
@@ -41,7 +44,7 @@ public class CompanyCallbackImpl implements ICompanyMode {
 
 	@Override
 	public int buyCredits(int amount) throws RemoteException,
-			ManagementException {
+	ManagementException {
 		if (amount < 0) {
 			throw new ManagementException("Invalid amount of credits.");
 		}
@@ -70,7 +73,8 @@ public class CompanyCallbackImpl implements ICompanyMode {
 			String address = engineDetails[0];
 			int port = Integer.parseInt(engineDetails[1]);
 			taskManager.assignEngine(taskId, address, port);
-			// TODO open tcp connection to engine and forward task
+			taskManager.getTask(taskId).setOutput(getEngineOutput(address, port));
+			
 		} catch (NumberFormatException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -83,7 +87,7 @@ public class CompanyCallbackImpl implements ICompanyMode {
 	}
 
 	private String requestEngine(int taskId) throws NumberFormatException,
-			IOException, ManagementException {
+	IOException, ManagementException {
 		scheduler = SchedulerConnectionManager.getInstance(host, tcpPort);
 		String assignedEngine = scheduler.requestEngine(taskManager
 				.getEffort(taskId));
@@ -98,16 +102,33 @@ public class CompanyCallbackImpl implements ICompanyMode {
 
 	}
 
+	private String getEngineOutput(String address, int port) throws IOException, ManagementException {
+		// TODO open tcp connection to engine and forward task
+		Socket engineSocket = new Socket(address, port);
+		DataInputStream in = new DataInputStream(engineSocket.getInputStream());
+		DataOutputStream out = new DataOutputStream(engineSocket.getOutputStream());
+
+		if(in == null) {
+			throw new ManagementException("Error: engine output is null!");
+		}
+		//TODO listen to result of engine bzw. msg "Execution of task <taskId> finished."
+		
+		out.close();
+		in.close();
+		engineSocket.close();
+		return null;
+	}
+
 	@Override
 	public String getInfo(int taskId) throws RemoteException,
-			ManagementException {
+	ManagementException {
 		checkTaskExistanceAndOwner(taskId);
 		return taskManager.getTask(taskId).getInfo();
 	}
 
 	@Override
 	public String getOutput(int taskId) throws RemoteException,
-			ManagementException {
+	ManagementException {
 		checkTaskExistanceAndOwner(taskId);
 		if (!taskManager.checkFinished(taskId)) {
 			throw new ManagementException("Task " + taskId
@@ -121,12 +142,12 @@ public class CompanyCallbackImpl implements ICompanyMode {
 							+ " credits) Buy new credits for retrieving the output.");
 		}
 		company.decreaseCredit(costs);
-		// TODO return output
-		return null;
+		//TODO consider discount
+		return taskManager.getTask(taskId).getOutput();
 	}
 
 	private void checkTaskExistanceAndOwner(int taskId) throws RemoteException,
-			ManagementException {
+	ManagementException {
 		if (!taskManager.taskExists(taskId)) {
 			throw new ManagementException("Task " + taskId + " doesn't exist.");
 		}
