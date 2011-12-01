@@ -48,8 +48,12 @@ public class CompanyCallbackImpl implements ICompanyMode {
 			throw new ManagementException(
 					"Not enough credits to prepare a task.");
 		}
+		int id = taskManager.prepareTask(taskName, taskType, company.getName());
+		if(id < 0) {
+			throw new ManagementException("invalid usage");
+		}
 		company.decreaseCredit(prepCosts);
-		return taskManager.prepareTask(taskName, taskType, company.getName());
+		return id;
 	}
 
 	@Override

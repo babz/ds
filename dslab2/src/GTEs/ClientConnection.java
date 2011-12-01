@@ -1,8 +1,6 @@
 package GTEs;
 
 import java.io.BufferedReader;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
@@ -38,7 +36,10 @@ public class ClientConnection implements Runnable {
 			System.out.println("splitting command");
 			
 			// receive task command + taskData
-			String[] cmd = in.readLine().split(" ");
+			String input = in.readLine();
+			System.out.println("command: " + input);
+			String[] cmd = input.split(" ");
+			
 			if(cmd[0].equals("!executeTask")) {
 				
 				System.out.println("execute task");
@@ -82,10 +83,10 @@ public class ClientConnection implements Runnable {
 				System.out.println("UNKnONW COMMAND: " + cmd);
 			}
 		} catch (IOException e) {
-			
+			e.printStackTrace(); // TODO
 		}
 		catch (InterruptedException e) {
-		
+			e.printStackTrace(); // TODO
 		} finally {
 			connectionListener.removeClient(this);
 			

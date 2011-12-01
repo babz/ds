@@ -53,12 +53,12 @@ public class UserManager {
 	
 	//TODO check online status and amount of requested tasks per category
 
-	public String getUsersAndTasks(MgmtTaskManager tasks) {
+	public String getUsersAndTasks() {
 		StringBuffer users = new StringBuffer();
 		for(Entry<String, UserInfo> user: allUsers.entrySet()) {
 			users.append(user.getValue());
 			if(!user.getValue().isAdmin()) {
-				users.append(tasks.getTaskEffortCountByCompany(user.getKey()));
+				users.append(MgmtTaskManager.getInstance().getTaskEffortCountByCompany(user.getKey()));
 			}
 			users.append("\n");
 		}

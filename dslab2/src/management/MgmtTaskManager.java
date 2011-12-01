@@ -64,9 +64,13 @@ public class MgmtTaskManager {
 	public Set<Integer> getFinishedTasksByCompany(String companyName) {
 		Set<Integer> tasks = getTaskIdsByCompany(companyName);
 		Set<Integer> finishedTasks = new TreeSet<Integer>();
+		
 		for (int task : tasks) {
-			if (allTasks.get(tasks).getStatus() == StatusType.FINISHED) {
-				finishedTasks.add(task);
+			TaskInfo t = allTasks.get(tasks);
+			if(t != null) {
+				if (t.getStatus() == StatusType.FINISHED) {
+					finishedTasks.add(task);
+				}
 			}
 		}
 		return finishedTasks;
