@@ -1,8 +1,11 @@
 package scheduler;
 
+import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Hashtable;
 import java.util.Map.Entry;
@@ -37,10 +40,13 @@ public class GTEAssigner {
 		for (Entry<EngineIdentifier, GTEInfo> tmpEngine: engines.entrySet()) {
 			// update load information
 			Socket engineSock = new Socket(tmpEngine.getValue().getIpAddress(), tmpEngine.getValue().getTcpPort());
-			DataInputStream in = new DataInputStream(engineSock.getInputStream());
-			DataOutputStream out = new DataOutputStream(engineSock.getOutputStream());
-			out.writeUTF("!currentLoad");
-			tmpEngine.getValue().setLoad(in.readInt());
+			BufferedReader in = new BufferedReader(new InputStreamReader(engineSock.getInputStream()));
+			PrintWriter out = new PrintWriter(engineSock.getOutputStream());
+			System.out.println("requesting load");
+			out.println("!currentLoad");
+			System.out.println("requesting load 2");
+			tmpEngine.getValue().setLoad(Integer.parseInt(in.readLine()));
+			System.out.println("requesting load 3");
 			
 			out.close();
 			in.close();

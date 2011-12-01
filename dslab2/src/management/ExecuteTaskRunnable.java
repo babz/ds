@@ -1,8 +1,11 @@
 package management;
 
+import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.Socket;
 
 import management.TaskInfo.StatusType;
@@ -26,21 +29,22 @@ public class ExecuteTaskRunnable implements Runnable {
 		String address = task.getAssignedEngineAddress();
 		int port = task.getAssignedEnginePort();
 		Socket engineSocket = null;
-		DataInputStream in = null;
-		DataOutputStream out = null;
+		BufferedReader in = null;
+		PrintWriter out = null;
 		try {
 			engineSocket = new Socket(address, port);
-			 in = new DataInputStream(engineSocket.getInputStream());
-			 out = new DataOutputStream(engineSocket.getOutputStream());
+			 in = new BufferedReader(new InputStreamReader(engineSocket.getInputStream()));
+			 out = new PrintWriter(engineSocket.getOutputStream());
 
 			//listen to result of engine bzw. msg "Execution of task <taskId> finished."
-			out.writeUTF("!executeTask " + task.getEffortType() + " " + script);
+			out.println("!executeTask " + task.getEffortType() + " " + script);
 			task.setStatus(StatusType.EXECUTING);
 			
 			String lineFromEngine;
 			StringBuffer taskOutput = new StringBuffer();
-			while((lineFromEngine = in.readUTF()) != null) {
+			while((lineFromEngine = in.readLine()) != null) {
 				taskOutput.append(lineFromEngine);
+				System.out.println("read line: " + lineFromEngine);
 			}
 			task.setOutput(taskOutput.toString());
 			task.setStatus(StatusType.FINISHED);
@@ -48,8 +52,10 @@ public class ExecuteTaskRunnable implements Runnable {
 			clientCb.sendNotification(task.getId());
 			
 		} catch (IOException e) {
+			e.printStackTrace();
 		} finally {
 			try {
+				System.out.println("closing streams");
 				in.close();
 				out.close();
 				engineSocket.close();

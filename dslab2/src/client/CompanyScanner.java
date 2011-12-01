@@ -57,6 +57,15 @@ public class CompanyScanner implements ICommandScanner {
 			System.out.println("Task with id " + id + " prepared.");
 
 		} else if (cmd[0].equals("!executeTask")) {
+			// unite command with arguments
+			String originalInput = "";
+			for(String s : cmd) {
+				originalInput += s + " ";
+			}
+			originalInput = originalInput.trim();
+			// split again with limit
+			cmd = originalInput.split(" ", 3);
+			
 			if(!checkNoOfArgs(cmd, 2)) {
 				return;
 			}

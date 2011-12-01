@@ -1,8 +1,11 @@
 package GTEs;
 
+import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.Socket;
 
 public class ClientConnection implements Runnable {
@@ -11,8 +14,8 @@ public class ClientConnection implements Runnable {
 	@SuppressWarnings("unused")
 	private String dir; //relief
 	private EngineManager manager;
-	private DataInputStream in = null;
-	private DataOutputStream out = null;
+	private BufferedReader in = null;
+	private PrintWriter out = null;
 	private ConnectionListener connectionListener;
 
 	public ClientConnection(Socket socket, String taskDir, EngineManager engineManager, ConnectionListener connectionListener) {
@@ -29,13 +32,13 @@ public class ClientConnection implements Runnable {
 		try {
 			System.out.println("opening streams");
 			
-			in = new DataInputStream(sock.getInputStream());
-			out = new DataOutputStream(sock.getOutputStream());
+			in = new BufferedReader(new InputStreamReader(sock.getInputStream()));
+			out = new PrintWriter(sock.getOutputStream());
 			
 			System.out.println("splitting command");
 			
 			// receive task command + taskData
-			String[] cmd = in.readUTF().split(" ");
+			String[] cmd = in.readLine().split(" ");
 			if(cmd[0].equals("!executeTask")) {
 				
 				System.out.println("execute task");
@@ -60,19 +63,23 @@ public class ClientConnection implements Runnable {
 				// read file from client
 				System.out.println("finished reading file from client - not implemented, see relief #1");
 				
-				out.writeUTF("Starting execution");
+				out.println("Starting execution");
 				
 				manager.addLoad(load);
 				
 				// TODO relief #2
-				out.writeUTF("begin task xyz");
+				out.println("begin task xyz");
 				Thread.sleep(sleepTime); // simulate execution
 				
-				out.writeUTF("task completed successfully");
+				out.println("task completed successfully");
 				
 				manager.removeLoad(load);
-			} else if (cmd[0].equals("!currentLoad")) {
-				out.writeInt(manager.getLoad());
+			} else if (cmd[0].trim().equals("!currentLoad")) {
+				System.out.println("load requested");
+				out.println(manager.getLoad());
+				System.out.println("requesting load 2");
+			} else {
+				System.out.println("UNKnONW COMMAND: " + cmd);
 			}
 		} catch (IOException e) {
 			
@@ -90,13 +97,15 @@ public class ClientConnection implements Runnable {
 				out.close();
 				in.close();
 				sock.close();
-			} catch (IOException e) { }
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
 	public void terminate() {
 		try {
-			out.writeUTF("Engine shutting down");
+			out.println("Engine shutting down");
 			
 			out.close();
 			in.close();

@@ -36,10 +36,12 @@ public class ClientListener implements Runnable {
 		String input = null;
 		try {
 			while ((input = in.readLine()) != null) {
+				System.out.println("engine requested: " + input);
 				EngineIdentifier engine = gteAssigner.getEngine(input);
 				if (engine == null) {
 					out.println("!engineRequestFailed");
 				} else {
+					System.out.println("returning engine: " + engine.getAddress().getHostAddress());
 					out.println(engine.getAddress().getHostAddress() + ":" + engine.getPort());
 				}
 			} 
