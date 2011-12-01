@@ -85,7 +85,6 @@ public class CompanyCallbackImpl implements ICompanyMode {
 					+ " has not been finished yet.");
 		}
 		int costs = taskManager.calculateCostsForTask(taskId, company.getName());
-		//TODO consider discount
 		if (costs > company.getCredits()) {
 			throw new ManagementException(
 					"You do not have enough credits to pay this execution. (Costs: "

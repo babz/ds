@@ -38,7 +38,13 @@ public class PricingCurve {
 	 * @return discount in percent
 	 */
 	public synchronized double getDiscount(int sumOfExecutedTasks) {
-		//TODO
-		return sumOfExecutedTasks;
+		double discount = 0;
+		for(Entry<Integer, Double> priceStep: curveMappings.entrySet()) {
+			if(priceStep.getKey() <= sumOfExecutedTasks) {
+				System.out.println("using discount: " + priceStep.getKey() + " value: " + priceStep.getValue());
+				discount = priceStep.getValue();
+			}
+		}
+		return discount;
 	}
 }
