@@ -68,12 +68,12 @@ public class GTEController implements Runnable {
 			}
 			try {
 				// check suspend/activate
-				this.checkEnergyEfficience(activeEngines, zeroLoadEngines);
+				//this.checkEnergyEfficience(activeEngines, zeroLoadEngines);
 				// confirm alive statements every checkPeriod, timeout otherwise
 				Thread.sleep(checkPeriod);
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
+//			} catch (IOException e1) {
+//				// TODO Auto-generated catch block
+//				e1.printStackTrace();
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
