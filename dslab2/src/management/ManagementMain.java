@@ -58,7 +58,7 @@ public class ManagementMain {
 
 		MgmtInfoPoint commandReader;
 		try {
-			commandReader = new MgmtInfoPoint(UserManager.getInstance(), MgmtTaskManager.getInstance());
+			commandReader = new MgmtInfoPoint();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

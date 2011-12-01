@@ -6,12 +6,10 @@ import java.util.Scanner;
 public class MgmtInfoPoint {
 
 	private Scanner sc = new Scanner(System.in);
-	private UserManager user;
-	private MgmtTaskManager tasks;
+	private UserManager userManager;
 
-	public MgmtInfoPoint(UserManager userManager, MgmtTaskManager taskManager) throws IOException {
-		user = userManager;
-		tasks = taskManager;
+	public MgmtInfoPoint() throws IOException {
+		userManager = UserManager.getInstance();
 		read();
 	}
 
@@ -19,7 +17,7 @@ public class MgmtInfoPoint {
 		while(sc.hasNext()) {
 			String command = sc.next();
 			if (command.equals("!users")) {
-				System.out.println(user.getUsersAndTasks(tasks));
+				System.out.println(userManager.getUsersAndTasks());
 			} else if (command.equals("!exit")) {
 				return;
 			} else {
