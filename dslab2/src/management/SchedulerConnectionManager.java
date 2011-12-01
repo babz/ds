@@ -18,43 +18,42 @@ public class SchedulerConnectionManager {
 	private static Logger log = Logger.getLogger("open scheduler connection");
 
 	private static SchedulerConnectionManager instance;
-	private Socket clientSocket;
+	private String host;
+	private int tcpPort;
 
-	private PrintWriter serverWriter;
-	private BufferedReader schedulerIn;
-
-	private SchedulerConnectionManager(String schedulerHost, int schedulerTCPPort) throws UnknownHostException, IOException {
-		clientSocket = new Socket(schedulerHost, schedulerTCPPort);
-		serverWriter = new PrintWriter(clientSocket.getOutputStream(), true);
-		schedulerIn = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+	private SchedulerConnectionManager() throws UnknownHostException, IOException {
+		host = ManagementMain.getSchedulerHost();
+		tcpPort = ManagementMain.getSchedulerTCPPort();
 	}
 
-	public static synchronized SchedulerConnectionManager getInstance(String host, int port) throws UnknownHostException, IOException {
+	public static synchronized SchedulerConnectionManager getInstance() throws UnknownHostException, IOException {
 		if(instance == null) {
-			instance = new SchedulerConnectionManager(host, port);
+			instance = new SchedulerConnectionManager();
 		}
 		return instance;
 	}
 
 	public String requestEngine(String taskEffort) throws NumberFormatException, IOException {
+		Socket socket = new Socket(host, tcpPort); 
+		PrintWriter serverWriter = new PrintWriter(socket.getOutputStream(), true);
+		BufferedReader schedulerIn = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+		
 		log.info("forward request to scheduler");
 		serverWriter.println(taskEffort);
 		
 		log.info("catch answer from scheduler");
 		String answer = schedulerIn.readLine();
-		closeConnectionProperly();
-		return answer;
-	}
 
-	private void closeConnectionProperly() {
-		serverWriter.close();
+		//close everything
 		try {
+			serverWriter.close();
 			schedulerIn.close();
-			clientSocket.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} finally {
+			socket.close();
 		}
-		
+		return answer;
 	}
 }

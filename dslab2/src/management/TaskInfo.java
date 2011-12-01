@@ -40,6 +40,10 @@ public class TaskInfo {
 	public void setName(String name) {
 		this.name = name;
 	}
+	
+	public int getId() {
+		return id;
+	}
 
 	public EffortType getEffortType() {
 		return effort;
@@ -82,6 +86,7 @@ public class TaskInfo {
 		 * middle = 3 min
 		 * high = 5 min
 		 */
+		//TODO not so easy cheasy babz
 		int costsPerMin = 10;
 		if(effort == EffortType.LOW) {
 			return (int) (costsPerMin * 0.5);

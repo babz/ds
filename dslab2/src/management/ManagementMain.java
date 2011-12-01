@@ -19,6 +19,9 @@ import remote.LoginImpl;
  */
 public class ManagementMain {
 
+	private static int schedulerTCPPort, preparationCosts;
+	private static String schedulerHost;
+	
 	/**
 	 * @param args
 	 */
@@ -33,16 +36,16 @@ public class ManagementMain {
 		}
 
 		String bindingName = args[0];
-		String schedulerHost = args[1];
-		int schedulerTCPPort = Integer.parseInt(args[2]);
-		int preparationCosts = Integer.parseInt(args[3]);
+		schedulerHost = args[1];
+		schedulerTCPPort = Integer.parseInt(args[2]);
+		preparationCosts = Integer.parseInt(args[3]);
 		File taskDir = new File(args[4]); //optional
 
 		try {
 			RegistryReader registryLocation = new RegistryReader();
 			//Creates and exports a Registry instance on the local host that accepts requests on the specified port.
 			Registry registry = LocateRegistry.createRegistry(registryLocation.getRegistryPort());
-			ILogin login = new LoginImpl(preparationCosts, schedulerHost, schedulerTCPPort);
+			ILogin login = new LoginImpl();
 			UnicastRemoteObject.exportObject(login, 0);
 			//register name in registry
 			registry.bind(bindingName, login);
@@ -61,4 +64,17 @@ public class ManagementMain {
 			e.printStackTrace();
 		}
 	}
+
+	public static synchronized int getSchedulerTCPPort() {
+		return schedulerTCPPort;
+	}
+
+	public static synchronized int getPreparationCosts() {
+		return preparationCosts;
+	}
+
+	public static synchronized String getSchedulerHost() {
+		return schedulerHost;
+	}
+	
 }

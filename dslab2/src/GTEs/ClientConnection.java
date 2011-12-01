@@ -27,17 +27,14 @@ public class ClientConnection implements Runnable {
 
 	@Override
 	public void run() {
+		int sleepTime = 0;
 		try {
-			
 			System.out.println("opening streams");
-			
 			
 			in = new DataInputStream(sock.getInputStream());
 			out = new DataOutputStream(sock.getOutputStream());
-
 			
 			System.out.println("splitting command");
-			
 			
 			// receive task command + taskData
 			String[] cmd = in.readUTF().split(" ");
@@ -45,50 +42,34 @@ public class ClientConnection implements Runnable {
 				
 				System.out.println("execute task");
 				
-				
 				String effort = cmd[1];
 				int load = 0;
 				if(effort.equals("LOW")) {
 					load = 33;
+					sleepTime = 30000;
 				} else if (effort.equals("MIDDLE")) {
 					load = 66;
+					sleepTime = 60000 * 3;
 				} else if (effort.equals("HIGH")) {
 					load = 100;
+					sleepTime = 60000 * 5;
 				}
 				@SuppressWarnings("unused")
 				String startScript = cmd[2];
-				String filename = cmd[3];
 				
-				//TODO check if this works
-				FileOutputStream fos = new FileOutputStream(dir + File.separator + filename);
-				
-				
-				System.out.println("read file from client");
-				
-				
-				byte[] buf = new byte[BUF_LENGTH];
-				int bytesReceived = 0;
-				while((bytesReceived = in.read(buf)) != -1) {
-					System.out.println("writing buf to disk");
-					fos.write(buf, 0, bytesReceived);
-				}
-				
-				fos.close();
-				
-				// TODO set status of file to executable
-				
-				System.out.println("finished reading file from client");
+				//TODO relief #1
+				System.out.println("read file from client - not implemented, see relief #1");
+				// read file from client
+				System.out.println("finished reading file from client - not implemented, see relief #1");
 				
 				out.writeUTF("Starting execution");
 				
-				
 				manager.addLoad(load);
 				
-				// TODO execute and write back to client
-				Thread.sleep(20000); // simulate execution
-				
+				// TODO relief #2
+				out.writeUTF("begin task xyz");
+				Thread.sleep(sleepTime); // simulate execution
 				out.writeUTF("task completed successfully");
-
 				
 				manager.removeLoad(load);
 			} else if (cmd[0].equals("!currentLoad")) {

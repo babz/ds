@@ -4,7 +4,6 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
-import java.net.UnknownHostException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
@@ -16,18 +15,11 @@ public class CompanyCallbackImpl implements ICompanyMode {
 	private UserInfo company;
 	private int prepCosts;
 	private MgmtTaskManager taskManager;
-	private String host;
-	private int tcpPort;
-	private SchedulerConnectionManager scheduler;
 
-	public CompanyCallbackImpl(UserInfo companyInfo,
-			MgmtTaskManager taskManager, int preparationCosts,
-			String schedulerHost, int schedulerPort) {
+	public CompanyCallbackImpl(UserInfo companyInfo) {
 		company = companyInfo;
-		this.taskManager = taskManager;
-		prepCosts = preparationCosts;
-		host = schedulerHost;
-		tcpPort = schedulerPort;
+		taskManager = MgmtTaskManager.getInstance();
+		prepCosts = ManagementMain.getPreparationCosts();
 	}
 
 	@Override
@@ -63,60 +55,14 @@ public class CompanyCallbackImpl implements ICompanyMode {
 	}
 
 	@Override
-	public String executeTask(int taskId, String startScript)
+	public void executeTask(int taskId, String startScript, INotifyClientCallback callback)
 			throws RemoteException, ManagementException {
 		// TODO fehlerfälle
 		checkTaskExistanceAndOwner(taskId);
-		try {
-			String assignedEngine = requestEngine(taskId);
-			String[] engineDetails = assignedEngine.split(":");
-			String address = engineDetails[0];
-			int port = Integer.parseInt(engineDetails[1]);
-			taskManager.assignEngine(taskId, address, port);
-			taskManager.getTask(taskId).setOutput(getEngineOutput(address, port));
-			
-		} catch (NumberFormatException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		return null;
-	}
-
-	private String requestEngine(int taskId) throws NumberFormatException,
-	IOException, ManagementException {
-		scheduler = SchedulerConnectionManager.getInstance(host, tcpPort);
-		String assignedEngine = scheduler.requestEngine(taskManager
-				.getEffort(taskId));
-		if (assignedEngine == null) {
-			throw new ManagementException("Connection to scheduler failed.");
-		}
-		if (assignedEngine.startsWith("!engineRequestFailed")) {
-			throw new ManagementException(
-					"No engine available for execution. Please try again later.");
-		}
-		return assignedEngine;
-
-	}
-
-	private String getEngineOutput(String address, int port) throws IOException, ManagementException {
-		// TODO open tcp connection to engine and forward task
-		Socket engineSocket = new Socket(address, port);
-		DataInputStream in = new DataInputStream(engineSocket.getInputStream());
-		DataOutputStream out = new DataOutputStream(engineSocket.getOutputStream());
-
-		if(in == null) {
-			throw new ManagementException("Error: engine output is null!");
-		}
-		//TODO listen to result of engine bzw. msg "Execution of task <taskId> finished."
-		
-		out.close();
-		in.close();
-		engineSocket.close();
-		return null;
+		MgmtEngineManager engineManager = MgmtEngineManager.getInstance();
+		engineManager.requestEngine(taskId);
+		engineManager.executeTask(taskId, callback, startScript);
+		//engine manager notifies the client
 	}
 
 	@Override

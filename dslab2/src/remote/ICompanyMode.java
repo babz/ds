@@ -3,6 +3,8 @@ package remote;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
+import management.INotifyClientCallback;
+
 /**
  * remote interface handles all commands valid for companies
  * @author babz
@@ -46,11 +48,10 @@ public interface ICompanyMode extends Remote, IUser {
 	 * executes task by forwarding to an engine
 	 * @param taskId unique id of task
 	 * @param startScript "java -jar task<id>.jar"
-	 * @return message of execution success
 	 * @throws RemoteException thrown if either there is no free engine for execution or the task belongs to another company
 	 * @throws ManagementException 
 	 */
-	String executeTask(int taskId, String startScript) throws RemoteException, ManagementException;
+	void executeTask(int taskId, String startScript, INotifyClientCallback cb) throws RemoteException, ManagementException;
 	
 	/**
 	 * prints out information for the specified task
