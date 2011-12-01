@@ -1,4 +1,4 @@
-package management;
+package remote;
 
 import java.rmi.Remote;
 

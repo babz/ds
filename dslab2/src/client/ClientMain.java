@@ -51,7 +51,7 @@ public class ClientMain {
 				System.err.println("Fix your management!");
 				e.printStackTrace();
 			} catch (RemoteException re) {
-				System.err.println("exception from scanner classes");
+				System.err.println("remote exception from scanner classes");
 				re.printStackTrace();
 			}
 		} catch (IOException e) {

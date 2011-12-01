@@ -2,18 +2,23 @@ package client;
 
 import java.io.File;
 import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 
 import remote.ICompanyMode;
+import remote.INotifyClientCallback;
 import remote.ManagementException;
+import remote.NotifyClientCallbackImpl;
 
 public class CompanyScanner implements ICommandScanner {
 
 	private ICompanyMode company;
 	private File taskDir;
+	private INotifyClientCallback callbackNotification = new NotifyClientCallbackImpl();
 
-	public CompanyScanner(ICompanyMode loggedInCompany, File clientTaskDir) {
+	public CompanyScanner(ICompanyMode loggedInCompany, File clientTaskDir) throws RemoteException {
 		company = loggedInCompany;
 		taskDir = clientTaskDir;
+		UnicastRemoteObject.exportObject(callbackNotification, 0);
 	}
 
 	@Override
@@ -48,15 +53,17 @@ public class CompanyScanner implements ICommandScanner {
 				System.out.println("Task not found.");
 				return;
 			}
-			int id = 0;
-			id = company.prepareTask(taskName, taskType);
+			int id = company.prepareTask(taskName, taskType);
 			System.out.println("Task with id " + id + " prepared.");
 
 		} else if (cmd[0].equals("!executeTask")) {
 			if(!checkNoOfArgs(cmd, 2)) {
 				return;
 			}
-			//TODO
+			int id = Integer.parseInt(cmd[1]);
+			String script = cmd[2];
+			company.executeTask(id, script, callbackNotification);
+			System.out.println("Execution for task " + id + " started.");
 
 		} else if (cmd[0].equals("!info")) {
 			if(!checkNoOfArgs(cmd, 1)) {
@@ -85,6 +92,7 @@ public class CompanyScanner implements ICommandScanner {
 	@Override
 	public void logout() throws RemoteException {
 		company.logout();
+		UnicastRemoteObject.unexportObject(callbackNotification, false);
 	}
 
 	private boolean checkNoOfArgs(String[] cmd, int noOfSupposedArgs) {

@@ -2,16 +2,14 @@ package GTEs;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 
 public class ClientConnection implements Runnable {
 
-	private static final int BUF_LENGTH = 100;
 	private Socket sock;
-	private String dir;
+	@SuppressWarnings("unused")
+	private String dir; //relief
 	private EngineManager manager;
 	private DataInputStream in = null;
 	private DataOutputStream out = null;

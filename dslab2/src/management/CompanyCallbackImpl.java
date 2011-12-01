@@ -1,13 +1,11 @@
 package management;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.net.Socket;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
+import management.TaskInfo.StatusType;
 import remote.ICompanyMode;
+import remote.INotifyClientCallback;
 import remote.ManagementException;
 
 public class CompanyCallbackImpl implements ICompanyMode {
@@ -57,12 +55,15 @@ public class CompanyCallbackImpl implements ICompanyMode {
 	@Override
 	public void executeTask(int taskId, String startScript, INotifyClientCallback callback)
 			throws RemoteException, ManagementException {
-		// TODO fehlerfälle
 		checkTaskExistanceAndOwner(taskId);
+		if(taskManager.getTask(taskId).getStatus() == StatusType.EXECUTING) {
+			throw new ManagementException("Execution has already been started");
+		}
 		MgmtEngineManager engineManager = MgmtEngineManager.getInstance();
 		engineManager.requestEngine(taskId);
 		engineManager.executeTask(taskId, callback, startScript);
-		//engine manager notifies the client
+		//TODO stop time
+		//INFO: engine manager notifies the client
 	}
 
 	@Override

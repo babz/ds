@@ -3,7 +3,6 @@ package remote;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
-import management.INotifyClientCallback;
 
 /**
  * remote interface handles all commands valid for companies

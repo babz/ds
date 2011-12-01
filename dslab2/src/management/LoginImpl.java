@@ -1,12 +1,13 @@
-package remote;
+package management;
 
 import java.io.IOException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
-import management.AdminCallbackImpl;
-import management.CompanyCallbackImpl;
-import management.UserManager;
+import remote.ILogin;
+import remote.IUser;
+import remote.ManagementException;
+
 
 /**
  * Implements the Remote-Interface and implements login for one user
