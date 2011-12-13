@@ -2,13 +2,15 @@ package management;
 
 import java.io.File;
 import java.io.IOException;
+import java.rmi.AccessException;
 import java.rmi.AlreadyBoundException;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 
 import propertyReader.RegistryReader;
-import remote.ILogin;
 
 
 /**
@@ -40,11 +42,14 @@ public class ManagementMain {
 		preparationCosts = Integer.parseInt(args[3]);
 		File taskDir = new File(args[4]); //optional
 
+		LoginImpl login = null;
+		Registry registry = null;
+		
 		try {
 			RegistryReader registryLocation = new RegistryReader();
 			//Creates and exports a Registry instance on the local host that accepts requests on the specified port.
-			Registry registry = LocateRegistry.createRegistry(registryLocation.getRegistryPort());
-			ILogin login = new LoginImpl();
+			registry = LocateRegistry.createRegistry(registryLocation.getRegistryPort());
+			login = new LoginImpl();
 			UnicastRemoteObject.exportObject(login, 0);
 			//register name in registry
 			registry.bind(bindingName, login);
@@ -61,6 +66,16 @@ public class ManagementMain {
 			commandReader = new MgmtInfoPoint();
 		} catch (IOException e) {
 			e.printStackTrace();
+		} finally {
+			try {
+				//logout all clients
+				login.logoutAll();
+				registry.unbind(bindingName);
+				UnicastRemoteObject.unexportObject(login, true);
+			} catch (AccessException e) {
+			} catch (RemoteException e) {
+			} catch (NotBoundException e) {
+			}
 		}
 	}
 

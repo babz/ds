@@ -51,8 +51,6 @@ public class UserManager {
 		return false;
 	}
 	
-	//TODO check online status and amount of requested tasks per category
-
 	public String getUsersAndTasks() {
 		StringBuffer users = new StringBuffer();
 		for(Entry<String, UserInfo> user: allUsers.entrySet()) {
@@ -63,6 +61,15 @@ public class UserManager {
 			users.append("\n");
 		}
 		return users.toString();
+	}
+
+	public String getAllUsers() {
+		StringBuffer everyone = new StringBuffer();
+		for(String s: allUsers.keySet()) {
+			everyone.append(s + "\n");
+		}
+		
+		return everyone.toString();
 	}
 
 }

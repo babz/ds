@@ -62,7 +62,10 @@ public class ClientInfoPoint {
 				cmdScanner.logout();
 				cmdScanner = null;
 				System.out.println("Successfully logged out.");
-			} else {
+			} else if (cmd[0].equals("!exit")) {
+				cmdScanner.logout();
+				return;
+			}else {
 				if(cmdScanner == null) {
 					System.out.println("You have to log in first.");
 					continue;

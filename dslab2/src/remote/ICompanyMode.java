@@ -12,12 +12,6 @@ import java.rmi.RemoteException;
 public interface ICompanyMode extends Remote, IUser {
 
 	/**
-	 * logs out company
-	 * @throws RemoteException
-	 */
-	void logout() throws RemoteException;
-	
-	/**
 	 * get the credits of a company
 	 * @return amount of credits the company owns
 	 * @throws RemoteException

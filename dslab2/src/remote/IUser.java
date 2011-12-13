@@ -11,5 +11,7 @@ import java.rmi.RemoteException;
 public interface IUser extends Remote {
 
 	boolean isAdmin() throws RemoteException;
+	
+	void logout() throws RemoteException;
 
 }

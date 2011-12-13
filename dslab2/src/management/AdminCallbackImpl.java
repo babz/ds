@@ -18,6 +18,9 @@ public class AdminCallbackImpl implements IAdminMode {
 	@Override
 	public void logout() throws RemoteException {
 		//callback instantiated only after successful login
+		if(!admin.isOnline()) {
+			return;
+		}
 		admin.setOffline();
 		UnicastRemoteObject.unexportObject(this, false);
 	}

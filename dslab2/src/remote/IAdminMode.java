@@ -4,12 +4,7 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 
 public interface IAdminMode extends Remote, IUser {
-	
-	/**
-	 * logs out admin
-	 * @throws RemoteException
-	 */
-	void logout() throws RemoteException;
+
 	
 	/**
 	 * prints out the steps of the pricing curve

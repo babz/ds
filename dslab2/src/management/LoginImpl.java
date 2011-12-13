@@ -3,6 +3,8 @@ package management;
 import java.io.IOException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.HashSet;
+import java.util.Set;
 
 import remote.ILogin;
 import remote.IUser;
@@ -17,6 +19,7 @@ import remote.ManagementException;
 public class LoginImpl implements ILogin {
 
 	private UserManager cManager = null;
+	private Set<IUser> allUsers = new HashSet<IUser>();
 
 	public LoginImpl() throws IOException {
 		cManager = UserManager.getInstance();
@@ -34,10 +37,16 @@ public class LoginImpl implements ILogin {
 				user = new CompanyCallbackImpl(cManager.getUserInfo(userName));
 			}
 			UnicastRemoteObject.exportObject(user, 0);
+			allUsers.add(user);
 			return user;
 		} else {
 			throw new ManagementException("login failed");
 		}
 	}
 
+	public void logoutAll() throws RemoteException {
+		for(IUser u : allUsers) {
+			u.logout();
+		}
+	}
 }
